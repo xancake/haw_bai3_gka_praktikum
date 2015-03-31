@@ -1,0 +1,8 @@
+// FORMAT
+// ["#directed"],[" #attributed"],[" #weighted"];
+// node1,[":"attribute1],[","node2,[":"attribute2],["::"weight]];
+a,b
+a,c
+b,d
+b,e
+d,e

@@ -6,15 +6,16 @@ import java.io.InputStream;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import org.haw.lnielsen.gka.graphen.Knoten;
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
-import org.jgrapht.graph.AsUndirectedGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.ListenableDirectedGraph;
+import org.jgrapht.graph.ListenableDirectedWeightedGraph;
+import org.jgrapht.graph.ListenableUndirectedGraph;
+import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 
-public class GraphParser_GKA {
+public class GraphParser_GKA implements GraphParser_I {
 	private static final String COMMENT_PREFIX      = "//";
 	private static final String DIRECTED            = "#directed";
 	private static final String ATTRIBUTED          = "#attributed";
@@ -25,13 +26,11 @@ public class GraphParser_GKA {
 	private static final String NAME                = "[a-zA-Z_]+[0-9]*";
 	private static final String NUMBER              = "[0-9]+";
 	
-	private static final Pattern PHEADER     = Pattern.compile("(" + DIRECTED + ")?\\w*(" + ATTRIBUTED + ")?\\w*(" + WEIGHTED + ")?");
-	private static final Pattern PDEF_SIMPLE = Pattern.compile(NAME + KANTEN_SEPARATOR + NAME);
-	private static final Pattern PDEF_WEIGHTED = Pattern.compile(NAME + KANTEN_SEPARATOR + NAME + WEIGHT_SEPARATOR + NUMBER);
+	private static final Pattern PHEADER         = Pattern.compile("(" + DIRECTED + ")?\\s*(" + ATTRIBUTED + ")?\\s*(" + WEIGHTED + ")?");
+	private static final Pattern PDEF_SIMPLE     = Pattern.compile(NAME + KANTEN_SEPARATOR + NAME);
+	private static final Pattern PDEF_WEIGHTED   = Pattern.compile(NAME + KANTEN_SEPARATOR + NAME + WEIGHT_SEPARATOR + NUMBER);
 	private static final Pattern PDEF_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER + KANTEN_SEPARATOR + NAME + ATTRIBUTE_SEPARATOR + NUMBER);
 	private static final Pattern PDEF_WEIGHTED_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER + KANTEN_SEPARATOR + NAME + ATTRIBUTE_SEPARATOR + NUMBER + WEIGHT_SEPARATOR + NUMBER);
-	private static final Pattern PNAME       = Pattern.compile(NAME);
-	private static final Pattern PNUMBER     = Pattern.compile(NUMBER);
 	
 	private static final int NO_HEADER_FOUND = -1;
 	
@@ -43,8 +42,9 @@ public class GraphParser_GKA {
 			boolean attributed = false;
 			boolean weighted = false;
 			
+			String line = null;
 			while(scanner.hasNextLine() && headerZeile == NO_HEADER_FOUND) {
-				String line = scanner.nextLine();
+				line = scanner.nextLine();
 				aktuelleZeile++;
 				
 				if(line.trim().isEmpty() || line.startsWith(COMMENT_PREFIX)) {
@@ -54,12 +54,17 @@ public class GraphParser_GKA {
 					directed = line.contains(DIRECTED);
 					attributed = line.contains(ATTRIBUTED);
 					weighted = line.contains(WEIGHTED);
+				} else if(PDEF_SIMPLE.matcher(line).matches()) {
+					break;
 				}
 			}
 			
 			Graph<Knoten, DefaultEdge> graph = createGraph(directed, weighted);
+			if(headerZeile == NO_HEADER_FOUND) {
+				parseDefinitionLine(graph, directed, attributed, weighted, line);
+			}
 			while(scanner.hasNextLine()) {
-				String line = scanner.nextLine();
+				line = scanner.nextLine();
 				aktuelleZeile++;
 				parseDefinitionLine(graph, directed, attributed, weighted, line);
 			}
@@ -84,12 +89,12 @@ public class GraphParser_GKA {
 				k1 = new Knoten(elem[0], Integer.parseInt(elem[1]));
 				k2 = new Knoten(elem[2], Integer.parseInt(elem[3]));
 			} else if(!attributed && weighted && PDEF_WEIGHTED.matcher(line).matches()) {
-				String[] elem = line.split("[" + KANTEN_SEPARATOR + WEIGHT_SEPARATOR + "]");
+				String[] elem = line.split(KANTEN_SEPARATOR + "|(" + WEIGHT_SEPARATOR + ")");
 				k1 = new Knoten(elem[0]);
 				k2 = new Knoten(elem[1]);
 				weight = Integer.parseInt(elem[2]);
 			} else if(attributed && weighted && PDEF_WEIGHTED_ATTRIBUTED.matcher(line).matches()) {
-				String[] elem = line.split("[" + KANTEN_SEPARATOR + ATTRIBUTE_SEPARATOR + "]");
+				String[] elem = line.split("[" + KANTEN_SEPARATOR + ATTRIBUTE_SEPARATOR + "]|(" + WEIGHT_SEPARATOR + ")");
 				k1 = new Knoten(elem[0], Integer.parseInt(elem[1]));
 				k2 = new Knoten(elem[2], Integer.parseInt(elem[3]));
 				weight = Integer.parseInt(elem[4]);
@@ -106,9 +111,14 @@ public class GraphParser_GKA {
 	}
 	
 	private Graph<Knoten, DefaultEdge> createGraph(boolean directed, boolean weighted) {
-		DirectedGraph<Knoten, DefaultEdge> graph = weighted
-				? new DefaultDirectedWeightedGraph<Knoten, DefaultEdge>(DefaultEdge.class)
-				: new DefaultDirectedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
-		return directed ? graph : new AsUndirectedGraph<Knoten, DefaultEdge>(graph);
+		if(directed && weighted) {
+			return new ListenableDirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
+		} else if(directed && !weighted) {
+			return new ListenableDirectedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
+		} else if(!directed && weighted) {
+			return new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
+		} else {
+			return new ListenableUndirectedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
+		}
 	}
 }

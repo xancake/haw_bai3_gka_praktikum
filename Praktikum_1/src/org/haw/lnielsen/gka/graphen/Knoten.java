@@ -35,4 +35,35 @@ public class Knoten {
 	public String toString() {
 		return getName() + (isAttributiert() ? " (" + getAttribut() + ")" : "");
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (bAttributiert ? 1231 : 1237);
+		result = prime * result + myAttribut;
+		result = prime * result + ((myName == null) ? 0 : myName.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(obj == null)
+			return false;
+		if(getClass() != obj.getClass())
+			return false;
+		Knoten other = (Knoten)obj;
+		if(bAttributiert != other.bAttributiert)
+			return false;
+		if(myAttribut != other.myAttribut)
+			return false;
+		if(myName == null) {
+			if(other.myName != null)
+				return false;
+		} else if(!myName.equals(other.myName))
+			return false;
+		return true;
+	}
 }
