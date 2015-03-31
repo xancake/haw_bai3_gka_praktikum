@@ -16,8 +16,8 @@ public abstract class GraphParserTest {
 	}
 	
 	@Test
-	public void testParseGraph_Simple() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/simple.graph"));
+	public void testParseGraph_Undirected() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/undirected.graph"));
 		assertEquals(5, graph.vertexSet().size());
 		assertTrue(graph.containsVertex(new Knoten("a")));
 		assertTrue(graph.containsVertex(new Knoten("b")));
@@ -33,8 +33,8 @@ public abstract class GraphParserTest {
 	}
 	
 	@Test
-	public void testParseGraph_Weighted() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/weighted.graph"));
+	public void testParseGraph_UndirectedWeighted() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/undirected weighted.graph"));
 		assertEquals(5, graph.vertexSet().size());
 		assertTrue(graph.containsVertex(new Knoten("a")));
 		assertTrue(graph.containsVertex(new Knoten("b")));

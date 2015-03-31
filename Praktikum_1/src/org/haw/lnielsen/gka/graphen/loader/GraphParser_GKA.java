@@ -56,6 +56,8 @@ public class GraphParser_GKA implements GraphParser_I {
 					weighted = line.contains(WEIGHTED);
 				} else if(PDEF_SIMPLE.matcher(line).matches()) {
 					break;
+				} else {
+					throw new RuntimeException("Couldn't parse line: " + line);
 				}
 			}
 			
