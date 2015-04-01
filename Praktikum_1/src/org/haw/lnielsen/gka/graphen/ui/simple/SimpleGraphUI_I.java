@@ -1,4 +1,4 @@
-package org.haw.lnielsen.gka.graphen.ui;
+package org.haw.lnielsen.gka.graphen.ui.simple;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.jgrapht.Graph;
