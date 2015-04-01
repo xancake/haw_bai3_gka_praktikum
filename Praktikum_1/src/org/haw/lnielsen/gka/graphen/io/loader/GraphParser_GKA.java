@@ -1,4 +1,4 @@
-package org.haw.lnielsen.gka.graphen.loader;
+package org.haw.lnielsen.gka.graphen.io.loader;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

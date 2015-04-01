@@ -11,8 +11,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 import org.haw.lnielsen.gka.graphen.Knoten;
-import org.haw.lnielsen.gka.graphen.loader.GraphParser_GKA;
-import org.haw.lnielsen.gka.graphen.loader.GraphParser_I;
+import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
+import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.jgraph.JGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.JGraphModelAdapter;
@@ -31,16 +31,16 @@ public class SimpleGraphFrameSwing implements SimpleGraphUI_I {
 		}
 		myChooser.setMultiSelectionEnabled(false);
 		myChooser.setFileFilter(new FileFilter() {
-			private static final String FILE_ENDING = ".graph";
+			private static final String FILE_EXTENSION = ".graph";
 			
 			@Override
 			public String getDescription() {
-				return FILE_ENDING;
+				return "Graph files (" + FILE_EXTENSION + ")";
 			}
 			
 			@Override
 			public boolean accept(File f) {
-				return f.getName().endsWith(FILE_ENDING);
+				return f.getName().endsWith(FILE_EXTENSION);
 			}
 		});
 		myFrame = new JFrame("Graph");

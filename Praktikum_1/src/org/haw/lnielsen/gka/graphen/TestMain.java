@@ -1,8 +1,7 @@
 package org.haw.lnielsen.gka.graphen;
 
 import java.io.IOException;
-
-import org.haw.lnielsen.gka.graphen.loader.GraphParser_GKA;
+import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;

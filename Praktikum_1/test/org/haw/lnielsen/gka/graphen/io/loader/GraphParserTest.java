@@ -1,7 +1,8 @@
-package org.haw.lnielsen.gka.graphen.loader;
+package org.haw.lnielsen.gka.graphen.io.loader;
 
 import static org.junit.Assert.*;
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Before;
