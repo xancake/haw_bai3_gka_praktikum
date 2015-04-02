@@ -100,5 +100,6 @@ public abstract class GraphParserTest {
 		assertEquals(20, graph.getEdgeWeight(graph.getEdge(new Knoten("e"), new Knoten("b"))), 0);
 	}
 	
+	
 	protected abstract GraphParser_I createParser();
 }
