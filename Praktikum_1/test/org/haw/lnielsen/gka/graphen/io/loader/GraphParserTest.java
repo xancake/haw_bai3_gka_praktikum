@@ -1,12 +1,15 @@
 package org.haw.lnielsen.gka.graphen.io.loader;
 
 import static org.junit.Assert.*;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.sun.xml.internal.bind.v2.TODO;
 
 public abstract class GraphParserTest {
 	private GraphParser_I myGraphParser;
@@ -53,6 +56,42 @@ public abstract class GraphParserTest {
 		assertEquals(10, graph.getEdgeWeight(graph.getEdge(new Knoten("b"), new Knoten("d"))), 0);
 		assertEquals(20, graph.getEdgeWeight(graph.getEdge(new Knoten("b"), new Knoten("e"))), 0);
 		assertEquals(40, graph.getEdgeWeight(graph.getEdge(new Knoten("d"), new Knoten("e"))), 0);
+	}
+	
+	@Test
+	public void testParseGraph_UndirectedAttributed() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/undirected attributed.graph"));
+		assertEquals(5, graph.vertexSet().size());
+		assertTrue(graph.containsVertex(new Knoten("a")));
+		assertTrue(graph.containsVertex(new Knoten("b")));
+		assertTrue(graph.containsVertex(new Knoten("c")));
+		assertTrue(graph.containsVertex(new Knoten("d")));
+		assertTrue(graph.containsVertex(new Knoten("e")));
+		assertEquals(6, graph.edgeSet().size());
+		assertTrue(graph.containsEdge(new Knoten("a"), new Knoten("a")));
+		assertTrue(graph.containsEdge(new Knoten("a"), new Knoten("c")));
+		assertTrue(graph.containsEdge(new Knoten("c"), new Knoten("e")));
+		assertTrue(graph.containsEdge(new Knoten("c"), new Knoten("d")));
+		assertTrue(graph.containsEdge(new Knoten("d"), new Knoten("e")));
+		// TODO: Attributed		
+	}
+	
+	@Test
+	public void testParseGraph_UndirectedWeightedAttributed() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/undirected weighted attributed.graph"));
+		assertEquals(4, graph.vertexSet().size());
+		assertTrue(graph.containsVertex(new Knoten("a")));
+		assertTrue(graph.containsVertex(new Knoten("b")));
+		assertTrue(graph.containsVertex(new Knoten("c")));
+		assertTrue(graph.containsVertex(new Knoten("d")));
+		assertEquals(3, graph.edgeSet().size());
+		assertTrue(graph.containsEdge(new Knoten("a"), new Knoten("b")));
+		assertTrue(graph.containsEdge(new Knoten("a"), new Knoten("c")));
+		assertTrue(graph.containsEdge(new Knoten("b"), new Knoten("d")));
+		assertEquals(1, graph.getEdgeWeight(graph.getEdge(new Knoten("a"), new Knoten("b"))), 0);
+		assertEquals(2, graph.getEdgeWeight(graph.getEdge(new Knoten("a"), new Knoten("c"))), 0);
+		assertEquals(3, graph.getEdgeWeight(graph.getEdge(new Knoten("b"), new Knoten("d"))), 0);
+		// TODO: Attributed		
 	}
 	
 	@Test
@@ -113,6 +152,7 @@ public abstract class GraphParserTest {
 		assertTrue(graph.containsEdge(new Knoten("b"), new Knoten("c")));
 		assertTrue(graph.containsEdge(new Knoten("c"), new Knoten("b")));
 		assertTrue(graph.containsEdge(new Knoten("c"), new Knoten("d")));
+		// TODO: Attributed
 		//assertEquals(10, graph.getEdgeSource(graph.addEdge(new Knoten("a"), new Knoten("c"))).getAttribute());
 	}
 	
@@ -129,7 +169,8 @@ public abstract class GraphParserTest {
 		assertTrue(graph.containsEdge(new Knoten("b"), new Knoten("c")));
 		assertEquals(10, graph.getEdgeWeight(graph.getEdge(new Knoten("a"), new Knoten("c"))),0);
 		assertEquals(10, graph.getEdgeWeight(graph.getEdge(new Knoten("c"), new Knoten("a"))),0);
-		assertEquals(60, graph.getEdgeWeight(graph.getEdge(new Knoten("b"), new Knoten("c"))),0);		
+		assertEquals(60, graph.getEdgeWeight(graph.getEdge(new Knoten("b"), new Knoten("c"))),0);	
+		//TODO: Attributed
 	}
 	
 	protected abstract GraphParser_I createParser();
