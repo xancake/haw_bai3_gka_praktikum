@@ -63,15 +63,14 @@ public abstract class GraphParserTest {
 		assertTrue(graph.containsVertex(new Knoten("a",10)));
 		assertTrue(graph.containsVertex(new Knoten("b",20)));
 		assertTrue(graph.containsVertex(new Knoten("c",30)));
-		assertTrue(graph.containsVertex(new Knoten("d",40)));
-		assertTrue(graph.containsVertex(new Knoten("e",100)));
-		assertEquals(6, graph.edgeSet().size());
-		assertTrue(graph.containsEdge(new Knoten("a",10), new Knoten("a",10)));
-		assertTrue(graph.containsEdge(new Knoten("a,10"), new Knoten("c",30)));
-		assertTrue(graph.containsEdge(new Knoten("c",30), new Knoten("e",100)));
-		assertTrue(graph.containsEdge(new Knoten("c",30), new Knoten("d",40)));
-		assertTrue(graph.containsEdge(new Knoten("d",40), new Knoten("e",100)));
-		// TODO: Attributed		
+		assertTrue(graph.containsVertex(new Knoten("d",100)));
+		assertTrue(graph.containsVertex(new Knoten("e",40)));
+		assertEquals(5, graph.edgeSet().size());
+		assertTrue(graph.containsEdge(new Knoten("a",10), new Knoten("c",30)));
+		assertTrue(graph.containsEdge(new Knoten("b",20), new Knoten("c",30)));
+		assertTrue(graph.containsEdge(new Knoten("c",30), new Knoten("e",40)));
+		assertTrue(graph.containsEdge(new Knoten("c",30), new Knoten("d",100)));
+		assertTrue(graph.containsEdge(new Knoten("d",100), new Knoten("e",40)));
 	}
 	
 	@Test
@@ -87,8 +86,8 @@ public abstract class GraphParserTest {
 		assertTrue(graph.containsEdge(new Knoten("a", 10), new Knoten("c", 30)));
 		assertTrue(graph.containsEdge(new Knoten("b", 100), new Knoten("d", 20)));
 		assertEquals(1, graph.getEdgeWeight(graph.getEdge(new Knoten("a",10), new Knoten("b",100))), 0);
-		assertEquals(2, graph.getEdgeWeight(graph.getEdge(new Knoten("a",10), new Knoten("c",30))), 0);
-		assertEquals(3, graph.getEdgeWeight(graph.getEdge(new Knoten("b",100), new Knoten("d",20))), 0);	
+		assertEquals(3, graph.getEdgeWeight(graph.getEdge(new Knoten("a",10), new Knoten("c",30))), 0);
+		assertEquals(2, graph.getEdgeWeight(graph.getEdge(new Knoten("b",100), new Knoten("d",20))), 0);	
 	}
 	
 	@Test

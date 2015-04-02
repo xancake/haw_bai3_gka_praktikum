@@ -87,16 +87,16 @@ public class GraphParser_GKA implements GraphParser_I {
 				k1 = new Knoten(elem[0]);
 				k2 = new Knoten(elem[1]);
 			} else if(attributed && !weighted && PDEF_ATTRIBUTED.matcher(line).matches()) {
-				String[] elem = line.split("[" + KANTEN_SEPARATOR + ATTRIBUTE_SEPARATOR + "]");
+				String[] elem = line.split(KANTEN_SEPARATOR + "|" + ATTRIBUTE_SEPARATOR);
 				k1 = new Knoten(elem[0], Integer.parseInt(elem[1]));
 				k2 = new Knoten(elem[2], Integer.parseInt(elem[3]));
 			} else if(!attributed && weighted && PDEF_WEIGHTED.matcher(line).matches()) {
-				String[] elem = line.split(KANTEN_SEPARATOR + "|(" + WEIGHT_SEPARATOR + ")");
+				String[] elem = line.split("(" + WEIGHT_SEPARATOR + ")|" + KANTEN_SEPARATOR);
 				k1 = new Knoten(elem[0]);
 				k2 = new Knoten(elem[1]);
 				weight = Integer.parseInt(elem[2]);
 			} else if(attributed && weighted && PDEF_WEIGHTED_ATTRIBUTED.matcher(line).matches()) {
-				String[] elem = line.split("[" + KANTEN_SEPARATOR + ATTRIBUTE_SEPARATOR + "]|(" + WEIGHT_SEPARATOR + ")");
+				String[] elem = line.split("(" + WEIGHT_SEPARATOR + ")|" + KANTEN_SEPARATOR +  "|" + ATTRIBUTE_SEPARATOR);
 				k1 = new Knoten(elem[0], Integer.parseInt(elem[1]));
 				k2 = new Knoten(elem[2], Integer.parseInt(elem[3]));
 				weight = Integer.parseInt(elem[4]);
