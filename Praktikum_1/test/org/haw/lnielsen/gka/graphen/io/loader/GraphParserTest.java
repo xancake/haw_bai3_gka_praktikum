@@ -100,6 +100,21 @@ public abstract class GraphParserTest {
 		assertEquals(20, graph.getEdgeWeight(graph.getEdge(new Knoten("e"), new Knoten("b"))), 0);
 	}
 	
+	@Test
+	public void testParseGraph_DirectedAttributed() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/directed attributed.graph"));
+		assertEquals(4, graph.vertexSet().size());
+		assertTrue(graph.containsVertex(new Knoten("a")));
+		assertTrue(graph.containsVertex(new Knoten("b")));
+		assertTrue(graph.containsVertex(new Knoten("c")));
+		assertTrue(graph.containsVertex(new Knoten("d")));
+		assertEquals(4, graph.edgeSet().size());
+		assertTrue(graph.containsEdge(new Knoten("a"), new Knoten("c")));
+		assertTrue(graph.containsEdge(new Knoten("b"), new Knoten("c")));
+		assertTrue(graph.containsEdge(new Knoten("c"), new Knoten("b")));
+		assertTrue(graph.containsEdge(new Knoten("c"), new Knoten("d")));
+		//assertEquals(10, graph.getEdgeSource(graph.addEdge(new Knoten("a"), new Knoten("c"))).getAttribute());
+	}
 	
 	protected abstract GraphParser_I createParser();
 }
