@@ -1,14 +1,29 @@
 package org.haw.lnielsen.gka.graphen;
 
+/**
+ * Modellklasse für Knoten von Graphen. Ein Knoten kann einen Namen sowie ein ganzzahliges Attribut besitzen.
+ * Knoten sind immutabel damit es keine Komplikationen mit auf Hashes arbeitenden Datenstrukturen gibt.
+ * 
+ * @author Lars Nielsen
+ */
 public class Knoten {
 	private String myName;
 	private int myAttribut;
 	private boolean bAttributiert;
 	
+	/**
+	 * Initialisiert einen nicht attributierten Knoten mit einem Namen. 
+	 * @param name Der Name des Knotens
+	 */
 	public Knoten(String name) {
 		this(name, 0, false);
 	}
 	
+	/**
+	 * Initialisiert einen attributierten Knoten mit einem Namen und dem Attribut.
+	 * @param name Der Name des Knotens
+	 * @param attribut Das Attribut des Knotens
+	 */
 	public Knoten(String name, int attribut) {
 		this(name, attribut, true);
 	}
@@ -19,14 +34,26 @@ public class Knoten {
 		bAttributiert = attributiert;
 	}
 	
+	/**
+	 * Gibt den Namen des Knotens zurück.
+	 * @return Der Name
+	 */
 	public String getName() {
 		return myName;
 	}
 	
+	/**
+	 * Gibt das Attribut des Knotens zurück.
+	 * @return Das Attribut
+	 */
 	public int getAttribut() {
 		return myAttribut;
 	}
 	
+	/**
+	 * Gibt zurück, ob der Knoten attributiert ist.
+	 * @return {@code true}, wenn der Knoten attributiert ist, ansonsten {@code false}
+	 */
 	public boolean isAttributiert() {
 		return bAttributiert;
 	}

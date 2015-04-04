@@ -15,6 +15,14 @@ import org.jgrapht.graph.ListenableDirectedWeightedGraph;
 import org.jgrapht.graph.ListenableUndirectedGraph;
 import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 
+/**
+ * Die standart Implementation eines Graph-Parsers.
+ * Der Parser unterstützt das in der GKA-Vorlesung vorgegebene Format.
+ * Zusätzlich zum ursprünglichen Format können mittels "//" Kommentare angegeben werden,
+ * die der Parser nicht verarbeitet. Ebenso werden leere Zeilen in der Verarbeitung übersprungen.
+ * 
+ * @author Lars Nielsen
+ */
 public class GraphParser_GKA implements GraphParser_I {
 	private static final String COMMENT_PREFIX      = "//";
 	private static final String DIRECTED            = "#directed";
@@ -34,48 +42,65 @@ public class GraphParser_GKA implements GraphParser_I {
 	
 	private static final int NO_HEADER_FOUND = -1;
 	
+	/**
+	 * Liest einen Graphen aus einem {@link InputStream}.
+	 * Das Format muss den Vorgaben aus der GKA-Vorlesung entsprechen.
+	 * @param in Der InputStream aus dem gelesen wird
+	 * @return Der gelesene Graph
+	 * @throws IOException Wenn ein Fehler beim Zugriff auf den Inputstream auftritt
+	 */
+	@Override
 	public Graph<Knoten, DefaultEdge> parseGraph(InputStream in) throws IOException {
 		try(Scanner scanner = new Scanner(new BufferedInputStream(in))) {
-			int aktuelleZeile = 0;
-			int headerZeile = NO_HEADER_FOUND;
+			int currentLine = 0;
+			int headerLine = NO_HEADER_FOUND;
 			boolean directed = false;
 			boolean attributed = false;
 			boolean weighted = false;
 			
 			String line = null;
-			while(scanner.hasNextLine() && headerZeile == NO_HEADER_FOUND) {
+			while(scanner.hasNextLine() && headerLine == NO_HEADER_FOUND) {
 				line = scanner.nextLine();
-				aktuelleZeile++;
+				currentLine++;
 				
 				if(line.trim().isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 					continue;
 				} else if(PHEADER.matcher(line).matches()) {
-					headerZeile = aktuelleZeile;
+					headerLine = currentLine;
 					directed = line.contains(DIRECTED);
 					attributed = line.contains(ATTRIBUTED);
 					weighted = line.contains(WEIGHTED);
 				} else if(PDEF_SIMPLE.matcher(line).matches()) {
 					break;
 				} else {
-					throw new RuntimeException("Couldn't parse line: " + line);
+					throw new RuntimeException("Couldn't parse line " + currentLine + ": " + line);
 				}
 			}
 			
 			Graph<Knoten, DefaultEdge> graph = createGraph(directed, weighted);
-			if(headerZeile == NO_HEADER_FOUND) {
-				parseDefinitionLine(graph, directed, attributed, weighted, line);
+			if(headerLine == NO_HEADER_FOUND) {
+				parseDefinitionLine(graph, directed, attributed, weighted, line, currentLine);
 			}
 			while(scanner.hasNextLine()) {
 				line = scanner.nextLine();
-				aktuelleZeile++;
-				parseDefinitionLine(graph, directed, attributed, weighted, line);
+				currentLine++;
+				parseDefinitionLine(graph, directed, attributed, weighted, line, currentLine);
 			}
 			
 			return graph;
 		}
 	}
 	
-	private void parseDefinitionLine(Graph<Knoten, DefaultEdge> graph, boolean directed, boolean attributed, boolean weighted, String line) {
+	/**
+	 * Liest und verarbeitet eine Definitions-Zeile. Dies sind die Zeilen, in der 
+	 * @param graph Der Graph, dem die gelesenen Knoten und Kanten hinzugefügt werden soll
+	 * @param directed Ob die Kanten des Graphen gerichtet sind
+	 * @param attributed Ob die Knoten des Graphen attributiert sind
+	 * @param weighted Ob die Kanten des Graphen gewichtet sind
+	 * @param line Die aktuell vom Parser zu verarbeitende Zeile
+	 * @param currentLine Die aktuelle Zeilennummer (wird nur als Zeilenangabe beim Fehlerfall ausgegeben)
+	 */
+	private void parseDefinitionLine(Graph<Knoten, DefaultEdge> graph, boolean directed, boolean attributed, boolean weighted, String line, int currentLine) {
 		if(line.trim().isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 			// skip
 		} else {
@@ -101,7 +126,7 @@ public class GraphParser_GKA implements GraphParser_I {
 				k2 = new Knoten(elem[2], Integer.parseInt(elem[3]));
 				weight = Integer.parseInt(elem[4]);
 			} else {
-				throw new RuntimeException("Couldn't parse definition line: " + line);
+				throw new RuntimeException("Couldn't parse definition line " + currentLine + ": " + line);
 			}
 			graph.addVertex(k1);
 			graph.addVertex(k2);
@@ -112,6 +137,12 @@ public class GraphParser_GKA implements GraphParser_I {
 		}
 	}
 	
+	/**
+	 * Erzeugt den korrekten Graphen für die übergebene Konfiguration.
+	 * @param directed Ob der zu erzeugende Graph gerichtet sein soll
+	 * @param weighted Ob der zu erzeugende Graph gewichtet sein soll
+	 * @return Ein Graph, der der gewünschten Konfiguration entspricht
+	 */
 	private Graph<Knoten, DefaultEdge> createGraph(boolean directed, boolean weighted) {
 		if(directed && weighted) {
 			return new ListenableDirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
