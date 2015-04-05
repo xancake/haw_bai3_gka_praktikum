@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.filechooser.FileFilter;
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
+import org.haw.lnielsen.gka.graphen.ui.swing.GraphFileFilter;
 import org.jgraph.JGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.ext.JGraphModelAdapter;
@@ -31,19 +31,7 @@ public class SimpleGraphFrameSwing implements SimpleGraphUI_I {
 			throw new RuntimeException("Fehler beim Laden des 'loader'-Ordners", e);
 		}
 		myChooser.setMultiSelectionEnabled(false);
-		myChooser.setFileFilter(new FileFilter() {
-			private static final String FILE_EXTENSION = ".graph";
-			
-			@Override
-			public String getDescription() {
-				return "Graph files (" + FILE_EXTENSION + ")";
-			}
-			
-			@Override
-			public boolean accept(File f) {
-				return f.getName().endsWith(FILE_EXTENSION);
-			}
-		});
+		myChooser.setFileFilter(new GraphFileFilter());
 		myFrame = new JFrame("Graph");
 		myFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		myFrame.addWindowListener(new WindowAdapter() {
