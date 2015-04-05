@@ -1,6 +1,5 @@
 package org.haw.lnielsen.gka.graphen;
 
-import java.io.IOException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
@@ -8,7 +7,7 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 public class TestMain {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		DirectedGraph<String, DefaultEdge> graph = new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 		
 		String a = "A";

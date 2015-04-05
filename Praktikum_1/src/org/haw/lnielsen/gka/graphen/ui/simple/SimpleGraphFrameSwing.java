@@ -11,6 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.jgraph.JGraph;
@@ -52,6 +53,8 @@ public class SimpleGraphFrameSwing implements SimpleGraphUI_I {
 					selectGraphFromFile();
 				} catch(FileNotFoundException exc) {
 					exc.printStackTrace();
+				} catch(GraphParseException exc) {
+					exc.printStackTrace();
 				} catch(IOException exc) {
 					exc.printStackTrace();
 				}
@@ -71,7 +74,7 @@ public class SimpleGraphFrameSwing implements SimpleGraphUI_I {
 		myGraphComponent.setModel(modelAdapter);
 	}
 	
-	public void selectGraphFromFile() throws FileNotFoundException, IOException {
+	public void selectGraphFromFile() throws FileNotFoundException, IOException, GraphParseException {
 		switch(myChooser.showOpenDialog(myFrame)) {
 			case JFileChooser.APPROVE_OPTION:
 				GraphParser_I parser = new GraphParser_GKA();

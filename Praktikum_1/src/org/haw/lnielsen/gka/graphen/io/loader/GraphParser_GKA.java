@@ -31,14 +31,16 @@ public class GraphParser_GKA implements GraphParser_I {
 	private static final String ATTRIBUTE_SEPARATOR = ":";
 	private static final String KANTEN_SEPARATOR    = ",";
 	private static final String WEIGHT_SEPARATOR    = "::";
-	private static final String NAME                = "[a-zA-Z_]+[0-9]*";
+	private static final String NAME                = "[a-zA-Z0-9_äÄöÖüÜ]+";
 	private static final String NUMBER              = "[0-9]+";
+	private static final String SPACE               = "\\s*";
 	
 	private static final Pattern PHEADER         = Pattern.compile("(" + DIRECTED + ")?\\s*(" + ATTRIBUTED + ")?\\s*(" + WEIGHTED + ")?");
-	private static final Pattern PDEF_SIMPLE     = Pattern.compile(NAME + KANTEN_SEPARATOR + NAME);
-	private static final Pattern PDEF_WEIGHTED   = Pattern.compile(NAME + KANTEN_SEPARATOR + NAME + WEIGHT_SEPARATOR + NUMBER);
-	private static final Pattern PDEF_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER + KANTEN_SEPARATOR + NAME + ATTRIBUTE_SEPARATOR + NUMBER);
-	private static final Pattern PDEF_WEIGHTED_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER + KANTEN_SEPARATOR + NAME + ATTRIBUTE_SEPARATOR + NUMBER + WEIGHT_SEPARATOR + NUMBER);
+	private static final Pattern PDEF_KNOTEN     = Pattern.compile(NAME);
+	private static final Pattern PDEF_SIMPLE     = Pattern.compile(NAME + SPACE + KANTEN_SEPARATOR + SPACE + NAME);
+	private static final Pattern PDEF_WEIGHTED   = Pattern.compile(NAME + SPACE + KANTEN_SEPARATOR + SPACE + NAME + WEIGHT_SEPARATOR + NUMBER);
+	private static final Pattern PDEF_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER + SPACE + KANTEN_SEPARATOR + SPACE + NAME + ATTRIBUTE_SEPARATOR + NUMBER);
+	private static final Pattern PDEF_WEIGHTED_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER + SPACE + KANTEN_SEPARATOR + SPACE + NAME + ATTRIBUTE_SEPARATOR + NUMBER + WEIGHT_SEPARATOR + NUMBER);
 	
 	private static final int NO_HEADER_FOUND = -1;
 	
@@ -50,7 +52,7 @@ public class GraphParser_GKA implements GraphParser_I {
 	 * @throws IOException Wenn ein Fehler beim Zugriff auf den Inputstream auftritt
 	 */
 	@Override
-	public Graph<Knoten, DefaultEdge> parseGraph(InputStream in) throws IOException {
+	public Graph<Knoten, DefaultEdge> parseGraph(InputStream in) throws GraphParseException, IOException {
 		try(Scanner scanner = new Scanner(new BufferedInputStream(in))) {
 			int currentLine = 0;
 			int headerLine = NO_HEADER_FOUND;
@@ -60,7 +62,7 @@ public class GraphParser_GKA implements GraphParser_I {
 			
 			String line = null;
 			while(scanner.hasNextLine() && headerLine == NO_HEADER_FOUND) {
-				line = scanner.nextLine();
+				line = scanner.nextLine().trim();
 				currentLine++;
 				
 				if(line.trim().isEmpty() || line.startsWith(COMMENT_PREFIX)) {
@@ -73,7 +75,7 @@ public class GraphParser_GKA implements GraphParser_I {
 				} else if(PDEF_SIMPLE.matcher(line).matches()) {
 					break;
 				} else {
-					throw new RuntimeException("Couldn't parse line " + currentLine + ": " + line);
+					throw new GraphParseException("Couldn't parse line " + currentLine + ": " + line);
 				}
 			}
 			
@@ -82,7 +84,7 @@ public class GraphParser_GKA implements GraphParser_I {
 				parseDefinitionLine(graph, directed, attributed, weighted, line, currentLine);
 			}
 			while(scanner.hasNextLine()) {
-				line = scanner.nextLine();
+				line = scanner.nextLine().trim();
 				currentLine++;
 				parseDefinitionLine(graph, directed, attributed, weighted, line, currentLine);
 			}
@@ -100,38 +102,44 @@ public class GraphParser_GKA implements GraphParser_I {
 	 * @param line Die aktuell vom Parser zu verarbeitende Zeile
 	 * @param currentLine Die aktuelle Zeilennummer (wird nur als Zeilenangabe beim Fehlerfall ausgegeben)
 	 */
-	private void parseDefinitionLine(Graph<Knoten, DefaultEdge> graph, boolean directed, boolean attributed, boolean weighted, String line, int currentLine) {
-		if(line.trim().isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+	private void parseDefinitionLine(Graph<Knoten, DefaultEdge> graph, boolean directed, boolean attributed, boolean weighted, String line, int currentLine) throws GraphParseException {
+		if(line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 			// skip
+		} else if(PDEF_KNOTEN.matcher(line).matches()) {
+			graph.addVertex(new Knoten(line.trim()));
 		} else {
-			Knoten k1;
-			Knoten k2;
+			Knoten k1 = null;
+			Knoten k2 = null;
 			int weight = 0;
 			if(!attributed && !weighted && PDEF_SIMPLE.matcher(line).matches()) {
 				String[] elem = line.split(KANTEN_SEPARATOR);
-				k1 = new Knoten(elem[0]);
-				k2 = new Knoten(elem[1]);
+				k1 = new Knoten(elem[0].trim());
+				k2 = new Knoten(elem[1].trim());
 			} else if(attributed && !weighted && PDEF_ATTRIBUTED.matcher(line).matches()) {
 				String[] elem = line.split(KANTEN_SEPARATOR + "|" + ATTRIBUTE_SEPARATOR);
-				k1 = new Knoten(elem[0], Integer.parseInt(elem[1]));
-				k2 = new Knoten(elem[2], Integer.parseInt(elem[3]));
+				k1 = new Knoten(elem[0].trim(), Integer.parseInt(elem[1].trim()));
+				k2 = new Knoten(elem[2].trim(), Integer.parseInt(elem[3].trim()));
 			} else if(!attributed && weighted && PDEF_WEIGHTED.matcher(line).matches()) {
 				String[] elem = line.split("(" + WEIGHT_SEPARATOR + ")|" + KANTEN_SEPARATOR);
-				k1 = new Knoten(elem[0]);
-				k2 = new Knoten(elem[1]);
-				weight = Integer.parseInt(elem[2]);
+				k1 = new Knoten(elem[0].trim());
+				k2 = new Knoten(elem[1].trim());
+				weight = Integer.parseInt(elem[2].trim());
 			} else if(attributed && weighted && PDEF_WEIGHTED_ATTRIBUTED.matcher(line).matches()) {
 				String[] elem = line.split("(" + WEIGHT_SEPARATOR + ")|" + KANTEN_SEPARATOR +  "|" + ATTRIBUTE_SEPARATOR);
-				k1 = new Knoten(elem[0], Integer.parseInt(elem[1]));
-				k2 = new Knoten(elem[2], Integer.parseInt(elem[3]));
-				weight = Integer.parseInt(elem[4]);
+				k1 = new Knoten(elem[0].trim(), Integer.parseInt(elem[1].trim()));
+				k2 = new Knoten(elem[2].trim(), Integer.parseInt(elem[3].trim()));
+				weight = Integer.parseInt(elem[4].trim());
 			} else {
-				throw new RuntimeException("Couldn't parse definition line " + currentLine + ": " + line);
+				throw new GraphParseException("Couldn't parse definition line " + currentLine + ": " + line);
 			}
 			graph.addVertex(k1);
 			graph.addVertex(k2);
 			DefaultEdge edge = graph.addEdge(k1, k2);
 			if(weighted) {
+				if(edge == null) { // Die Kante wurde bereits hinzugefügt
+					edge = graph.getEdge(k1, k2);
+					// TODO: Warnung loggen, da möglicherweise das weight überschrieben wird 
+				}
 				((WeightedGraph<Knoten, DefaultEdge>)graph).setEdgeWeight(edge, weight);
 			}
 		}

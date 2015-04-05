@@ -16,7 +16,8 @@ public interface GraphParser_I {
 	 * Liest einen Graphen aus einem {@link InputStream}.
 	 * @param in Der Inputstream aus dem gelesen wird
 	 * @return Der gelesene Graph
+	 * @throws GraphParseException Wenn ein Fehler beim Verarbeiten des InputStreams auftritt
 	 * @throws IOException Wenn ein Fehler beim Zugriff auf den InputStream auftritt
 	 */
-	Graph<Knoten, DefaultEdge> parseGraph(InputStream in) throws IOException;
+	Graph<Knoten, DefaultEdge> parseGraph(InputStream in) throws GraphParseException, IOException;
 }
