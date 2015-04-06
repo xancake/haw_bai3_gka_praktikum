@@ -181,4 +181,14 @@ public class GraphParser_GKATest {
 	public void testParseGraph_DirectedTypo() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed typo.graph"));
 	}
+	
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_DirectedAttributedTypo() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed attributed typo.graph"));
+	}
+	
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_UndirectedAttributedWeightedTypo() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted typo.graph"));
+	}
 }
