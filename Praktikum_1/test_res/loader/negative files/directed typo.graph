@@ -1,0 +1,5 @@
+#directed
+a,b
+b,c
+b,,d
+a,d
