@@ -1,6 +1,9 @@
 package org.haw.lnielsen.gka.graphen.io.loader;
 
 import static org.junit.Assert.*;
+
+import java.io.IOException;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
@@ -170,5 +173,12 @@ public class GraphParser_GKATest {
 		assertEquals(10, graph.getEdgeWeight(graph.getEdge(new Knoten("a", 20), new Knoten("c", 30))),0);
 		assertEquals(10, graph.getEdgeWeight(graph.getEdge(new Knoten("c", 30), new Knoten("a", 20))),0);
 		assertEquals(60, graph.getEdgeWeight(graph.getEdge(new Knoten("b", 40), new Knoten("c", 30))),0);	
+	}
+	
+	//Negativtests:
+
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_DirectedTypo() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed typo.graph"));
 	}
 }
