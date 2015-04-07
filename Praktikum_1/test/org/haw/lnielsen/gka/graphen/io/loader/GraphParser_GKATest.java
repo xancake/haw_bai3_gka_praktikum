@@ -2,8 +2,6 @@ package org.haw.lnielsen.gka.graphen.io.loader;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
