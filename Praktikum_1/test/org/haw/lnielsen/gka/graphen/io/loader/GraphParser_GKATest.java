@@ -191,4 +191,29 @@ public class GraphParser_GKATest {
 	public void testParseGraph_UndirectedAttributedWeightedTypo() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted typo.graph"));
 	}
+	
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_DirectedWeightedFail() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed weighted fail.graph"));
+	}
+	
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_DirectedAttributedFail() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed attributed fail.graph"));
+	}
+	
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_UndirectedAttributedWeightedFail() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted fail.graph"));
+	}
+	
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_UndirectedWithoutFail() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected without fail.graph"));
+	}
+	
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_EmptyData() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/empty file.graph"));
+	}
 }

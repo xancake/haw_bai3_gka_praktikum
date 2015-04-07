@@ -1,0 +1,3 @@
+#directed #attributed
+a, b::100
+a:10,b::20
