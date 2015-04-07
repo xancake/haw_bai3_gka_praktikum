@@ -1,0 +1,4 @@
+#attributed #weighted
+a:20,b:30::100
+a,c:40::90
+b:30,c:40::20
