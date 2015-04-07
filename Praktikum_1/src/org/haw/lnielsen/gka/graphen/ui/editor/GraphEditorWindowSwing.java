@@ -127,15 +127,22 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	public void showPath(GraphPath<Knoten, DefaultEdge> path) {
 		StringBuilder message = new StringBuilder();
 		if(path != null) {
+			Graph<Knoten, DefaultEdge> graph = path.getGraph();
 			message.append("<html>Der kürzeste Weg von ");
 			message.append(path.getStartVertex());
 			message.append(" nach ");
 			message.append(path.getEndVertex());
 			message.append(" führt über die Kanten <ol>");
+			Knoten start = path.getStartVertex();
 			for(DefaultEdge edge : path.getEdgeList()) {
+				Knoten edgeStart = graph.getEdgeSource(edge);
+				Knoten edgeTarget = graph.getEdgeTarget(edge);
 				message.append("<li>");
-				message.append(edge);
+				message.append(start.equals(edgeStart) ? edgeStart : edgeTarget);
+				message.append(" - ");
+				message.append(start.equals(edgeStart) ? edgeTarget : edgeStart);
 				message.append("</li>");
+				start = (start.equals(edgeStart) ? edgeTarget : edgeStart);
 			}
 			message.append("</ol> und hat ein Gewicht von ");
 			message.append((int)path.getWeight());

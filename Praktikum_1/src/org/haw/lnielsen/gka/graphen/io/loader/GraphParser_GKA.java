@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import org.haw.lnielsen.gka.graphen.GewichteteKante;
+import org.haw.lnielsen.gka.graphen.Kante;
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
@@ -37,6 +39,7 @@ public class GraphParser_GKA implements GraphParser_I {
 	
 	private static final Pattern PHEADER         = Pattern.compile("(" + DIRECTED + ")?\\s*(" + ATTRIBUTED + ")?\\s*(" + WEIGHTED + ")?");
 	private static final Pattern PDEF_KNOTEN     = Pattern.compile(NAME);
+	private static final Pattern PDEF_KNOTEN_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER);
 	private static final Pattern PDEF_SIMPLE     = Pattern.compile(NAME + SPACE + KANTEN_SEPARATOR + SPACE + NAME);
 	private static final Pattern PDEF_WEIGHTED   = Pattern.compile(NAME + SPACE + KANTEN_SEPARATOR + SPACE + NAME + WEIGHT_SEPARATOR + NUMBER);
 	private static final Pattern PDEF_ATTRIBUTED = Pattern.compile(NAME + ATTRIBUTE_SEPARATOR + NUMBER + SPACE + KANTEN_SEPARATOR + SPACE + NAME + ATTRIBUTE_SEPARATOR + NUMBER);
@@ -105,8 +108,11 @@ public class GraphParser_GKA implements GraphParser_I {
 	private void parseDefinitionLine(Graph<Knoten, DefaultEdge> graph, boolean directed, boolean attributed, boolean weighted, String line, int currentLine) throws GraphParseException {
 		if(line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 			// skip
-		} else if(PDEF_KNOTEN.matcher(line).matches()) {
+		} else if(!attributed && PDEF_KNOTEN.matcher(line).matches()) {
 			graph.addVertex(new Knoten(line.trim()));
+		} else if(attributed && PDEF_KNOTEN_ATTRIBUTED.matcher(line).matches()) {
+			String[] elem = line.split(ATTRIBUTE_SEPARATOR);
+			graph.addVertex(new Knoten(elem[0].trim(), Integer.parseInt(elem[1].trim())));
 		} else {
 			Knoten k1 = null;
 			Knoten k2 = null;
@@ -153,13 +159,13 @@ public class GraphParser_GKA implements GraphParser_I {
 	 */
 	private Graph<Knoten, DefaultEdge> createGraph(boolean directed, boolean weighted) {
 		if(directed && weighted) {
-			return new ListenableDirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
+			return new ListenableDirectedWeightedGraph<Knoten, DefaultEdge>(GewichteteKante.class);
 		} else if(directed && !weighted) {
-			return new ListenableDirectedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
+			return new ListenableDirectedGraph<Knoten, DefaultEdge>(Kante.class);
 		} else if(!directed && weighted) {
-			return new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
+			return new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(GewichteteKante.class);
 		} else {
-			return new ListenableUndirectedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
+			return new ListenableUndirectedGraph<Knoten, DefaultEdge>(Kante.class);
 		}
 	}
 }
