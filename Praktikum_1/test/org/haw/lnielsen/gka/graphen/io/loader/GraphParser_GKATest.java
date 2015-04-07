@@ -179,25 +179,42 @@ public class GraphParser_GKATest {
 
 	//Gerichtete Graphen:
 	
+	/*
+	 * Kein Gewicht Attribut: zwei Kommata statt einem zwischen Knoten
+	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_DirectedTypo() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed typo.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed typo.graph"));
 	}
-	
+	/*
+	 * Attributiert/Gewichtet: wird kein Attribut zugeordnet
+	 */
 	@Test(expected=GraphParseException.class)
-	public void testParseGraph_DirectedAttributedTypo() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed attributed typo.graph"));
+	public void testParseGraph_DirectedAttributedWeightedFail() throws Exception {
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed attributed weighted fail.graph"));
+	}
+	/*
+	 * Attributiert/Gewichtet: wird kein Gewicht zugeordnet
+	 */
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_DirectedAttributedWeightedFail2() throws Exception {
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed attributed weighted fail 2.graph"));
 	}
 	
-	
+	/*
+	 * Gewichtet: Attribut statt Gewicht angehängt
+	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_DirectedWeightedFail() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed weighted fail.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed weighted fail.graph"));
 	}
 	
+	/*
+	 * Attributiert: Statt Attribut Gewicht hinzugefügt
+	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_DirectedAttributedFail() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed attributed fail.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed attributed fail.graph"));
 	}
 	
 	//Ungerichtete Graphen
@@ -207,7 +224,7 @@ public class GraphParser_GKATest {
 	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_UndirectedAttributedWeightedFail() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted fail.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted fail.graph"));
 	}
 	
 	/*
@@ -215,7 +232,7 @@ public class GraphParser_GKATest {
 	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_UndirectedAttributedWeightedFail2() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted fail2.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted fail2.graph"));
 	}
 	
 	/*
@@ -223,20 +240,20 @@ public class GraphParser_GKATest {
 	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_UndirectedFailWeighted() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected fail weighted.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected fail weighted.graph"));
 	}
 	/*
 	 * Nicht Attributiert/Nicht Gewichtet: Attribut wird trotzdem an einem Knoten eingefügt
 	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_UndirectedFailAttributed() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected fail attributed.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected fail attributed.graph"));
 	}
 	/*
 	 * Attributiert/Gewichtet: Statt zwei Doppelpunkten, wurde nur einer gemacht beim Kantengewicht
 	 */
 	@Test(expected=GraphParseException.class)
 	public void testParseGraph_UndirectedAttributedWeightedTypo() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted typo.graph"));
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted typo.graph"));
 	}
 }
