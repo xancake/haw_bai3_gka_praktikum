@@ -24,6 +24,11 @@ import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.DefaultEdge;
 import de.xancake.ui.mvc.window.SwingWindowView_A;
 
+/**
+ * Die Swing-Implementation des Hauptfensters der Benutzeroberfläche.
+ * 
+ * @author Lars Nielsen
+ */
 public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I> implements GraphEditorWindow_I {
 	private JButton myNewButton;
 	private JButton myLoadButton;

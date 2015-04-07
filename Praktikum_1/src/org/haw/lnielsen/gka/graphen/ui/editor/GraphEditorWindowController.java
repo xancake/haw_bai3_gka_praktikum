@@ -17,6 +17,11 @@ import org.jgrapht.graph.DefaultEdge;
 import de.xancake.ui.mvc.ControllerListener_I;
 import de.xancake.ui.mvc.window.WindowController_A;
 
+/**
+ * Der Controller für das Hauptfenster der Benutzeroberfläche.
+ * 
+ * @author Lars Nielsen
+ */
 public class GraphEditorWindowController extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I> implements GraphEditorWindowListener_I {
 	private GraphParser_I myParser;
 	
