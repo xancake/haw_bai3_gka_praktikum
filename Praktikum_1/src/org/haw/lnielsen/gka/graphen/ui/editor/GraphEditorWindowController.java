@@ -100,7 +100,8 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 		start.setzeWert(i);
 		for(int j = 0;j<=getModel().vertexSet().size();j++){
 			if(iterator.hasNext()){
-				iterator.next().setzeWert(i+1);
+				i++;
+				iterator.next().setzeWert(i);
 			}
 		}
 	}
