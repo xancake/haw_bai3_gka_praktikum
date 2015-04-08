@@ -18,9 +18,9 @@ import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 
 /**
  * Die standart Implementation eines Graph-Parsers.
- * Der Parser unterstützt das in der GKA-Vorlesung vorgegebene Format.
- * Zusätzlich zum ursprünglichen Format können mittels "//" Kommentare angegeben werden,
- * die der Parser nicht verarbeitet. Ebenso werden leere Zeilen in der Verarbeitung übersprungen.
+ * Der Parser unterstï¿½tzt das in der GKA-Vorlesung vorgegebene Format.
+ * Zusï¿½tzlich zum ursprï¿½nglichen Format kï¿½nnen mittels "//" Kommentare angegeben werden,
+ * die der Parser nicht verarbeitet. Ebenso werden leere Zeilen in der Verarbeitung ï¿½bersprungen.
  * 
  * @author Lars Nielsen
  */
@@ -32,7 +32,7 @@ public class GraphParser_GKA implements GraphParser_I {
 	private static final String ATTRIBUTE_SEPARATOR = ":";
 	private static final String KANTEN_SEPARATOR    = ",";
 	private static final String WEIGHT_SEPARATOR    = "::";
-	private static final String NAME                = "[a-zA-Z0-9_äÄöÖüÜ]+";
+	private static final String NAME                = "[a-zA-Z0-9_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+";
 	private static final String NUMBER              = "[0-9]+";
 	private static final String SPACE               = "\\s*";
 	
@@ -97,7 +97,7 @@ public class GraphParser_GKA implements GraphParser_I {
 	
 	/**
 	 * Liest und verarbeitet eine Definitions-Zeile. Dies sind die Zeilen, in der 
-	 * @param graph Der Graph, dem die gelesenen Knoten und Kanten hinzugefügt werden soll
+	 * @param graph Der Graph, dem die gelesenen Knoten und Kanten hinzugefï¿½gt werden soll
 	 * @param directed Ob die Kanten des Graphen gerichtet sind
 	 * @param attributed Ob die Knoten des Graphen attributiert sind
 	 * @param weighted Ob die Kanten des Graphen gewichtet sind
@@ -105,7 +105,9 @@ public class GraphParser_GKA implements GraphParser_I {
 	 * @param currentLine Die aktuelle Zeilennummer (wird nur als Zeilenangabe beim Fehlerfall ausgegeben)
 	 */
 	private void parseDefinitionLine(Graph<Knoten, DefaultEdge> graph, boolean directed, boolean attributed, boolean weighted, String line, int currentLine) throws GraphParseException {
-		if(line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+		if(line == null){
+			throw new GraphParseException("File is empty");
+		} else if(line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 			// skip
 		} else if(!attributed && PDEF_KNOTEN.matcher(line).matches()) {
 			graph.addVertex(new Knoten(line.trim()));
@@ -141,9 +143,9 @@ public class GraphParser_GKA implements GraphParser_I {
 			graph.addVertex(k2);
 			DefaultEdge edge = graph.addEdge(k1, k2);
 			if(weighted) {
-				if(edge == null) { // Die Kante wurde bereits hinzugefügt
+				if(edge == null) { // Die Kante wurde bereits hinzugefï¿½gt
 					edge = graph.getEdge(k1, k2);
-					// TODO: Warnung loggen, da möglicherweise das weight überschrieben wird 
+					// TODO: Warnung loggen, da mï¿½glicherweise das weight ï¿½berschrieben wird 
 				}
 				((WeightedGraph<Knoten, DefaultEdge>)graph).setEdgeWeight(edge, weight);
 			}
@@ -151,10 +153,10 @@ public class GraphParser_GKA implements GraphParser_I {
 	}
 	
 	/**
-	 * Erzeugt den korrekten Graphen für die übergebene Konfiguration.
+	 * Erzeugt den korrekten Graphen fï¿½r die ï¿½bergebene Konfiguration.
 	 * @param directed Ob der zu erzeugende Graph gerichtet sein soll
 	 * @param weighted Ob der zu erzeugende Graph gewichtet sein soll
-	 * @return Ein Graph, der der gewünschten Konfiguration entspricht
+	 * @return Ein Graph, der der gewï¿½nschten Konfiguration entspricht
 	 */
 	private Graph<Knoten, DefaultEdge> createGraph(boolean directed, boolean weighted) {
 		if(directed && weighted) {
