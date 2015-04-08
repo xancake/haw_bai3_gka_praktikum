@@ -98,11 +98,10 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 		BreadthFirstIterator<Knoten, DefaultEdge> iterator = new BreadthFirstIterator<Knoten, DefaultEdge>(getModel(), start);
 		int i = 0;
 		start.setzeWert(i);
-		for(int j = 0;j<=getModel().vertexSet().size();j++){
-			if(iterator.hasNext()){
-				i++;
-				iterator.next().setzeWert(i);
-			}
+		while(iterator.hasNext()){
+			i++;
+			iterator.next().setzeWert(i);			
 		}
+		end.getWert();
 	}
 }
