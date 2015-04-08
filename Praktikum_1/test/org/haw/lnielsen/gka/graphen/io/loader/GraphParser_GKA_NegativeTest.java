@@ -99,4 +99,36 @@ public class GraphParser_GKA_NegativeTest {
 	public void testParseGraph_UndirectedAttributedWeightedTypo() throws Exception {
 		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/undirected attributed weighted typo.graph"));
 	}
+	
+	/**
+	 * Schreibfehler in der Headerzeile bei Attributed
+	 */
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_AttributedHeaderTypo() throws Exception {
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/attributed header typo.graph"));
+	}
+	
+	/**
+	 * Schreibfehler in der Headerzeile bei Weighted
+	 */
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_WeightedHeaderTypo() throws Exception {
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/weighted header typo.graph"));
+	}
+	
+	/**
+	 * Schreibfehler in der Headerzeile bei Directed
+	 */
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_DirectedHeaderTypo() throws Exception {
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/directed header typo.graph"));
+	}
+	
+	/**
+	 * Leere .graph Datei
+	 */
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_EmptyFile() throws Exception {
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/empty file.graph"));
+	}
 }
