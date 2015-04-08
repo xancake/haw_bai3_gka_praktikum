@@ -10,7 +10,6 @@ public class Knoten {
 	private String myName;
 	private int myAttribut;
 	private boolean bAttributiert;
-	private int myWert;
 	
 	/**
 	 * Initialisiert einen nicht attributierten Knoten mit einem Namen. 
@@ -62,22 +61,6 @@ public class Knoten {
 	@Override
 	public String toString() {
 		return getName() + (isAttributiert() ? " (" + getAttribut() + ")" : "");
-	}
-	
-	/**
-	 * Zeichnet den Knoten mit einem Wert aus, den man für die BFS braucht
-	 * @param der ausgezeichnete Wert
-	 */
-	public void setzeWert(int wert){
-		myWert = wert;
-	}
-	
-	/**
-	 * Gibt den ausgezeichneten Wert zurück
-	 * return der Ausgezeichnete Wert
-	 */
-	public int getWert(){
-		return myWert;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package org.haw.lnielsen.gka.graphen.ui.editor;
 
+import java.util.List;
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -17,4 +18,11 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	 * @param path Der anzuzeigende Pfad
 	 */
 	void showPath(GraphPath<Knoten, DefaultEdge> path);
+	
+	/**
+	 * Zeigt die Traversierung des Graphens an, in der Reihenfolge,
+	 * in der die Knoten durchlaufen wurden.
+	 * @param trace Die Knoten in der Reihenfolge, in der sie durchlaufen wurden
+	 */
+	void showTraverseTrace(List<Knoten> trace);
 }

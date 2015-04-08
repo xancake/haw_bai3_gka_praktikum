@@ -34,4 +34,10 @@ public interface GraphEditorWindowListener_I extends WindowViewListener_I {
 	 * @param end Der Zielknoten
 	 */
 	void onCalculateShortestPath(Knoten start, Knoten end);
+	
+	/**
+	 * Wird aufgerufen, wenn die Aktion zum Traversieren des Graphens aufgerufen wird.
+	 * @param start Der Knoten von dem aus der Graph traversiert werden soll
+	 */
+	void onTraverse(Knoten start);
 }

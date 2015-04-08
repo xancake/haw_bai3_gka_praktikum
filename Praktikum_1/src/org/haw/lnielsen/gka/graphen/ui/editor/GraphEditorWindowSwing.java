@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	private JButton myLoadButton;
 	private JButton myStoreButton;
 	private JButton myShortestPathButton;
+	private JButton myTraverseButton;
 	
 	private JFileChooser myChooser;
 	private JGraph myGraphComponent;
@@ -57,6 +59,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myLoadButton = new JButton("Laden");
 		myStoreButton = new JButton("Speichern");
 		myShortestPathButton = new JButton("Kürzester Weg");
+		myTraverseButton = new JButton("Traversieren");
 	}
 	
 	@Override
@@ -73,6 +76,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		buttonPanel.add(myStoreButton);
 		buttonPanel.add(Box.createHorizontalStrut(11));
 		buttonPanel.add(myShortestPathButton);
+		buttonPanel.add(myTraverseButton);
 		buttonPanel.add(Box.createHorizontalGlue());
 		
 		content.add(buttonPanel, BorderLayout.PAGE_START);
@@ -115,7 +119,20 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 					Knoten end = (Knoten)((DefaultGraphCell)selectedElements[1]).getUserObject();
 					myListener.onCalculateShortestPath(start, end);
 				} else {
-					JOptionPane.showMessageDialog(myFrame, "Es kann nur der k�rzeste Pfad zwischen zwei Knoten berechnet werden. Bitte w�hlen Sie genau zwei Knoten aus (Strg+Mausklick).", "Fehler", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(myFrame, "Es kann nur der kürzeste Pfad zwischen zwei Knoten berechnet werden. Bitte wählen Sie genau zwei Knoten aus (Strg+Mausklick).", "Fehler", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		myTraverseButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GraphSelectionModel selectionModel = myGraphComponent.getSelectionModel();
+				if(selectionModel.getSelectionCount() == 1) {
+					Object selectedElement = selectionModel.getSelectionCell();
+					Knoten start = (Knoten)((DefaultGraphCell)selectedElement).getUserObject();
+					myListener.onTraverse(start);
+				} else {
+					JOptionPane.showMessageDialog(myFrame, "Es kann nur ein Knoten als Startknoten ausgewählt werden. Bitte wählen Sie genau einen Knoten aus.", "Fehler", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -160,5 +177,18 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			message.append(selectedElements[1]);
 		}
 		JOptionPane.showMessageDialog(myFrame, message.toString(), "Kürzester Weg", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	@Override
+	public void showTraverseTrace(List<Knoten> trace) {
+		StringBuilder message = new StringBuilder();
+		message.append("<html>Der Graph wurde in folgender Knotenreihenfolge traversiert:<ol>");
+		for(Knoten k : trace) {
+			message.append("<li>");
+			message.append(k);
+			message.append("</li>");
+		}
+		message.append("</ol></html>");
+		JOptionPane.showMessageDialog(myFrame, message.toString(), "Traversierung", JOptionPane.PLAIN_MESSAGE);
 	}
 }

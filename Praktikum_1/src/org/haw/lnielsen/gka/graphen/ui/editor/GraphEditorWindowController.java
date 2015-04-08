@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
@@ -17,7 +17,6 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
-
 import de.xancake.ui.mvc.ControllerListener_I;
 import de.xancake.ui.mvc.window.WindowController_A;
 
@@ -83,6 +82,16 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 	}
 	
 	@Override
+	public void onTraverse(Knoten start) {
+		BreadthFirstIterator<Knoten, DefaultEdge> iterator = new BreadthFirstIterator<Knoten, DefaultEdge>(getModel(), start);
+		List<Knoten> knotenList = new ArrayList<Knoten>(getModel().vertexSet().size());
+		while(iterator.hasNext()) {
+			knotenList.add(iterator.next());
+		}
+		getView().showTraverseTrace(knotenList);
+	}
+	
+	@Override
 	protected GraphEditorWindowListener_I getViewListener() {
 		return this;
 	}
@@ -92,16 +101,5 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {}
 		new GraphEditorWindowController().show();
-	}
-	
-	public void ShortestPath(Knoten start, Knoten end) {
-		BreadthFirstIterator<Knoten, DefaultEdge> iterator = new BreadthFirstIterator<Knoten, DefaultEdge>(getModel(), start);
-		int i = 0;
-		start.setzeWert(i);
-		while(iterator.hasNext()){
-			i++;
-			iterator.next().setzeWert(i);			
-		}
-		end.getWert();
 	}
 }
