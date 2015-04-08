@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
@@ -14,11 +16,13 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.traverse.BreadthFirstIterator;
+
 import de.xancake.ui.mvc.ControllerListener_I;
 import de.xancake.ui.mvc.window.WindowController_A;
 
 /**
- * Der Controller für das Hauptfenster der Benutzeroberfläche.
+ * Der Controller fï¿½r das Hauptfenster der Benutzeroberflï¿½che.
  * 
  * @author Lars Nielsen
  */
@@ -88,5 +92,16 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {}
 		new GraphEditorWindowController().show();
+	}
+	
+	public void ShortestPath(Knoten start, Knoten end) {
+		BreadthFirstIterator<Knoten, DefaultEdge> iterator = new BreadthFirstIterator<Knoten, DefaultEdge>(getModel(), start);
+		int i = 0;
+		start.setzeWert(i);
+		for(int j = 0;j<=getModel().vertexSet().size();j++){
+			if(iterator.hasNext()){
+				iterator.next().setzeWert(i+1);
+			}
+		}
 	}
 }

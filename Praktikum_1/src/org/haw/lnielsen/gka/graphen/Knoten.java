@@ -1,7 +1,7 @@
 package org.haw.lnielsen.gka.graphen;
 
 /**
- * Modellklasse für Knoten von Graphen. Ein Knoten kann einen Namen sowie ein ganzzahliges Attribut besitzen.
+ * Modellklasse fï¿½r Knoten von Graphen. Ein Knoten kann einen Namen sowie ein ganzzahliges Attribut besitzen.
  * Knoten sind immutabel damit es keine Komplikationen mit auf Hashes arbeitenden Datenstrukturen gibt.
  * 
  * @author Lars Nielsen
@@ -10,6 +10,7 @@ public class Knoten {
 	private String myName;
 	private int myAttribut;
 	private boolean bAttributiert;
+	private int myWert;
 	
 	/**
 	 * Initialisiert einen nicht attributierten Knoten mit einem Namen. 
@@ -35,7 +36,7 @@ public class Knoten {
 	}
 	
 	/**
-	 * Gibt den Namen des Knotens zurück.
+	 * Gibt den Namen des Knotens zurï¿½ck.
 	 * @return Der Name
 	 */
 	public String getName() {
@@ -43,7 +44,7 @@ public class Knoten {
 	}
 	
 	/**
-	 * Gibt das Attribut des Knotens zurück.
+	 * Gibt das Attribut des Knotens zurï¿½ck.
 	 * @return Das Attribut
 	 */
 	public int getAttribut() {
@@ -51,7 +52,7 @@ public class Knoten {
 	}
 	
 	/**
-	 * Gibt zurück, ob der Knoten attributiert ist.
+	 * Gibt zurï¿½ck, ob der Knoten attributiert ist.
 	 * @return {@code true}, wenn der Knoten attributiert ist, ansonsten {@code false}
 	 */
 	public boolean isAttributiert() {
@@ -61,6 +62,22 @@ public class Knoten {
 	@Override
 	public String toString() {
 		return getName() + (isAttributiert() ? " (" + getAttribut() + ")" : "");
+	}
+	
+	/**
+	 * Zeichnet den Knoten mit einem Wert aus, den man fÃ¼r die BFS braucht
+	 * @param der ausgezeichnete Wert
+	 */
+	public void setzeWert(int wert){
+		myWert = wert;
+	}
+	
+	/**
+	 * Gibt den ausgezeichneten Wert zurÃ¼ck
+	 * return der Ausgezeichnete Wert
+	 */
+	public int getWert(){
+		return myWert;
 	}
 	
 	@Override
