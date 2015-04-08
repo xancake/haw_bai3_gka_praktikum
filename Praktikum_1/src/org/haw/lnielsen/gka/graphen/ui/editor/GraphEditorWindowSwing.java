@@ -25,7 +25,7 @@ import org.jgrapht.graph.DefaultEdge;
 import de.xancake.ui.mvc.window.SwingWindowView_A;
 
 /**
- * Die Swing-Implementation des Hauptfensters der Benutzeroberfläche.
+ * Die Swing-Implementation des Hauptfensters der BenutzeroberflÃ¤che.
  * 
  * @author Lars Nielsen
  */
@@ -56,7 +56,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myNewButton = new JButton("Neu...");
 		myLoadButton = new JButton("Laden");
 		myStoreButton = new JButton("Speichern");
-		myShortestPathButton = new JButton("Kürzester Weg");
+		myShortestPathButton = new JButton("KÃ¼rzester Weg");
 	}
 	
 	@Override
@@ -115,7 +115,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 					Knoten end = (Knoten)((DefaultGraphCell)selectedElements[1]).getUserObject();
 					myListener.onCalculateShortestPath(start, end);
 				} else {
-					JOptionPane.showMessageDialog(myFrame, "Es kann nur der kürzeste Pfad zwischen zwei Knoten berechnet werden. Bitte wählen Sie genau zwei Knoten aus (Strg+Mausklick).", "Fehler", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(myFrame, "Es kann nur der kï¿½rzeste Pfad zwischen zwei Knoten berechnet werden. Bitte wï¿½hlen Sie genau zwei Knoten aus (Strg+Mausklick).", "Fehler", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -133,11 +133,11 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		StringBuilder message = new StringBuilder();
 		if(path != null) {
 			Graph<Knoten, DefaultEdge> graph = path.getGraph();
-			message.append("<html>Der kürzeste Weg von ");
+			message.append("<html>Der kÃ¼rzeste Weg von ");
 			message.append(path.getStartVertex());
 			message.append(" nach ");
 			message.append(path.getEndVertex());
-			message.append(" führt über die Kanten <ol>");
+			message.append(" fÃ¼hrt Ã¼ber die Kanten <ol>");
 			Knoten start = path.getStartVertex();
 			for(DefaultEdge edge : path.getEdgeList()) {
 				Knoten edgeStart = graph.getEdgeSource(edge);
@@ -159,6 +159,6 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			message.append(" nach ");
 			message.append(selectedElements[1]);
 		}
-		JOptionPane.showMessageDialog(myFrame, message.toString(), "Kürzester Weg", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(myFrame, message.toString(), "KÃ¼rzester Weg", JOptionPane.PLAIN_MESSAGE);
 	}
 }

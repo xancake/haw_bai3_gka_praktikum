@@ -22,7 +22,7 @@ import de.xancake.ui.mvc.ControllerListener_I;
 import de.xancake.ui.mvc.window.WindowController_A;
 
 /**
- * Der Controller f�r das Hauptfenster der Benutzeroberfl�che.
+ * Der Controller für das Hauptfenster der Benutzeroberfläche.
  * 
  * @author Lars Nielsen
  */

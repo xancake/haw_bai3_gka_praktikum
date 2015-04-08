@@ -18,9 +18,9 @@ import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 
 /**
  * Die standart Implementation eines Graph-Parsers.
- * Der Parser unterst�tzt das in der GKA-Vorlesung vorgegebene Format.
- * Zus�tzlich zum urspr�nglichen Format k�nnen mittels "//" Kommentare angegeben werden,
- * die der Parser nicht verarbeitet. Ebenso werden leere Zeilen in der Verarbeitung �bersprungen.
+ * Der Parser unterstützt das in der GKA-Vorlesung vorgegebene Format.
+ * Zusätzlich zum ursprünglichen Format können mittels "//" Kommentare angegeben werden,
+ * die der Parser nicht verarbeitet. Ebenso werden leere Zeilen in der Verarbeitung übersprungen.
  * 
  * @author Lars Nielsen
  */
@@ -32,7 +32,7 @@ public class GraphParser_GKA implements GraphParser_I {
 	private static final String ATTRIBUTE_SEPARATOR = ":";
 	private static final String KANTEN_SEPARATOR    = ",";
 	private static final String WEIGHT_SEPARATOR    = "::";
-	private static final String NAME                = "[a-zA-Z0-9_������]+";
+	private static final String NAME                = "[a-zA-Z0-9_ÄäÖöÜü]+";
 	private static final String NUMBER              = "[0-9]+";
 	private static final String SPACE               = "\\s*";
 	
@@ -101,8 +101,8 @@ public class GraphParser_GKA implements GraphParser_I {
 	}
 	
 	/**
-	 * Liest und verarbeitet eine Definitions-Zeile. Dies sind die Zeilen, in der 
-	 * @param graph Der Graph, dem die gelesenen Knoten und Kanten hinzugef�gt werden soll
+	 * Liest und verarbeitet eine Definitions-Zeile.
+	 * @param graph Der Graph, dem die gelesenen Knoten und Kanten hinzugefügt werden soll
 	 * @param directed Ob die Kanten des Graphen gerichtet sind
 	 * @param attributed Ob die Knoten des Graphen attributiert sind
 	 * @param weighted Ob die Kanten des Graphen gewichtet sind
@@ -156,10 +156,10 @@ public class GraphParser_GKA implements GraphParser_I {
 	}
 	
 	/**
-	 * Erzeugt den korrekten Graphen f�r die �bergebene Konfiguration.
+	 * Erzeugt den korrekten Graphen für die übergebene Konfiguration.
 	 * @param directed Ob der zu erzeugende Graph gerichtet sein soll
 	 * @param weighted Ob der zu erzeugende Graph gewichtet sein soll
-	 * @return Ein Graph, der der gew�nschten Konfiguration entspricht
+	 * @return Ein Graph, der der gewünschten Konfiguration entspricht
 	 */
 	private Graph<Knoten, DefaultEdge> createGraph(boolean directed, boolean weighted) {
 		if(directed && weighted) {

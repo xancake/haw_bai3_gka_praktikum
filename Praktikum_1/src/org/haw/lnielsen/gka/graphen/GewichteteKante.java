@@ -4,9 +4,9 @@ import org.jgraph.JGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 /**
- * Modellklasse für gewichtete Kanten. Diese Klasse existiert allein dazu,
- * die {@link DefaultWeightedEdge#toString()}-Methode so zu überschreiben,
- * dass nur das Gewicht der Kante zurückgegeben wird. Dies wird für die
+ * Modellklasse fÃ¼r gewichtete Kanten. Diese Klasse existiert allein dazu,
+ * die {@link DefaultWeightedEdge#toString()}-Methode so zu Ã¼berschreiben,
+ * dass nur das Gewicht der Kante zurÃ¼ckgegeben wird. Dies wird fÃ¼r die
  * Darstellung in einem {@link JGraph} verwendet, damit dieser das Gewicht
  * auch anzeigt.
  * 

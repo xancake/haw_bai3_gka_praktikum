@@ -4,12 +4,12 @@ import org.jgraph.JGraph;
 import org.jgrapht.graph.DefaultEdge;
 
 /**
- * Modellklasse für (ungewichtete) Kanten. Diese Klasse existiert allein dazu,
- * die {@link DefaultEdge#toString()}-Methode so zu überschreiben, dass sie
- * einen Leerstring zurückgibt. Dies wird für die Darstellung in einem
- * {@link JGraph} verwendet, damit der Graph nicht so überladen aussieht.
+ * Modellklasse fÃ¼r (ungewichtete) Kanten. Diese Klasse existiert allein dazu,
+ * die {@link DefaultEdge#toString()}-Methode so zu Ã¼berschreiben, dass sie
+ * einen Leerstring zurÃ¼ckgibt. Dies wird fÃ¼r die Darstellung in einem
+ * {@link JGraph} verwendet, damit der Graph nicht so Ã¼berladen aussieht.
  * In der Standardimplementation aus {@link DefaultEdge} werden ohnehin nur
- * die zugehörigen Knoten ausgegeben, was in der GUI keinen Mehrwert bringt.
+ * die zugehÃ¶rigen Knoten ausgegeben, was in der GUI keinen Mehrwert bringt.
  * 
  * @author Lars Nielsen
  */

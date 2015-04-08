@@ -7,7 +7,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
 /**
- * Die Schnittstelle für einen Graph-Parser.
+ * Die Schnittstelle fÃ¼r einen Graph-Parser.
  * 
  * @author Lars Nielsen
  */

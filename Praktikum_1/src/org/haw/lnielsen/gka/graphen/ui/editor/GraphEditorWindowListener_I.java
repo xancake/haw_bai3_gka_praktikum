@@ -5,7 +5,7 @@ import org.haw.lnielsen.gka.graphen.Knoten;
 import de.xancake.ui.mvc.window.WindowViewListener_I;
 
 /**
- * Schnittstelle für die Benutzerinteraktionen auf dem Hauptfenster der Benutzeroberfläche.
+ * Schnittstelle fÃ¼r die Benutzerinteraktionen auf dem Hauptfenster der BenutzeroberflÃ¤che.
  * 
  * @author Lars Nielsen
  */
@@ -28,7 +28,7 @@ public interface GraphEditorWindowListener_I extends WindowViewListener_I {
 	void onStoreGraph(File file);
 	
 	/**
-	 * Wird aufgerufen, wenn die Aktion zum berechnen des kürzesten Pfades zwischen zwei Knoten
+	 * Wird aufgerufen, wenn die Aktion zum berechnen des kÃ¼rzesten Pfades zwischen zwei Knoten
 	 * aufgerufen wird.
 	 * @param start Der Startknoten
 	 * @param end Der Zielknoten
