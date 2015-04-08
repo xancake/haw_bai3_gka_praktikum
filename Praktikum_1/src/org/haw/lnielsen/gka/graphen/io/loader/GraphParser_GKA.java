@@ -81,6 +81,11 @@ public class GraphParser_GKA implements GraphParser_I {
 				}
 			}
 			
+			if(line == null) {
+				// Es wurde keine Headerzeile gefunden und dabei das Dateiende erreicht
+				throw new GraphParseException("File is empty");
+			}
+			
 			Graph<Knoten, DefaultEdge> graph = createGraph(directed, weighted);
 			if(headerLine == NO_HEADER_FOUND) {
 				parseDefinitionLine(graph, directed, attributed, weighted, line, currentLine);
@@ -105,9 +110,7 @@ public class GraphParser_GKA implements GraphParser_I {
 	 * @param currentLine Die aktuelle Zeilennummer (wird nur als Zeilenangabe beim Fehlerfall ausgegeben)
 	 */
 	private void parseDefinitionLine(Graph<Knoten, DefaultEdge> graph, boolean directed, boolean attributed, boolean weighted, String line, int currentLine) throws GraphParseException {
-		if(line == null){
-			throw new GraphParseException("File is empty");
-		} else if(line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+		if(line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 			// skip
 		} else if(!attributed && PDEF_KNOTEN.matcher(line).matches()) {
 			graph.addVertex(new Knoten(line.trim()));
