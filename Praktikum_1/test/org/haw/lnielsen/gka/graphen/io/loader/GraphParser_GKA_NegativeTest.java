@@ -131,4 +131,12 @@ public class GraphParser_GKA_NegativeTest {
 	public void testParseGraph_EmptyFile() throws Exception {
 		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/empty file.graph"));
 	}
+	
+	/**
+	 * Mehr als eine Headerzeile
+	 */
+	@Test(expected=GraphParseException.class)
+	public void testParseGraph_TwoHeaderlines() throws Exception {
+		myGraphParser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/negative files/two headerlines.graph"));
+	}
 }

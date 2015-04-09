@@ -1,0 +1,6 @@
+#directed 
+a,b
+c,d
+e,f
+#directed #attributed
+e,a
