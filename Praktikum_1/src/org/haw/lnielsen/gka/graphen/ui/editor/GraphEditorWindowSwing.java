@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.ui.swing.GraphFileFilter;
 import org.jgraph.JGraph;
@@ -23,6 +25,11 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.DefaultEdge;
+
+import com.jgraph.layout.JGraphFacade;
+import com.jgraph.layout.JGraphLayout;
+import com.jgraph.layout.graph.JGraphSimpleLayout;
+
 import de.xancake.ui.mvc.window.SwingWindowView_A;
 
 /**
@@ -143,6 +150,13 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myGraphComponent.clearSelection();
 		myGraphComponent.setModel(model != null ? new JGraphModelAdapter<Knoten, DefaultEdge>(model) : null);
 		myGraphComponent.setEnabled(model != null);
+		
+		if(model != null) {
+			JGraphFacade facade = new JGraphFacade(myGraphComponent);
+			JGraphLayout layout = new JGraphSimpleLayout(JGraphSimpleLayout.TYPE_CIRCLE);
+			layout.run(facade);
+			myGraphComponent.getGraphLayoutCache().edit(facade.createNestedMap(true, true));
+		}
 	}
 	
 	@Override
