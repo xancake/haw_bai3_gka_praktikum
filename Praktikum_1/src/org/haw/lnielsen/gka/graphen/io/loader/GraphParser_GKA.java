@@ -146,9 +146,9 @@ public class GraphParser_GKA implements GraphParser_I {
 			graph.addVertex(k2);
 			DefaultEdge edge = graph.addEdge(k1, k2);
 			if(weighted) {
-				if(edge == null) { // Die Kante wurde bereits hinzugef�gt
+				if(edge == null) { // Die Kante wurde bereits hinzugefügt
 					edge = graph.getEdge(k1, k2);
-					// TODO: Warnung loggen, da m�glicherweise das weight �berschrieben wird 
+					// TODO: Warnung loggen, da möglicherweise das weight überschrieben wird 
 				}
 				((WeightedGraph<Knoten, DefaultEdge>)graph).setEdgeWeight(edge, weight);
 			}
