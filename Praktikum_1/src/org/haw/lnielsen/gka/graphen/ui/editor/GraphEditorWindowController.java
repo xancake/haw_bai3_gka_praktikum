@@ -3,20 +3,26 @@ package org.haw.lnielsen.gka.graphen.ui.editor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
+import org.haw.lnielsen.gka.graphen.io.store.GraphFileStorer_GKA;
+import org.haw.lnielsen.gka.graphen.io.store.GraphStorer_I;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
+
 import de.xancake.ui.mvc.ControllerListener_I;
 import de.xancake.ui.mvc.window.WindowController_A;
 
@@ -27,10 +33,12 @@ import de.xancake.ui.mvc.window.WindowController_A;
  */
 public class GraphEditorWindowController extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I> implements GraphEditorWindowListener_I {
 	private GraphParser_I myParser;
+	private GraphStorer_I myStorer;
 	
 	public GraphEditorWindowController() {
 		super(null, new GraphEditorWindowSwing());
 		myParser = new GraphParser_GKA();
+		myStorer = new GraphFileStorer_GKA();
 	}
 	
 	@Override
@@ -53,25 +61,35 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 		if(file != null && file.exists() && !file.isDirectory()) {
 			try {
 				setModel(myParser.parseGraph(new FileInputStream(file)));
-			} catch(FileNotFoundException e) {
-				e.printStackTrace();
 			} catch(GraphParseException e) {
-				e.printStackTrace();
+				getView().showFehlermeldung(e, false);
+			} catch(FileNotFoundException e) {
+				getView().showFehlermeldung(e, false);
 			} catch(IOException e) {
-				e.printStackTrace();
+				getView().showFehlermeldung(e, true);
 			}
 		} else if(!file.exists()) {
-			
+			getView().showFehlermeldung("Die angegebene Datei existiert nicht!");
 		} else if(file.isDirectory()) {
-			
+			getView().showFehlermeldung("Die angegebene Datei ist ein Verzeichnis!");
 		}
 	}
 	
 	@Override
 	public void onStoreGraph(File file) {
-		
-		
-		
+		if(file != null && file.exists() && !file.isDirectory()) {
+			try {
+				myStorer.storeGraph(getModel(), new FileOutputStream(file));
+			} catch(FileNotFoundException e) {
+				getView().showFehlermeldung(e, false);
+			} catch(IOException e) {
+				getView().showFehlermeldung(e, true);
+			}
+		} else if(!file.exists()) {
+			getView().showFehlermeldung("Die angegebene Datei existiert nicht!");
+		} else if(file.isDirectory()) {
+			getView().showFehlermeldung("Die angegebene Datei ist ein Verzeichnis!");
+		}
 	}
 	
 	@Override
