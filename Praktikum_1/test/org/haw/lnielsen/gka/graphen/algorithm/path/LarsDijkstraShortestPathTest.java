@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class LarsDijkstraShortestPathTest {
 	@Test
-	public void testCalculatePath_HamburgBuxtehudeSoltau() throws Exception {
+	public void testCalculatePath_Undirected_HamburgBuxtehudeSoltau() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Hamburg", 0);
 		Knoten destination = new Knoten("Soltau", 63);
@@ -29,7 +29,7 @@ public class LarsDijkstraShortestPathTest {
 	}
 	
 	@Test
-	public void testCalculatePath_KielUelzenHammelnDetmold() throws Exception {
+	public void testCalculatePath_Undirected_KielUelzenHammelnDetmold() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Kiel", 86);
 		Knoten destination = new Knoten("Detmold", 195);
@@ -63,4 +63,7 @@ public class LarsDijkstraShortestPathTest {
 			}
 		}
 	}
+	
+	// TODO: Testfälle für kein Weg vorhanden
+	// TODO: Testfälle für directed Graphen
 }

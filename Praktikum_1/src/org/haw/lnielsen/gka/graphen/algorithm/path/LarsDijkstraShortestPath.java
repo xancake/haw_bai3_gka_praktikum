@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphPathImpl;
@@ -23,13 +24,15 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		}
 		
 		Map<V, DijkstraAttribute<V>> dijkstraTable = initDijkstraTable(graph, start);
-		Set<V> nichtVerarbeitet = initNichtVerarbeitetSet(graph, start);
+		Set<V> nichtVerarbeitet = new HashSet<V>(graph.vertexSet());
 		
-		while(!nichtVerarbeitet.isEmpty()) {
+		// TODO: directed Graphen unterstützen
+		while(nichtVerarbeitet.contains(destination)) {
 			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, dijkstraTable);
 			nichtVerarbeitet.remove(vertex);
-			for(E edge : graph.edgesOf(vertex)) {
-				V other = vertex.equals(graph.getEdgeSource(edge)) ? graph.getEdgeTarget(edge) : graph.getEdgeSource(edge);
+			Set<E> outgoingEdgesOfVertex = graph instanceof DirectedGraph ? ((DirectedGraph<V, E>)graph).outgoingEdgesOf(vertex) : graph.edgesOf(vertex);
+			for(E edge : outgoingEdgesOfVertex) {
+				V other = getTargetVertex(graph, vertex, edge);
 				DijkstraAttribute<V> otherAttribute = dijkstraTable.get(other);
 				if(nichtVerarbeitet.contains(other)) {
 					DijkstraAttribute<V> vertexAttribute = dijkstraTable.get(vertex);
@@ -43,7 +46,7 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		}
 		
 		int weight = dijkstraTable.get(destination).entfernung;
-		List<E> edgeList = calculateEdgeList(graph, dijkstraTable, start, destination);
+		List<E> edgeList = createEdgeList(graph, dijkstraTable, start, destination);
 		return new GraphPathImpl<V, E>(graph, start, destination, edgeList, weight);
 	}
 	
@@ -56,11 +59,6 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		startAttributes.entfernung = 0;
 		startAttributes.vorgaenger = start;
 		return dijkstraTable;
-	}
-	
-	private <V, E> Set<V> initNichtVerarbeitetSet(Graph<V, E> graph, V start) {
-		Set<V> nichtVerarbeitet = new HashSet<V>(graph.vertexSet());
-		return nichtVerarbeitet;
 	}
 	
 	private <V> V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, DijkstraAttribute<V>> dijkstraTable) {
@@ -76,13 +74,26 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		return next;
 	}
 	
-	private <V, E> List<E> calculateEdgeList(Graph<V, E> graph, Map<V, DijkstraAttribute<V>> dijkstraTable, V start, V destination) {
+	private <V, E> V getTargetVertex(Graph<V, E> graph, V source, E edge) {
+		if(graph instanceof DirectedGraph) {
+			return graph.getEdgeTarget(edge);
+		} else {
+			return source.equals(graph.getEdgeSource(edge)) ? graph.getEdgeTarget(edge) : graph.getEdgeSource(edge);
+		}
+	}
+	
+	private <V, E> List<E> createEdgeList(Graph<V, E> graph, Map<V, DijkstraAttribute<V>> dijkstraTable, V start, V destination) {
+		// Kein Pfad von start - destination
+		if(dijkstraTable.get(destination).vorgaenger == null) {
+			return null;
+		}
+		
 		List<E> edgeList = new LinkedList<E>();
 		
 		V vertex = destination;
 		while(!start.equals(vertex)) {
 			DijkstraAttribute<V> vertexAttribute = dijkstraTable.get(vertex);
-			edgeList.add(graph.getEdge(vertex, vertexAttribute.vorgaenger));
+			edgeList.add(graph.getEdge(vertexAttribute.vorgaenger, vertex));
 			vertex = vertexAttribute.vorgaenger;
 		}
 		
@@ -103,5 +114,10 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		public String toString() {
 			return vorgaenger + " (" + entfernung + ")";
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Lars Dijkstra Implementation";
 	}
 }
