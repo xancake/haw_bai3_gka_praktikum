@@ -144,13 +144,17 @@ public class GraphParser_GKA implements GraphParser_I {
 			}
 			graph.addVertex(k1);
 			graph.addVertex(k2);
-			DefaultEdge edge = graph.addEdge(k1, k2);
-			if(weighted) {
-				if(edge == null) { // Die Kante wurde bereits hinzugefügt
-					edge = graph.getEdge(k1, k2);
-					// TODO: Warnung loggen, da möglicherweise das weight überschrieben wird 
+			try {
+				DefaultEdge edge = graph.addEdge(k1, k2);
+				if(weighted) {
+					if(edge == null) { // Die Kante wurde bereits hinzugefügt
+						edge = graph.getEdge(k1, k2);
+						// TODO: Warnung loggen, da möglicherweise das weight überschrieben wird 
+					}
+					((WeightedGraph<Knoten, DefaultEdge>)graph).setEdgeWeight(edge, weight);
 				}
-				((WeightedGraph<Knoten, DefaultEdge>)graph).setEdgeWeight(edge, weight);
+			} catch(IllegalArgumentException e) {
+				throw new GraphParseException("Couldn't parse definition line " + currentLine + ": " + line, e);
 			}
 		}
 	}
