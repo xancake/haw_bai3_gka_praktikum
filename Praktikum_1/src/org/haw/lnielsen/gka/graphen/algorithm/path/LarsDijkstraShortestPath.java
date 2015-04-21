@@ -12,8 +12,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphPathImpl;
 
-import org.haw.lnielsen.gka.graphen.Knoten;
-
 public class LarsDijkstraShortestPath implements ShortestPath_I {
 	@Override
 	public <V, E> GraphPath<V, E> calculatePath(Graph<V, E> graph, V start, V destination) {
