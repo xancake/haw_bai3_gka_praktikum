@@ -4,13 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.ui.swing.GraphFileFilter;
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
@@ -26,6 +31,8 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.DefaultEdge;
+
+import sun.util.locale.provider.SPILocaleProviderAdapter;
 
 import com.jgraph.layout.JGraphFacade;
 import com.jgraph.layout.JGraphLayout;
@@ -42,6 +49,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	private JButton myNewButton;
 	private JButton myLoadButton;
 	private JButton myStoreButton;
+	private JComboBox<ShortestPath_I> myShortestPathAlgorithms;
 	private JButton myShortestPathButton;
 	private JButton myTraverseButton;
 	
@@ -61,12 +69,14 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myChooser = new JFileChooser(chooserCurrentDirectory);
 		myChooser.setMultiSelectionEnabled(false);
 		myChooser.setFileFilter(new GraphFileFilter());
+		myShortestPathAlgorithms = new JComboBox<>();
 		myGraphComponent = new JGraph();
 		myGraphComponent.setEditable(false);
 		myNewButton = new JButton("Neu...");
 		myLoadButton = new JButton("Laden");
 		myStoreButton = new JButton("Speichern");
 		myShortestPathButton = new JButton("Kürzester Weg");
+		myShortestPathButton.setEnabled(false);
 		myTraverseButton = new JButton("Traversieren");
 	}
 	
@@ -83,6 +93,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		buttonPanel.add(myLoadButton);
 		buttonPanel.add(myStoreButton);
 		buttonPanel.add(Box.createHorizontalStrut(11));
+		buttonPanel.add(myShortestPathAlgorithms);
 		buttonPanel.add(myShortestPathButton);
 		buttonPanel.add(myTraverseButton);
 		buttonPanel.add(Box.createHorizontalGlue());
@@ -117,6 +128,12 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 				}
 			}
 		});
+		myShortestPathAlgorithms.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myShortestPathButton.setEnabled(myShortestPathAlgorithms.getSelectedItem() != null);
+			}
+		});
 		myShortestPathButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -125,7 +142,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 					Object[] selectedElements = selectionModel.getSelectionCells();
 					Knoten start = (Knoten)((DefaultGraphCell)selectedElements[0]).getUserObject();
 					Knoten end = (Knoten)((DefaultGraphCell)selectedElements[1]).getUserObject();
-					myListener.onCalculateShortestPath(start, end);
+					myListener.onCalculateShortestPath((ShortestPath_I)myShortestPathAlgorithms.getSelectedItem(), start, end);
 				} else {
 					JOptionPane.showMessageDialog(myFrame, "Es kann nur der kürzeste Pfad zwischen zwei Knoten berechnet werden. Bitte wählen Sie genau zwei Knoten aus (Strg+Mausklick).", "Fehler", JOptionPane.ERROR_MESSAGE);
 				}
@@ -158,6 +175,17 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			layout.run(facade);
 			myGraphComponent.getGraphLayoutCache().edit(facade.createNestedMap(true, true));
 		}
+	}
+	
+	@Override
+	public void setShortestPathAlgorithms(List<ShortestPath_I> algorithms) {
+		DefaultComboBoxModel<ShortestPath_I> model = new DefaultComboBoxModel<>();
+		for(ShortestPath_I algorithm : algorithms) {
+			model.addElement(algorithm);
+		}
+		model.setSelectedItem(algorithms.get(0));
+		myShortestPathAlgorithms.setModel(model);
+		myShortestPathButton.setEnabled(true);
 	}
 	
 	@Override

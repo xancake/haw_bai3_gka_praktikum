@@ -1,10 +1,13 @@
 package org.haw.lnielsen.gka.graphen.ui.editor;
 
 import java.util.List;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
+
 import de.xancake.ui.mvc.window.WindowView_I;
 
 /**
@@ -13,6 +16,13 @@ import de.xancake.ui.mvc.window.WindowView_I;
  * @author Lars Nielsen
  */
 public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I> {
+	/**
+	 * Legt die Algorithmen zur Berechnung des kürzesten Weges fest,
+	 * die die Benutzeroberläche anbietet.
+	 * @param algorithms Eine Liste der Algorithmen
+	 */
+	void setShortestPathAlgorithms(List<ShortestPath_I> algorithms);
+	
 	/**
 	 * Zeigt den übergebenen Pfad an.
 	 * @param path Der anzuzeigende Pfad

@@ -1,7 +1,10 @@
 package org.haw.lnielsen.gka.graphen.ui.editor;
 
 import java.io.File;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
+
 import de.xancake.ui.mvc.window.WindowViewListener_I;
 
 /**
@@ -30,10 +33,11 @@ public interface GraphEditorWindowListener_I extends WindowViewListener_I {
 	/**
 	 * Wird aufgerufen, wenn die Aktion zum berechnen des kürzesten Pfades zwischen zwei Knoten
 	 * aufgerufen wird.
+	 * @param algorithm Der Algorithmus der verwendet werden soll
 	 * @param start Der Startknoten
 	 * @param end Der Zielknoten
 	 */
-	void onCalculateShortestPath(Knoten start, Knoten end);
+	void onCalculateShortestPath(ShortestPath_I algorithm, Knoten start, Knoten end);
 	
 	/**
 	 * Wird aufgerufen, wenn die Aktion zum Traversieren des Graphens aufgerufen wird.

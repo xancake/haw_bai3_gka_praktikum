@@ -12,6 +12,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.path.JGraphTDijkstraAdapter;
+import org.haw.lnielsen.gka.graphen.algorithm.path.LarsDijkstraShortestPath;
+import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
@@ -34,11 +37,16 @@ import de.xancake.ui.mvc.window.WindowController_A;
 public class GraphEditorWindowController extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I> implements GraphEditorWindowListener_I {
 	private GraphParser_I myParser;
 	private GraphStorer_I myStorer;
+	private List<ShortestPath_I> myShortestPathAlgorithms;
 	
 	public GraphEditorWindowController() {
 		super(null, new GraphEditorWindowSwing());
 		myParser = new GKAGraphParser();
 		myStorer = new GKAGraphFileStorer();
+		myShortestPathAlgorithms = new ArrayList<>();
+		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter());
+		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath());
+		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 	}
 	
 	@Override
@@ -93,9 +101,8 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 	}
 	
 	@Override
-	public void onCalculateShortestPath(Knoten start, Knoten end) {
-		DijkstraShortestPath<Knoten, DefaultEdge> algorithm = new DijkstraShortestPath<Knoten, DefaultEdge>(getModel(), start, end);
-		GraphPath<Knoten, DefaultEdge> shortestPath = algorithm.getPath();
+	public void onCalculateShortestPath(ShortestPath_I algorithm, Knoten start, Knoten end) {
+		GraphPath<Knoten, DefaultEdge> shortestPath = algorithm.calculatePath(getModel(), start, end);
 		getView().showPath(shortestPath);
 	}
 	
