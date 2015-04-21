@@ -25,4 +25,18 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	 * @param trace Die Knoten in der Reihenfolge, in der sie durchlaufen wurden
 	 */
 	void showTraverseTrace(List<Knoten> trace);
+	
+	/**
+	 * Zeigt die übergebene Nachricht als Fehlermeldung an.
+	 * @param message Die Nachricht
+	 */
+	void showFehlermeldung(String message);
+	
+	/**
+	 * Zeigt die übergebene Exception an. Dabei kann festgelegt werden, ob der
+	 * gesamte Stacktrace ausgegeben werden soll, oder nur die kaskadierenden Nachrichten.
+	 * @param exception Die Exception
+	 * @param showTrace {@code true}, wenn der Stacktrace angezeigt werden soll, ansonsten {@code false}
+	 */
+	void showFehlermeldung(Throwable exception, boolean showTrace);
 }

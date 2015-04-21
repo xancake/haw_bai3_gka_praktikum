@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
@@ -87,7 +88,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		buttonPanel.add(Box.createHorizontalGlue());
 		
 		content.add(buttonPanel, BorderLayout.PAGE_START);
-		content.add(myGraphComponent, BorderLayout.CENTER);
+		content.add(new JScrollPane(myGraphComponent), BorderLayout.CENTER);
 		myFrame.setSize(800, 600);
 		myFrame.setLocationRelativeTo(null);
 	}
@@ -204,5 +205,26 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		}
 		message.append("</ol></html>");
 		JOptionPane.showMessageDialog(myFrame, message.toString(), "Traversierung", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	@Override
+	public void showFehlermeldung(String message) {
+		JOptionPane.showMessageDialog(myFrame, message, "Fehler", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	@Override
+	public void showFehlermeldung(Throwable exception, boolean showTrace) {
+		String message = "<html>";
+		while(exception != null) {
+			message += exception.getMessage() + "<br />";
+			if(showTrace) {
+				for(StackTraceElement traceElement : exception.getStackTrace()) {
+					message += traceElement.toString() + "<br />";
+				}
+			}
+			exception = exception.getCause();
+		}
+		message += "</html>";
+		showFehlermeldung(message);
 	}
 }
