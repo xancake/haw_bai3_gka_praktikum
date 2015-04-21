@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
-import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
+import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
@@ -15,7 +15,7 @@ import org.junit.Test;
 public class LarsDijkstraShortestPathTest {
 	@Test
 	public void testCalculatePath_HamburgBuxtehudeSoltau() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = new GraphParser_GKA().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Hamburg", 0);
 		Knoten destination = new Knoten("Soltau", 63);
 		
@@ -30,7 +30,7 @@ public class LarsDijkstraShortestPathTest {
 	
 	@Test
 	public void testCalculatePath_KielUelzenHammelnDetmold() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = new GraphParser_GKA().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Kiel", 86);
 		Knoten destination = new Knoten("Detmold", 195);
 		

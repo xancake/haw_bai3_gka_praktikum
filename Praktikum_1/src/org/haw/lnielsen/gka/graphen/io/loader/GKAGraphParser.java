@@ -24,7 +24,7 @@ import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
  * 
  * @author Lars Nielsen
  */
-public class GraphParser_GKA implements GraphParser_I {
+public class GKAGraphParser implements GraphParser_I {
 	private static final String COMMENT_PREFIX      = "//";
 	private static final String DIRECTED            = "#directed";
 	private static final String ATTRIBUTED          = "#attributed";

@@ -4,16 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Testklasse mit Negativtests zum {@link GraphParser_GKA}.
+ * Testklasse mit Negativtests zum {@link GKAGraphParser}.
  * 
  * @author Jennifer Momsen
  */
-public class GraphParser_GKA_NegativeTest {
+public class GKAGraphParserNegativeTest {
 	private GraphParser_I myGraphParser;
 		
 	@Before
 	public void setUp() {
-		myGraphParser = new GraphParser_GKA();
+		myGraphParser = new GKAGraphParser();
 	}
 	
 	//Gerichtete Graphen:

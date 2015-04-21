@@ -3,7 +3,7 @@ package org.haw.lnielsen.gka.graphen.io.loader;
 import static org.junit.Assert.*;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
-import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_GKA;
+import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
@@ -11,17 +11,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Testklasse zum {@link GraphParser_GKA}.
+ * Testklasse zum {@link GKAGraphParser}.
  * 
  * @author Lars Nielsen
  * @author Jennifer Momsen
  */
-public class GraphParser_GKATest {
+public class GKAGraphParserTest {
 	private GraphParser_I myGraphParser;
 	
 	@Before
 	public void setUp() {
-		myGraphParser = new GraphParser_GKA();
+		myGraphParser = new GKAGraphParser();
 	}
 	
 	@Test
