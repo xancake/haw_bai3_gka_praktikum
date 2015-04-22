@@ -22,6 +22,55 @@ public class LarsDijkstraShortestPathTest {
 	}
 	
 	@Test
+	public void testCalculatePath_Undirected_Aufgabe_HusumHamburg() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
+		Knoten start = new Knoten("Husum", 120);
+		Knoten destination = new Knoten("Hamburg", 0);
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertGraphPath(Arrays.asList(
+				start,
+				new Knoten("Kiel", 86),
+				new Knoten("Uelzen", 94),
+				new Knoten("Rotenburg", 63),
+				new Knoten("Soltau", 63),
+				new Knoten("Buxtehude", 20),
+				destination
+		), 518, shortestPath);
+	}
+	
+	@Test
+	public void testCalculatePath_Undirected_Aufgabe_MindenHamburg() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
+		Knoten start = new Knoten("Minden", 157);
+		Knoten destination = new Knoten("Hamburg", 0);
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertGraphPath(Arrays.asList(
+				start,
+				new Knoten("Walsrode", 81),
+				destination
+		), 227, shortestPath);
+	}
+	
+	@Test
+	public void testCalculatePath_Undirected_Aufgabe_MuensterHamburg() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
+		Knoten start = new Knoten("Münster", 237);
+		Knoten destination = new Knoten("Hamburg", 0);
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertGraphPath(Arrays.asList(
+				start,
+				new Knoten("Bremen", 95),
+				destination
+		), 300, shortestPath);
+	}
+	
+	@Test
 	public void testCalculatePath_Undirected_HamburgBuxtehudeSoltau() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Hamburg", 0);
