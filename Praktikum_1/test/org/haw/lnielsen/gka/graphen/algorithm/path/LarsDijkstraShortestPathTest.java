@@ -10,16 +10,24 @@ import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
+import org.junit.Before;
 import org.junit.Test;
 
 public class LarsDijkstraShortestPathTest {
+	private ShortestPath_I myShortestPathAlgorithm;
+	
+	@Before
+	public void setUp() {
+		myShortestPathAlgorithm = createShortestPathAlgorithm();
+	}
+	
 	@Test
 	public void testCalculatePath_Undirected_HamburgBuxtehudeSoltau() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Hamburg", 0);
 		Knoten destination = new Knoten("Soltau", 63);
 		
-		GraphPath<Knoten, DefaultEdge> shortestPath = new LarsDijkstraShortestPath().calculatePath(graph, start, destination);
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
 		
 		assertGraphPath(Arrays.asList(
 				start,
@@ -34,7 +42,7 @@ public class LarsDijkstraShortestPathTest {
 		Knoten start = new Knoten("Kiel", 86);
 		Knoten destination = new Knoten("Detmold", 195);
 		
-		GraphPath<Knoten, DefaultEdge> shortestPath = new LarsDijkstraShortestPath().calculatePath(graph, start, destination);
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
 		
 		assertGraphPath(Arrays.asList(
 				start,
@@ -43,6 +51,37 @@ public class LarsDijkstraShortestPathTest {
 				destination
 		), 395, shortestPath);
 	}
+	
+	@Test
+	public void testCalculatePath_Directed_1() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp1 - directed.graph"));
+		Knoten start = new Knoten("i");
+		Knoten destination = new Knoten("f");
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertGraphPath(Arrays.asList(
+				start,
+				new Knoten("c"),
+				new Knoten("d"),
+				new Knoten("e"),
+				destination
+		), 4, shortestPath);
+	}
+	
+	@Test
+	public void testCalculatePath_Directed_NoPath() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp6 - directed numbers as names and single vertices.graph"));
+		Knoten start = new Knoten("12");
+		Knoten destination = new Knoten("11");
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertNull(shortestPath);
+	}
+	
+	// TODO: Testfälle für kein Weg vorhanden
+	// TODO: Testfälle für directed Graphennew HashSet<V>(graph.vertexSet())
 	
 	private <V, E> void assertGraphPath(List<V> expectedVertices, double expectedWeight, GraphPath<V, E> actualPath) throws Exception {
 		assertEquals(expectedWeight, actualPath.getWeight(), 0);
@@ -64,6 +103,7 @@ public class LarsDijkstraShortestPathTest {
 		}
 	}
 	
-	// TODO: Testfälle für kein Weg vorhanden
-	// TODO: Testfälle für directed Graphen
+	protected ShortestPath_I createShortestPathAlgorithm() {
+		return new LarsDijkstraShortestPath();
+	}
 }

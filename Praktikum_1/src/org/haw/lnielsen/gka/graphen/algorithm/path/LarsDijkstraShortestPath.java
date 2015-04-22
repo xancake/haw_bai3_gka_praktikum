@@ -26,9 +26,14 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		Map<V, DijkstraAttribute<V>> dijkstraTable = initDijkstraTable(graph, start);
 		Set<V> nichtVerarbeitet = new HashSet<V>(graph.vertexSet());
 		
+		// TODO: Unterstützung für Graphen und Pfad zwischen start und destination
 		// TODO: directed Graphen unterstützen
 		while(nichtVerarbeitet.contains(destination)) {
 			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, dijkstraTable);
+			// Es gibt keinen erreichbaren Knoten mehr
+			if(vertex == null) {
+				return null;
+			}
 			nichtVerarbeitet.remove(vertex);
 			Set<E> outgoingEdgesOfVertex = graph instanceof DirectedGraph ? ((DirectedGraph<V, E>)graph).outgoingEdgesOf(vertex) : graph.edgesOf(vertex);
 			for(E edge : outgoingEdgesOfVertex) {
@@ -66,7 +71,7 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		int entfernung = Integer.MAX_VALUE;
 		for(V vertex : nichtVerarbeitet) {
 			DijkstraAttribute<V> vertexAttributes = dijkstraTable.get(vertex);
-			if(vertexAttributes.entfernung <= entfernung) {
+			if(vertexAttributes.entfernung < entfernung) {
 				next = vertex;
 				entfernung = vertexAttributes.entfernung;
 			}
