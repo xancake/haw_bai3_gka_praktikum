@@ -29,20 +29,26 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 		}
 		
 		Map<V, DijkstraAttribute> dijkstraTable = initDijkstraTable(graph, start);
-		Set<V> nichtVerarbeitet = new HashSet<V>(graph.vertexSet());
+		Set<V> bereitsVerarbeitet = new HashSet<>();
+		Set<V> nichtVerarbeitet = new HashSet<>();
+		nichtVerarbeitet.add(start);
 		
-		while(nichtVerarbeitet.contains(destination)) {
+		while(!bereitsVerarbeitet.contains(destination)) {
 			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, dijkstraTable);
 			// Es gibt keinen erreichbaren Knoten mehr
 			if(vertex == null) {
 				return null;
 			}
 			nichtVerarbeitet.remove(vertex);
+			bereitsVerarbeitet.add(vertex);
 			Set<E> outgoingEdgesOfVertex = graph instanceof DirectedGraph ? ((DirectedGraph<V, E>)graph).outgoingEdgesOf(vertex) : graph.edgesOf(vertex);
 			for(E edge : outgoingEdgesOfVertex) {
 				V other = getTargetVertex(graph, vertex, edge);
+				if(!bereitsVerarbeitet.contains(other)) {
+					nichtVerarbeitet.add(other);
+				}
 				DijkstraAttribute otherAttribute = dijkstraTable.get(other);
-				if(nichtVerarbeitet.contains(other)) {
+				if(!bereitsVerarbeitet.contains(other)) {
 					DijkstraAttribute vertexAttribute = dijkstraTable.get(vertex);
 					int entfNeu = vertexAttribute.entfernung + (int)graph.getEdgeWeight(edge);
 					if(entfNeu < otherAttribute.entfernung) {
