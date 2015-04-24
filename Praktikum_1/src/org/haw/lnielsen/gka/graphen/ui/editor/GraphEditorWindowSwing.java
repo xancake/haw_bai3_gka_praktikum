@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -32,8 +30,6 @@ import org.jgrapht.GraphPath;
 import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.DefaultEdge;
 
-import sun.util.locale.provider.SPILocaleProviderAdapter;
-
 import com.jgraph.layout.JGraphFacade;
 import com.jgraph.layout.JGraphLayout;
 import com.jgraph.layout.graph.JGraphSimpleLayout;
@@ -49,7 +45,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	private JButton myNewButton;
 	private JButton myLoadButton;
 	private JButton myStoreButton;
-	private JComboBox<ShortestPath_I> myShortestPathAlgorithms;
+	private JComboBox<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
 	private JButton myShortestPathButton;
 	private JButton myTraverseButton;
 	
@@ -135,6 +131,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			}
 		});
 		myShortestPathButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				GraphSelectionModel selectionModel = myGraphComponent.getSelectionModel();
@@ -142,7 +139,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 					Object[] selectedElements = selectionModel.getSelectionCells();
 					Knoten start = (Knoten)((DefaultGraphCell)selectedElements[0]).getUserObject();
 					Knoten end = (Knoten)((DefaultGraphCell)selectedElements[1]).getUserObject();
-					myListener.onCalculateShortestPath((ShortestPath_I)myShortestPathAlgorithms.getSelectedItem(), start, end);
+					myListener.onCalculateShortestPath((ShortestPath_I<Knoten, DefaultEdge>)myShortestPathAlgorithms.getSelectedItem(), start, end);
 				} else {
 					JOptionPane.showMessageDialog(myFrame, "Es kann nur der kürzeste Pfad zwischen zwei Knoten berechnet werden. Bitte wählen Sie genau zwei Knoten aus (Strg+Mausklick).", "Fehler", JOptionPane.ERROR_MESSAGE);
 				}
@@ -178,9 +175,9 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	}
 	
 	@Override
-	public void setShortestPathAlgorithms(List<ShortestPath_I> algorithms) {
-		DefaultComboBoxModel<ShortestPath_I> model = new DefaultComboBoxModel<>();
-		for(ShortestPath_I algorithm : algorithms) {
+	public void setShortestPathAlgorithms(List<ShortestPath_I<Knoten, DefaultEdge>> algorithms) {
+		DefaultComboBoxModel<ShortestPath_I<Knoten, DefaultEdge>> model = new DefaultComboBoxModel<>();
+		for(ShortestPath_I<Knoten, DefaultEdge> algorithm : algorithms) {
 			model.addElement(algorithm);
 		}
 		model.setSelectedItem(algorithms.get(0));

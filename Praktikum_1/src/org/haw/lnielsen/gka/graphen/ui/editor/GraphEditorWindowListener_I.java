@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
+import org.jgrapht.graph.DefaultEdge;
 
 import de.xancake.ui.mvc.window.WindowViewListener_I;
 
@@ -37,7 +38,7 @@ public interface GraphEditorWindowListener_I extends WindowViewListener_I {
 	 * @param start Der Startknoten
 	 * @param end Der Zielknoten
 	 */
-	void onCalculateShortestPath(ShortestPath_I algorithm, Knoten start, Knoten end);
+	void onCalculateShortestPath(ShortestPath_I<Knoten, DefaultEdge> algorithm, Knoten start, Knoten end);
 	
 	/**
 	 * Wird aufgerufen, wenn die Aktion zum Traversieren des Graphens aufgerufen wird.

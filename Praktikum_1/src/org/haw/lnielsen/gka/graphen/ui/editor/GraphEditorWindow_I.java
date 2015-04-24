@@ -21,7 +21,7 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	 * die die Benutzeroberläche anbietet.
 	 * @param algorithms Eine Liste der Algorithmen
 	 */
-	void setShortestPathAlgorithms(List<ShortestPath_I> algorithms);
+	void setShortestPathAlgorithms(List<ShortestPath_I<Knoten, DefaultEdge>> algorithms);
 	
 	/**
 	 * Zeigt den übergebenen Pfad an.

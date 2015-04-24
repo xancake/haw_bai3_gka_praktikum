@@ -13,16 +13,17 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.JGraphTDijkstraAdapter;
+import org.haw.lnielsen.gka.graphen.algorithm.path.LarsAStarShortestPath;
+import org.haw.lnielsen.gka.graphen.algorithm.path.LarsAStarShortestPath.AStarProvider;
 import org.haw.lnielsen.gka.graphen.algorithm.path.LarsDijkstraShortestPath;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
-import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
+import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.haw.lnielsen.gka.graphen.io.store.GKAGraphFileStorer;
 import org.haw.lnielsen.gka.graphen.io.store.GraphStorer_I;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
@@ -37,15 +38,15 @@ import de.xancake.ui.mvc.window.WindowController_A;
 public class GraphEditorWindowController extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I> implements GraphEditorWindowListener_I {
 	private GraphParser_I myParser;
 	private GraphStorer_I myStorer;
-	private List<ShortestPath_I> myShortestPathAlgorithms;
+	private List<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
 	
 	public GraphEditorWindowController() {
 		super(null, new GraphEditorWindowSwing());
 		myParser = new GKAGraphParser();
 		myStorer = new GKAGraphFileStorer();
 		myShortestPathAlgorithms = new ArrayList<>();
-		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter());
-		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath());
+		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter<Knoten, DefaultEdge>());
+		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath<Knoten, DefaultEdge>());
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 	}
 	
@@ -101,7 +102,7 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 	}
 	
 	@Override
-	public void onCalculateShortestPath(ShortestPath_I algorithm, Knoten start, Knoten end) {
+	public void onCalculateShortestPath(ShortestPath_I<Knoten, DefaultEdge> algorithm, Knoten start, Knoten end) {
 		GraphPath<Knoten, DefaultEdge> shortestPath = algorithm.calculatePath(getModel(), start, end);
 		getView().showPath(shortestPath);
 	}

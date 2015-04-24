@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class LarsDijkstraShortestPathTest {
-	private ShortestPath_I myShortestPathAlgorithm;
+	private ShortestPath_I<Knoten, DefaultEdge> myShortestPathAlgorithm;
 	
 	@Before
 	public void setUp() {
@@ -152,7 +152,7 @@ public class LarsDijkstraShortestPathTest {
 		}
 	}
 	
-	protected ShortestPath_I createShortestPathAlgorithm() {
-		return new LarsDijkstraShortestPath();
+	protected ShortestPath_I<Knoten, DefaultEdge> createShortestPathAlgorithm() {
+		return new LarsDijkstraShortestPath<Knoten, DefaultEdge>();
 	}
 }

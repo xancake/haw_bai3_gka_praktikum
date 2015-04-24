@@ -13,9 +13,14 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphPathImpl;
 
-public class LarsDijkstraShortestPath implements ShortestPath_I {
+/**
+ * Implementation des Dijkstra-Shortest-Path-Algorithmus wie in der Vorlesung gelernt.
+ * 
+ * @author Lars Nielsen
+ */
+public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 	@Override
-	public <V, E> GraphPath<V, E> calculatePath(Graph<V, E> graph, V start, V destination) {
+	public GraphPath<V, E> calculatePath(Graph<V, E> graph, V start, V destination) {
 		if(!graph.containsVertex(start)) {
 			throw new IllegalArgumentException("Der Startknoten ist nicht im Graphen enthalten");
 		}
@@ -23,11 +28,9 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 			throw new IllegalArgumentException("Der Zielknoten ist nicht im Graphen enthalten");
 		}
 		
-		Map<V, DijkstraAttribute<V>> dijkstraTable = initDijkstraTable(graph, start);
+		Map<V, DijkstraAttribute> dijkstraTable = initDijkstraTable(graph, start);
 		Set<V> nichtVerarbeitet = new HashSet<V>(graph.vertexSet());
 		
-		// TODO: Unterstützung für Graphen und Pfad zwischen start und destination
-		// TODO: directed Graphen unterstützen
 		while(nichtVerarbeitet.contains(destination)) {
 			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, dijkstraTable);
 			// Es gibt keinen erreichbaren Knoten mehr
@@ -38,9 +41,9 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 			Set<E> outgoingEdgesOfVertex = graph instanceof DirectedGraph ? ((DirectedGraph<V, E>)graph).outgoingEdgesOf(vertex) : graph.edgesOf(vertex);
 			for(E edge : outgoingEdgesOfVertex) {
 				V other = getTargetVertex(graph, vertex, edge);
-				DijkstraAttribute<V> otherAttribute = dijkstraTable.get(other);
+				DijkstraAttribute otherAttribute = dijkstraTable.get(other);
 				if(nichtVerarbeitet.contains(other)) {
-					DijkstraAttribute<V> vertexAttribute = dijkstraTable.get(vertex);
+					DijkstraAttribute vertexAttribute = dijkstraTable.get(vertex);
 					int entfNeu = vertexAttribute.entfernung + (int)graph.getEdgeWeight(edge);
 					if(entfNeu < otherAttribute.entfernung) {
 						otherAttribute.entfernung = entfNeu;
@@ -55,22 +58,22 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		return new GraphPathImpl<V, E>(graph, start, destination, edgeList, weight);
 	}
 	
-	private <V, E> Map<V, DijkstraAttribute<V>> initDijkstraTable(Graph<V, E> graph, V start) {
-		Map<V, DijkstraAttribute<V>> dijkstraTable = new HashMap<V, DijkstraAttribute<V>>(graph.vertexSet().size());
+	private Map<V, DijkstraAttribute> initDijkstraTable(Graph<V, E> graph, V start) {
+		Map<V, DijkstraAttribute> dijkstraTable = new HashMap<V, DijkstraAttribute>(graph.vertexSet().size());
 		for(V vertex : graph.vertexSet()) {
-			dijkstraTable.put(vertex, new DijkstraAttribute<V>());
+			dijkstraTable.put(vertex, new DijkstraAttribute());
 		}
-		DijkstraAttribute<V> startAttributes = dijkstraTable.get(start);
+		DijkstraAttribute startAttributes = dijkstraTable.get(start);
 		startAttributes.entfernung = 0;
 		startAttributes.vorgaenger = start;
 		return dijkstraTable;
 	}
 	
-	private <V> V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, DijkstraAttribute<V>> dijkstraTable) {
+	private V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, DijkstraAttribute> dijkstraTable) {
 		V next = null;
 		int entfernung = Integer.MAX_VALUE;
 		for(V vertex : nichtVerarbeitet) {
-			DijkstraAttribute<V> vertexAttributes = dijkstraTable.get(vertex);
+			DijkstraAttribute vertexAttributes = dijkstraTable.get(vertex);
 			if(vertexAttributes.entfernung < entfernung) {
 				next = vertex;
 				entfernung = vertexAttributes.entfernung;
@@ -79,7 +82,7 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		return next;
 	}
 	
-	private <V, E> V getTargetVertex(Graph<V, E> graph, V source, E edge) {
+	private V getTargetVertex(Graph<V, E> graph, V source, E edge) {
 		if(graph instanceof DirectedGraph) {
 			return graph.getEdgeTarget(edge);
 		} else {
@@ -87,7 +90,7 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		}
 	}
 	
-	private <V, E> List<E> createEdgeList(Graph<V, E> graph, Map<V, DijkstraAttribute<V>> dijkstraTable, V start, V destination) {
+	private List<E> createEdgeList(Graph<V, E> graph, Map<V, DijkstraAttribute> dijkstraTable, V start, V destination) {
 		// Kein Pfad von start - destination
 		if(dijkstraTable.get(destination).vorgaenger == null) {
 			return null;
@@ -97,7 +100,7 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		
 		V vertex = destination;
 		while(!start.equals(vertex)) {
-			DijkstraAttribute<V> vertexAttribute = dijkstraTable.get(vertex);
+			DijkstraAttribute vertexAttribute = dijkstraTable.get(vertex);
 			edgeList.add(graph.getEdge(vertexAttribute.vorgaenger, vertex));
 			vertex = vertexAttribute.vorgaenger;
 		}
@@ -106,7 +109,7 @@ public class LarsDijkstraShortestPath implements ShortestPath_I {
 		return edgeList;
 	}
 	
-	private class DijkstraAttribute<V> {
+	private class DijkstraAttribute {
 		private int entfernung;
 		private V vorgaenger;
 		

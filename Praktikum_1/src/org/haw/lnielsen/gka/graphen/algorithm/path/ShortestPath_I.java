@@ -8,7 +8,7 @@ import org.jgrapht.GraphPath;
  * 
  * @author Lars Nielsen
  */
-public interface ShortestPath_I {
+public interface ShortestPath_I<V, E> {
 	/**
 	 * Berechnet den kürzesten Pfad von {@code start} nach {@code destination} in dem
 	 * Graphen.
@@ -17,5 +17,5 @@ public interface ShortestPath_I {
 	 * @param destination Der Zielknoten
 	 * @return Der kürzeste Pfad von start nach destination oder {@code null}, wenn es keinen gibt
 	 */
-	<V, E> GraphPath<V, E> calculatePath(Graph<V, E> graph, V start, V destination);
+	GraphPath<V, E> calculatePath(Graph<V, E> graph, V start, V destination);
 }
