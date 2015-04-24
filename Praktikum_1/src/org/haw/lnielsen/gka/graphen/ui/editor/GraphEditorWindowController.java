@@ -12,9 +12,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.KnotenAStarProvider;
 import org.haw.lnielsen.gka.graphen.algorithm.path.JGraphTDijkstraAdapter;
 import org.haw.lnielsen.gka.graphen.algorithm.path.LarsAStarShortestPath;
-import org.haw.lnielsen.gka.graphen.algorithm.path.LarsAStarShortestPath.AStarProvider;
 import org.haw.lnielsen.gka.graphen.algorithm.path.LarsDijkstraShortestPath;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
@@ -47,6 +47,7 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 		myShortestPathAlgorithms = new ArrayList<>();
 		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter<Knoten, DefaultEdge>());
 		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath<Knoten, DefaultEdge>());
+		myShortestPathAlgorithms.add(new LarsAStarShortestPath<Knoten, DefaultEdge>(new KnotenAStarProvider()));
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 	}
 	
