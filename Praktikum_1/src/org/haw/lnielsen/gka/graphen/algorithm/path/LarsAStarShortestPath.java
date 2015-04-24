@@ -34,12 +34,8 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 		Set<V> nichtVerarbeitet = new HashSet<>();
 		nichtVerarbeitet.add(start);
 		
-		while(!bereitsVerarbeitet.contains(destination)) {
+		while(!nichtVerarbeitet.isEmpty() && !bereitsVerarbeitet.contains(destination)) {
 			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, aStarTable);
-			// Es gibt keinen erreichbaren Knoten mehr
-			if(vertex == null) {
-				return null;
-			}
 			nichtVerarbeitet.remove(vertex);
 			bereitsVerarbeitet.add(vertex);
 			Set<E> outgoingEdgesOfVertex = graph instanceof DirectedGraph ? ((DirectedGraph<V, E>)graph).outgoingEdgesOf(vertex) : graph.edgesOf(vertex);
@@ -59,6 +55,11 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 					}
 				}
 			}
+		}
+		
+		// Zielknoten nicht erreichbar
+		if(aStarTable.get(destination).vorgaenger == null) {
+			return null;
 		}
 		
 		int weight = aStarTable.get(destination).entfernung;
