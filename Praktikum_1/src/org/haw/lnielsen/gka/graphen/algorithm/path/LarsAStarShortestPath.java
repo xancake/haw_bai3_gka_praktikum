@@ -13,6 +13,11 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphPathImpl;
 
+/**
+ * Implementation des A* Algorithmus wie in der Vorlesung gelernt.
+ * 
+ * @author Lars Nielsen
+ */
 public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 	private AStarProvider<V> myAStarProvider;
 	
