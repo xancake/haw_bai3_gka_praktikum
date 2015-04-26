@@ -20,7 +20,7 @@ import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
-import org.haw.lnielsen.gka.graphen.io.store.GKAGraphFileStorer;
+import org.haw.lnielsen.gka.graphen.io.store.GKAGraphStorer;
 import org.haw.lnielsen.gka.graphen.io.store.GraphStorer_I;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -43,7 +43,7 @@ public class GraphEditorWindowController extends WindowController_A<Graph<Knoten
 	public GraphEditorWindowController() {
 		super(null, new GraphEditorWindowSwing());
 		myParser = new GKAGraphParser();
-		myStorer = new GKAGraphFileStorer();
+		myStorer = new GKAGraphStorer();
 		myShortestPathAlgorithms = new ArrayList<>();
 		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter<Knoten, DefaultEdge>());
 		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath<Knoten, DefaultEdge>());
