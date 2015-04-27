@@ -41,14 +41,21 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 		
 		while(!nichtVerarbeitet.isEmpty() && !bereitsVerarbeitet.contains(destination)) {
 			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, aStarTable);
+			
+			// Aktuellen Knoten als verarbeitet markieren
 			nichtVerarbeitet.remove(vertex);
 			bereitsVerarbeitet.add(vertex);
+			
 			Set<E> outgoingEdgesOfVertex = graph instanceof DirectedGraph ? ((DirectedGraph<V, E>)graph).outgoingEdgesOf(vertex) : graph.edgesOf(vertex);
 			for(E edge : outgoingEdgesOfVertex) {
 				V other = getTargetVertex(graph, vertex, edge);
+				
+				// Anderen Knoten in die Liste der zu verarbeitenden Knoten aufnehmen, wenn er noch nicht verarbeitet wurde
 				if(!bereitsVerarbeitet.contains(other)) {
 					nichtVerarbeitet.add(other);
 				}
+				
+				// Attribute für den anderen Knoten anpassen
 				AStarAttribute otherAttribute = aStarTable.get(other);
 				if(!bereitsVerarbeitet.contains(other)) {
 					AStarAttribute vertexAttribute = aStarTable.get(vertex);
@@ -72,6 +79,14 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 		return new GraphPathImpl<V, E>(graph, start, destination, edgeList, weight);
 	}
 	
+	/**
+	 * Initialisiert die AStar-Tabelle für alle Knoten aus dem Graphen.
+	 * Dabei wird das Attribut für den Startknoten mit {@code vorgaenger=start}, {@code entfernung=0}
+	 * und {@code schaetzung=heuristik von start} vorbelegt.
+	 * @param graph Der Graph
+	 * @param start Der Startknoten
+	 * @return Die Dijkstra-Tabelle
+	 */
 	private Map<V, AStarAttribute> initAStarTable(Graph<V, E> graph, V start) {
 		Map<V, AStarAttribute> dijkstraTable = new HashMap<V, AStarAttribute>(graph.vertexSet().size());
 		for(V vertex : graph.vertexSet()) {
@@ -84,6 +99,13 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 		return dijkstraTable;
 	}
 	
+	/**
+	 * Ermittelt den nächsten zu verarbeitenden Knoten.
+	 * Dies geschieht, indem der Knoten mit dem kleinsten Wert für {@code schaetzung} ermittelt wird.
+	 * @param nichtVerarbeitet Die Menge der nicht verarbeiteten Knoten
+	 * @param dijkstraTable Die Dijkstra-Tabelle
+	 * @return Den nächsten Knoten
+	 */
 	private V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, AStarAttribute> aStarTable) {
 		V next = null;
 		int schaetzung = Integer.MAX_VALUE;
@@ -105,6 +127,14 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 		}
 	}
 	
+	/**
+	 * Erzeugt eine Liste der Kanten, die zu dem kürzesten Weg zwischen dem Start- und Zielknoten des Graphen gehören.
+	 * @param graph Der Graph
+	 * @param dijkstraTable Die Dijkstra-Attribut-Tabelle
+	 * @param start Der Startknoten
+	 * @param destination Der Zielknoten
+	 * @return Eine Liste mit den Kanten die zum kürzesten Weg zwischen {@code start} und {@code ziel} gehören
+	 */
 	private List<E> createEdgeList(Graph<V, E> graph, Map<V, AStarAttribute> aStarTable, V start, V destination) {
 		// Kein Pfad von start - destination
 		if(aStarTable.get(destination).vorgaenger == null) {
@@ -124,7 +154,17 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 		return edgeList;
 	}
 	
+	/**
+	 * Eine Schnittstelle zum Bereitstellen von Heuristikwerten für Knoten.
+	 * 
+	 * @author Lars Nielsen
+	 */
 	public interface AStarProvider<T> {
+		/**
+		 * Ermittelt die Heuristik für einen übergebenen Knoten.
+		 * @param vertex Der Knoten
+		 * @return Die Heuristik
+		 */
 		int getHeuristik(T vertex);
 	}
 	
