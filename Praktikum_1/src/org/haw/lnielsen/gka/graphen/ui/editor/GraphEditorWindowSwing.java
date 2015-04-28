@@ -190,11 +190,11 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		StringBuilder message = new StringBuilder();
 		if(path != null) {
 			Graph<Knoten, DefaultEdge> graph = path.getGraph();
-			message.append("<html>Der kürzeste Weg von ");
+			message.append("<html>Der kürzeste Weg von <b>");
 			message.append(path.getStartVertex());
-			message.append(" nach ");
+			message.append("</b> nach <b>");
 			message.append(path.getEndVertex());
-			message.append(" führt über die Kanten <ol>");
+			message.append("</b> führt über die Kanten <ol>");
 			Knoten start = path.getStartVertex();
 			for(DefaultEdge edge : path.getEdgeList()) {
 				Knoten edgeStart = graph.getEdgeSource(edge);
@@ -206,11 +206,11 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 				message.append("</li>");
 				start = (start.equals(edgeStart) ? edgeTarget : edgeStart);
 			}
-			message.append("</ol> und hat ein Gewicht von ");
+			message.append("</ol> und hat ein Gewicht von <b>");
 			message.append((int)path.getWeight());
-			message.append("<br />Für diese Berechnung wurden ");
+			message.append("</b><br />Für diese Berechnung wurden <b>");
 			message.append(anzahlZugriffe);
-			message.append(" Zugriffe auf den Graphen durchgeführt!");
+			message.append("</b> Zugriffe auf den Graphen durchgeführt!");
 			message.append("</html>");
 		} else {
 			Object[] selectedElements = myGraphComponent.getSelectionModel().getSelectionCells();
