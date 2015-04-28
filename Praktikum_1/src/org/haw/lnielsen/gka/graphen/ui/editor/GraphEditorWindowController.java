@@ -92,7 +92,7 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onStoreGraph(File file) {
-		if(file != null && file.exists() && !file.isDirectory()) {
+		if(file != null && !file.isDirectory()) {
 			try {
 				myStorer.storeGraph(getModel(), new FileOutputStream(file));
 			} catch(FileNotFoundException e) {
@@ -100,8 +100,6 @@ public class GraphEditorWindowController
 			} catch(IOException e) {
 				getView().showFehlermeldung(e, true);
 			}
-		} else if(!file.exists()) {
-			getView().showFehlermeldung("Die angegebene Datei existiert nicht!");
 		} else if(file.isDirectory()) {
 			getView().showFehlermeldung("Die angegebene Datei ist ein Verzeichnis!");
 		}
