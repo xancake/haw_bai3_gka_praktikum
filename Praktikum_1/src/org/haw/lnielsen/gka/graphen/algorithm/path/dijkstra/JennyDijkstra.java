@@ -143,4 +143,8 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 		}	
 	}
 	
+	@Override
+	public String toString() {
+		return "Jenny Dijkstra Implementation";
+	}
 }
