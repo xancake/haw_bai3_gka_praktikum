@@ -26,8 +26,9 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	/**
 	 * Zeigt den übergebenen Pfad an.
 	 * @param path Der anzuzeigende Pfad
+	 * @param anzahlZugriffe Die Anzahl der Zugriffe auf den Graphen
 	 */
-	void showPath(GraphPath<Knoten, DefaultEdge> path);
+	void showPath(GraphPath<Knoten, DefaultEdge> path, int anzahlZugriffe);
 	
 	/**
 	 * Zeigt die Traversierung des Graphens an, in der Reihenfolge,

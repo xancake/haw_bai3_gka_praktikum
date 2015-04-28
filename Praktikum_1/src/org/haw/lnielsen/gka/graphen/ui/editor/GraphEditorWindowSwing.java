@@ -186,7 +186,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	}
 	
 	@Override
-	public void showPath(GraphPath<Knoten, DefaultEdge> path) {
+	public void showPath(GraphPath<Knoten, DefaultEdge> path, int anzahlZugriffe) {
 		StringBuilder message = new StringBuilder();
 		if(path != null) {
 			Graph<Knoten, DefaultEdge> graph = path.getGraph();
@@ -208,6 +208,9 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			}
 			message.append("</ol> und hat ein Gewicht von ");
 			message.append((int)path.getWeight());
+			message.append("<br />Für diese Berechnung wurden ");
+			message.append(anzahlZugriffe);
+			message.append(" Zugriffe auf den Graphen durchgeführt!");
 			message.append("</html>");
 		} else {
 			Object[] selectedElements = myGraphComponent.getSelectionModel().getSelectionCells();

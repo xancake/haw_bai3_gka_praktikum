@@ -22,6 +22,9 @@ import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.haw.lnielsen.gka.graphen.io.store.GKAGraphStorer;
 import org.haw.lnielsen.gka.graphen.io.store.GraphStorer_I;
+import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGerichteterGraph;
+import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGraph;
+import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
@@ -106,8 +109,14 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onCalculateShortestPath(ShortestPath_I<Knoten, DefaultEdge> algorithm, Knoten start, Knoten end) {
-		GraphPath<Knoten, DefaultEdge> shortestPath = algorithm.calculatePath(getModel(), start, end);
-		getView().showPath(shortestPath);
+		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph =
+				getModel() instanceof DirectedGraph
+				? new ZugriffszaehlenderGerichteterGraph<Knoten, DefaultEdge>((DirectedGraph<Knoten, DefaultEdge>)getModel())
+				: new ZugriffszaehlenderGraph<Knoten, DefaultEdge>(getModel());
+		
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = algorithm.calculatePath(graph, start, end);
+		getView().showPath(shortestPath, graph.getZugriffsZaehler());
 	}
 	
 	@Override
