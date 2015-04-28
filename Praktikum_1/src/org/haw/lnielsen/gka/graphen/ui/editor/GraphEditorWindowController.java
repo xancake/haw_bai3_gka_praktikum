@@ -16,6 +16,7 @@ import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenAStarProvider;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.LarsAStarShortestPath;
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JGraphTDijkstraAdapter;
+import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JennyDijkstra;
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.LarsDijkstraShortestPath;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
@@ -52,6 +53,7 @@ public class GraphEditorWindowController
 		myShortestPathAlgorithms = new ArrayList<>();
 		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter<Knoten, DefaultEdge>());
 		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath<Knoten, DefaultEdge>());
+		myShortestPathAlgorithms.add(new JennyDijkstra<Knoten, DefaultEdge>());
 		myShortestPathAlgorithms.add(new LarsAStarShortestPath<Knoten, DefaultEdge>(new KnotenAStarProvider()));
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 	}
