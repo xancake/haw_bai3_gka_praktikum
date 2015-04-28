@@ -112,7 +112,7 @@ public abstract class ShortestPathUndirectedTest_A {
 	}
 	
 	@Test
-	public void testCalculatePath_Unirected_NoPath() throws Exception {
+	public void testCalculatePath_Undirected_NoPath() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp6 - undirected numbers as names and single vertices.graph"));
 		Knoten start = new Knoten("12");
 		Knoten destination = new Knoten("9");
