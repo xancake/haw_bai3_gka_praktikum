@@ -1,4 +1,4 @@
-package org.haw.lnielsen.gka.graphen.algorithm.path;
+package org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphPathImpl;

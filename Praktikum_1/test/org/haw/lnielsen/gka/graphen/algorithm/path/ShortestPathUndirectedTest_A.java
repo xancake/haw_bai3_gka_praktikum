@@ -1,9 +1,8 @@
 package org.haw.lnielsen.gka.graphen.algorithm.path;
 
-import static org.junit.Assert.*;
+import static org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPathAsserts.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
@@ -18,7 +17,12 @@ import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class ShortestPathTest_A {
+/**
+ * Testfälle für Shortest-Path-Algorithmen für ungerichtete Graphen.
+ * 
+ * @author Lars Nielsen
+ */
+public abstract class ShortestPathUndirectedTest_A {
 	private ShortestPath_I<Knoten, DefaultEdge> myShortestPathAlgorithm;
 	
 	@Before
@@ -27,7 +31,7 @@ public abstract class ShortestPathTest_A {
 	}
 	
 	@Test
-	public void testCalculatePath_Undirected_Aufgabe_HusumHamburg() throws Exception {
+	public void testCalculatePath_Aufgabe_Undirected_HusumHamburg() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Husum", 120);
 		Knoten destination = new Knoten("Hamburg", 0);
@@ -46,7 +50,7 @@ public abstract class ShortestPathTest_A {
 	}
 	
 	@Test
-	public void testCalculatePath_Undirected_Aufgabe_MindenHamburg() throws Exception {
+	public void testCalculatePath_Aufgabe_Undirected_MindenHamburg() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Minden", 157);
 		Knoten destination = new Knoten("Hamburg", 0);
@@ -61,7 +65,7 @@ public abstract class ShortestPathTest_A {
 	}
 	
 	@Test
-	public void testCalculatePath_Undirected_Aufgabe_MuensterHamburg() throws Exception {
+	public void testCalculatePath_Aufgabe_Undirected_MuensterHamburg() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp3 - umlaute and empty lines.graph"));
 		Knoten start = new Knoten("Münster", 237);
 		Knoten destination = new Knoten("Hamburg", 0);
@@ -106,60 +110,10 @@ public abstract class ShortestPathTest_A {
 		), 395, shortestPath);
 	}
 	
-	@Test
-	public void testCalculatePath_Directed_1() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp1 - directed.graph"));
-		Knoten start = new Knoten("i");
-		Knoten destination = new Knoten("f");
-		
-		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
-		
-		assertGraphPath(Arrays.asList(
-				start,
-				new Knoten("c"),
-				new Knoten("d"),
-				new Knoten("e"),
-				destination
-		), 4, shortestPath);
-	}
-	
-	@Test
-	public void testCalculatePath_Directed_NoPath() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp6 - directed numbers as names and single vertices.graph"));
-		Knoten start = new Knoten("12");
-		Knoten destination = new Knoten("11");
-		
-		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
-		
-		assertNull(shortestPath);
-	}
-	
 	// TODO: Testfälle für kein Weg vorhanden
-	// TODO: Testfälle für directed Graphen
-	
-	private <V, E> void assertGraphPath(List<V> expectedVertices, double expectedWeight, GraphPath<V, E> actualPath) throws Exception {
-		assertNotNull(actualPath);
-		assertEquals(expectedWeight, actualPath.getWeight(), 0);
-		
-		List<E> edgeList = actualPath.getEdgeList();
-		assertEquals(expectedVertices.size()-1, edgeList.size());
-		
-		Graph<V, E> graph = actualPath.getGraph();
-		for(int i=0; i<edgeList.size(); i++) {
-			V edgeSource = graph.getEdgeSource(edgeList.get(i));
-			V edgeTarget = graph.getEdgeTarget(edgeList.get(i));
-			if(expectedVertices.get(i).equals(edgeSource)) {
-				assertEquals(expectedVertices.get(i), edgeSource);
-				assertEquals(expectedVertices.get(i+1), edgeTarget);
-			} else {
-				assertEquals(expectedVertices.get(i), edgeTarget);
-				assertEquals(expectedVertices.get(i+1), edgeSource);
-			}
-		}
-	}
 	
 	@Test
-	public void testCalculatePath_Random_100_4000() throws Exception {
+	public void testCalculatePath_Aufgabe_Random_100_4000() throws Exception {
 		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
 		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
 		generator.generateGraph(graph, new KnotenFactory(), null);
@@ -172,19 +126,10 @@ public abstract class ShortestPathTest_A {
 		assertGraphPath(jgraphtPath, larsPath);
 	}
 	
-	private void assertGraphPath(GraphPath<Knoten, DefaultEdge> expectedPath, GraphPath<Knoten, DefaultEdge> actualPath) {
-		assertNotNull(actualPath);
-		assertEquals(expectedPath.getStartVertex(), actualPath.getStartVertex());
-		assertEquals(expectedPath.getEndVertex(), actualPath.getEndVertex());
-		assertEquals(expectedPath.getWeight(), actualPath.getWeight(), 0);
-		
-		List<DefaultEdge> expectedList = expectedPath.getEdgeList();
-		List<DefaultEdge> actualList   = actualPath.getEdgeList();
-		assertEquals(expectedList.size(), actualList.size());
-		for(int i=0; i<expectedList.size(); i++) {
-			assertEquals(expectedList.get(i), actualList.get(i));
-		}
-	}
-	
+	/**
+	 * Fabrikmethode für erbende Tests um ihre entsprechende Implementation des Algorithmus
+	 * bereitzustellen.
+	 * @return Der Algorithmus
+	 */
 	protected abstract ShortestPath_I<Knoten, DefaultEdge> createShortestPathAlgorithm();
 }
