@@ -109,14 +109,16 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onCalculateShortestPath(ShortestPath_I<Knoten, DefaultEdge> algorithm, Knoten start, Knoten end) {
-		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph =
-				getModel() instanceof DirectedGraph
-				? new ZugriffszaehlenderGerichteterGraph<Knoten, DefaultEdge>((DirectedGraph<Knoten, DefaultEdge>)getModel())
-				: new ZugriffszaehlenderGraph<Knoten, DefaultEdge>(getModel());
-		
+		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph = createZugriffszaehlenderGraph(getModel());
 		
 		GraphPath<Knoten, DefaultEdge> shortestPath = algorithm.calculatePath(graph, start, end);
 		getView().showPath(shortestPath, graph.getZugriffsZaehler());
+	}
+	
+	private ZugriffszaehlenderGraph<Knoten, DefaultEdge> createZugriffszaehlenderGraph(Graph<Knoten, DefaultEdge> graph) {
+		return graph instanceof DirectedGraph
+				? new ZugriffszaehlenderGerichteterGraph<Knoten, DefaultEdge>((DirectedGraph<Knoten, DefaultEdge>)graph)
+				: new ZugriffszaehlenderGraph<Knoten, DefaultEdge>(graph);
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Testfälle für Shortest-Path-Algorithmen für ungerichtete Graphen.
+ * Allgemeine Testfälle für Shortest-Path-Algorithmen für ungerichtete Graphen.
  * 
  * @author Lars Nielsen
  */

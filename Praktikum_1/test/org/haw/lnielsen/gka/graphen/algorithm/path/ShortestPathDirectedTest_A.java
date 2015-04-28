@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Testfälle für Shortest-Path-Algorithmen für gerichtete Graphen.
+ * Allgemeine Testfälle für Shortest-Path-Algorithmen für gerichtete Graphen.
  * 
  * @author Lars Nielsen
  */
