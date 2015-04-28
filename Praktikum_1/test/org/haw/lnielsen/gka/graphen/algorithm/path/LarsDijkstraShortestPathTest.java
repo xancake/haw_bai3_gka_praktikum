@@ -1,6 +1,7 @@
 package org.haw.lnielsen.gka.graphen.algorithm.path;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.LarsDijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 
 public class LarsDijkstraShortestPathTest extends ShortestPathTest_A {

@@ -12,7 +12,7 @@ import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-public class GKAGraphFileStorer implements GraphStorer_I {
+public class GKAGraphStorer implements GraphStorer_I {
 	private static final String DIRECTED            = "#directed";
 	private static final String ATTRIBUTED          = "#attributed";
 	private static final String WEIGHTED            = "#weighted";

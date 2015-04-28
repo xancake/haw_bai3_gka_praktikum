@@ -6,10 +6,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.generate.RandomGraphGenerator;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -150,6 +156,34 @@ public abstract class ShortestPathTest_A {
 				assertEquals(expectedVertices.get(i), edgeTarget);
 				assertEquals(expectedVertices.get(i+1), edgeSource);
 			}
+		}
+	}
+	
+	@Test
+	public void testCalculatePath_Random_100_4000() throws Exception {
+		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
+		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
+		generator.generateGraph(graph, new KnotenFactory(), null);
+		
+		Knoten start = new Knoten("0");
+		Knoten destination = new Knoten("99");
+		
+		GraphPath<Knoten, DefaultEdge> jgraphtPath = new DijkstraShortestPath<Knoten, DefaultEdge>(graph, start, destination).getPath();
+		GraphPath<Knoten, DefaultEdge> larsPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		assertGraphPath(jgraphtPath, larsPath);
+	}
+	
+	private void assertGraphPath(GraphPath<Knoten, DefaultEdge> expectedPath, GraphPath<Knoten, DefaultEdge> actualPath) {
+		assertNotNull(actualPath);
+		assertEquals(expectedPath.getStartVertex(), actualPath.getStartVertex());
+		assertEquals(expectedPath.getEndVertex(), actualPath.getEndVertex());
+		assertEquals(expectedPath.getWeight(), actualPath.getWeight(), 0);
+		
+		List<DefaultEdge> expectedList = expectedPath.getEdgeList();
+		List<DefaultEdge> actualList   = actualPath.getEdgeList();
+		assertEquals(expectedList.size(), actualList.size());
+		for(int i=0; i<expectedList.size(); i++) {
+			assertEquals(expectedList.get(i), actualList.get(i));
 		}
 	}
 	
