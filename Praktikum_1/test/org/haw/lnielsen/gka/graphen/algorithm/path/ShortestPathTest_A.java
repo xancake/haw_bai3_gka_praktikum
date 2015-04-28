@@ -10,7 +10,6 @@ import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.generate.RandomGraphGenerator;
