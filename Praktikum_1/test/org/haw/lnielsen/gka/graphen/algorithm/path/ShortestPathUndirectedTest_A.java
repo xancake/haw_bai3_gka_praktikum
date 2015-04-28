@@ -1,6 +1,7 @@
 package org.haw.lnielsen.gka.graphen.algorithm.path;
 
 import static org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPathAsserts.*;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
@@ -110,7 +111,16 @@ public abstract class ShortestPathUndirectedTest_A {
 		), 395, shortestPath);
 	}
 	
-	// TODO: Testfälle für kein Weg vorhanden
+	@Test
+	public void testCalculatePath_Unirected_NoPath() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp6 - undirected numbers as names and single vertices.graph"));
+		Knoten start = new Knoten("12");
+		Knoten destination = new Knoten("9");
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertNull(shortestPath);
+	}
 	
 	@Test
 	public void testCalculatePath_Aufgabe_Random_100_4000() throws Exception {
