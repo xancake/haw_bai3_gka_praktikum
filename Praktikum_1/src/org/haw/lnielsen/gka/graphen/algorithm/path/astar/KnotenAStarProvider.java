@@ -1,6 +1,6 @@
-package org.haw.lnielsen.gka.graphen;
+package org.haw.lnielsen.gka.graphen.algorithm.path.astar;
 
-import org.haw.lnielsen.gka.graphen.algorithm.path.LarsAStarShortestPath.AStarProvider;
+import org.haw.lnielsen.gka.graphen.Knoten;
 
 /**
  * Stellt die Heuristik eines Knoten bereit.

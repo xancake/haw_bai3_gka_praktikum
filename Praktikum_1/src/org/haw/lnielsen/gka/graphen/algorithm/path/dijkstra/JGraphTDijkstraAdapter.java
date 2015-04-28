@@ -1,5 +1,6 @@
-package org.haw.lnielsen.gka.graphen.algorithm.path;
+package org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra;
 
+import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.DijkstraShortestPath;

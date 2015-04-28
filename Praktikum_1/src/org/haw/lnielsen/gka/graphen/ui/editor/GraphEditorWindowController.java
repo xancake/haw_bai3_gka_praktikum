@@ -12,11 +12,11 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
-import org.haw.lnielsen.gka.graphen.KnotenAStarProvider;
-import org.haw.lnielsen.gka.graphen.algorithm.path.JGraphTDijkstraAdapter;
-import org.haw.lnielsen.gka.graphen.algorithm.path.LarsAStarShortestPath;
-import org.haw.lnielsen.gka.graphen.algorithm.path.LarsDijkstraShortestPath;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
+import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenAStarProvider;
+import org.haw.lnielsen.gka.graphen.algorithm.path.astar.LarsAStarShortestPath;
+import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JGraphTDijkstraAdapter;
+import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.LarsDijkstraShortestPath;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
@@ -35,7 +35,9 @@ import de.xancake.ui.mvc.window.WindowController_A;
  * 
  * @author Lars Nielsen
  */
-public class GraphEditorWindowController extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I> implements GraphEditorWindowListener_I {
+public class GraphEditorWindowController
+		extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I>
+		implements GraphEditorWindowListener_I {
 	private GraphParser_I myParser;
 	private GraphStorer_I myStorer;
 	private List<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;

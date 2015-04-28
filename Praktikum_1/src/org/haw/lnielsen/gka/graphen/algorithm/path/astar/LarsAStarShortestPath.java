@@ -1,4 +1,4 @@
-package org.haw.lnielsen.gka.graphen.algorithm.path;
+package org.haw.lnielsen.gka.graphen.algorithm.path.astar;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,17 +8,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphPathImpl;
 
 /**
- * Implementation des Dijkstra-Shortest-Path-Algorithmus wie in der Vorlesung gelernt.
+ * Implementation des A* Algorithmus wie in der Vorlesung gelernt.
  * 
  * @author Lars Nielsen
  */
-public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
+public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
+	private AStarProvider<V> myAStarProvider;
+	
+	public LarsAStarShortestPath(AStarProvider<V> provider) {
+		myAStarProvider = provider;
+	}
+	
 	@Override
 	public GraphPath<V, E> calculatePath(Graph<V, E> graph, V start, V destination) {
 		if(!graph.containsVertex(start)) {
@@ -28,13 +35,13 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 			throw new IllegalArgumentException("Der Zielknoten ist nicht im Graphen enthalten");
 		}
 		
-		Map<V, DijkstraAttribute> dijkstraTable = initDijkstraTable(graph, start);
+		Map<V, AStarAttribute> aStarTable = initAStarTable(graph, start);
 		Set<V> bereitsVerarbeitet = new HashSet<>();
 		Set<V> nichtVerarbeitet = new HashSet<>();
 		nichtVerarbeitet.add(start);
 		
 		while(!nichtVerarbeitet.isEmpty() && !bereitsVerarbeitet.contains(destination)) {
-			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, dijkstraTable);
+			V vertex = getNaechstenNichtVerarbeitetenKnoten(nichtVerarbeitet, aStarTable);
 			
 			// Aktuellen Knoten als verarbeitet markieren
 			nichtVerarbeitet.remove(vertex);
@@ -50,12 +57,13 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 				}
 				
 				// Attribute für den anderen Knoten anpassen
-				DijkstraAttribute otherAttribute = dijkstraTable.get(other);
+				AStarAttribute otherAttribute = aStarTable.get(other);
 				if(!bereitsVerarbeitet.contains(other)) {
-					DijkstraAttribute vertexAttribute = dijkstraTable.get(vertex);
+					AStarAttribute vertexAttribute = aStarTable.get(vertex);
 					int entfNeu = vertexAttribute.entfernung + (int)graph.getEdgeWeight(edge);
 					if(entfNeu < otherAttribute.entfernung) {
 						otherAttribute.entfernung = entfNeu;
+						otherAttribute.schaetzung = entfNeu + myAStarProvider.getHeuristik(other);
 						otherAttribute.vorgaenger = vertex;
 					}
 				}
@@ -63,48 +71,50 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 		}
 		
 		// Zielknoten nicht erreichbar
-		if(dijkstraTable.get(destination).vorgaenger == null) {
+		if(aStarTable.get(destination).vorgaenger == null) {
 			return null;
 		}
 		
-		int weight = dijkstraTable.get(destination).entfernung;
-		List<E> edgeList = createEdgeList(graph, dijkstraTable, start, destination);
+		int weight = aStarTable.get(destination).entfernung;
+		List<E> edgeList = createEdgeList(graph, aStarTable, start, destination);
 		return new GraphPathImpl<V, E>(graph, start, destination, edgeList, weight);
 	}
 	
 	/**
-	 * Initialisiert die Dijkstra-Attribut-Tabelle für alle Knoten aus dem Graphen.
-	 * Dabei wird das Attribut für den Startknoten mit {@code vorgaenger=start} und {@code entfernung=0} vorbelegt.
+	 * Initialisiert die AStar-Tabelle für alle Knoten aus dem Graphen.
+	 * Dabei wird das Attribut für den Startknoten mit {@code vorgaenger=start}, {@code entfernung=0}
+	 * und {@code schaetzung=heuristik von start} vorbelegt.
 	 * @param graph Der Graph
 	 * @param start Der Startknoten
 	 * @return Die Dijkstra-Tabelle
 	 */
-	private Map<V, DijkstraAttribute> initDijkstraTable(Graph<V, E> graph, V start) {
-		Map<V, DijkstraAttribute> dijkstraTable = new HashMap<V, DijkstraAttribute>(graph.vertexSet().size());
+	private Map<V, AStarAttribute> initAStarTable(Graph<V, E> graph, V start) {
+		Map<V, AStarAttribute> dijkstraTable = new HashMap<V, AStarAttribute>(graph.vertexSet().size());
 		for(V vertex : graph.vertexSet()) {
-			dijkstraTable.put(vertex, new DijkstraAttribute());
+			dijkstraTable.put(vertex, new AStarAttribute());
 		}
-		DijkstraAttribute startAttributes = dijkstraTable.get(start);
+		AStarAttribute startAttributes = dijkstraTable.get(start);
 		startAttributes.entfernung = 0;
 		startAttributes.vorgaenger = start;
+		startAttributes.schaetzung = myAStarProvider.getHeuristik(start);
 		return dijkstraTable;
 	}
 	
 	/**
 	 * Ermittelt den nächsten zu verarbeitenden Knoten.
-	 * Dies geschieht, indem der Knoten mit dem kleinsten Wert für {@code entfernung} ermittelt wird.
+	 * Dies geschieht, indem der Knoten mit dem kleinsten Wert für {@code schaetzung} ermittelt wird.
 	 * @param nichtVerarbeitet Die Menge der nicht verarbeiteten Knoten
-	 * @param dijkstraTable Die Dijkstra-Attribut-Tabelle
+	 * @param dijkstraTable Die Dijkstra-Tabelle
 	 * @return Den nächsten Knoten
 	 */
-	private V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, DijkstraAttribute> dijkstraTable) {
+	private V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, AStarAttribute> aStarTable) {
 		V next = null;
-		int entfernung = Integer.MAX_VALUE;
+		int schaetzung = Integer.MAX_VALUE;
 		for(V vertex : nichtVerarbeitet) {
-			DijkstraAttribute vertexAttributes = dijkstraTable.get(vertex);
-			if(vertexAttributes.entfernung < entfernung) {
+			AStarAttribute vertexAttributes = aStarTable.get(vertex);
+			if(vertexAttributes.schaetzung < schaetzung) {
 				next = vertex;
-				entfernung = vertexAttributes.entfernung;
+				schaetzung = vertexAttributes.schaetzung;
 			}
 		}
 		return next;
@@ -126,9 +136,9 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 	 * @param destination Der Zielknoten
 	 * @return Eine Liste mit den Kanten die zum kürzesten Weg zwischen {@code start} und {@code ziel} gehören
 	 */
-	private List<E> createEdgeList(Graph<V, E> graph, Map<V, DijkstraAttribute> dijkstraTable, V start, V destination) {
+	private List<E> createEdgeList(Graph<V, E> graph, Map<V, AStarAttribute> aStarTable, V start, V destination) {
 		// Kein Pfad von start - destination
-		if(dijkstraTable.get(destination).vorgaenger == null) {
+		if(aStarTable.get(destination).vorgaenger == null) {
 			return null;
 		}
 		
@@ -136,7 +146,7 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 		
 		V vertex = destination;
 		while(!start.equals(vertex)) {
-			DijkstraAttribute vertexAttribute = dijkstraTable.get(vertex);
+			AStarAttribute vertexAttribute = aStarTable.get(vertex);
 			edgeList.add(graph.getEdge(vertexAttribute.vorgaenger, vertex));
 			vertex = vertexAttribute.vorgaenger;
 		}
@@ -145,12 +155,14 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 		return edgeList;
 	}
 	
-	private class DijkstraAttribute {
+	private class AStarAttribute {
 		private int entfernung;
+		private int schaetzung;
 		private V vorgaenger;
 		
-		public DijkstraAttribute() {
+		public AStarAttribute() {
 			entfernung = Integer.MAX_VALUE;
+			schaetzung = 0;
 			vorgaenger = null;
 		}
 		
@@ -162,6 +174,6 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 	
 	@Override
 	public String toString() {
-		return "Lars Dijkstra Implementation";
+		return "Lars A* Implementation";
 	}
 }
