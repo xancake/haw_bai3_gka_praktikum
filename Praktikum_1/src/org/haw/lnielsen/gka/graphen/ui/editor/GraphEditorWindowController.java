@@ -23,6 +23,8 @@ import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
 import org.haw.lnielsen.gka.graphen.io.store.GKAGraphStorer;
 import org.haw.lnielsen.gka.graphen.io.store.GraphStorer_I;
+import org.haw.lnielsen.gka.graphen.ui.generator.GraphGeneratorController;
+import org.haw.lnielsen.gka.graphen.ui.generator.GraphGeneratorControllerListener_I;
 import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGerichteterGraph;
 import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGraph;
 import org.jgrapht.DirectedGraph;
@@ -41,13 +43,16 @@ import de.xancake.ui.mvc.window.WindowController_A;
  */
 public class GraphEditorWindowController
 		extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I>
-		implements GraphEditorWindowListener_I {
+		implements GraphEditorWindowListener_I, GraphGeneratorControllerListener_I {
+	private GraphGeneratorController myGraphGenerator;
 	private GraphParser_I myParser;
 	private GraphStorer_I myStorer;
 	private List<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
 	
 	public GraphEditorWindowController() {
 		super(null, new GraphEditorWindowSwing());
+		myGraphGenerator = new GraphGeneratorController();
+		myGraphGenerator.addControllerListener(this);
 		myParser = new GKAGraphParser();
 		myStorer = new GKAGraphStorer();
 		myShortestPathAlgorithms = new ArrayList<>();
@@ -70,7 +75,7 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onNewGraph() {
-		
+		myGraphGenerator.show();
 	}
 	
 	@Override
@@ -129,6 +134,16 @@ public class GraphEditorWindowController
 			knotenList.add(iterator.next());
 		}
 		getView().showTraverseTrace(knotenList);
+	}
+	
+	@Override
+	public void onGraphGenerated(Graph<Knoten, DefaultEdge> graph) {
+		setModel(graph);
+	}
+	
+	@Override
+	public void onCancel() {
+		myGraphGenerator.hide();
 	}
 	
 	@Override
