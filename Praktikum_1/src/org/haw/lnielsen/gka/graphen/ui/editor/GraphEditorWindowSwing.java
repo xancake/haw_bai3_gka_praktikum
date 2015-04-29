@@ -1,7 +1,6 @@
 package org.haw.lnielsen.gka.graphen.ui.editor;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -77,7 +76,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	}
 	
 	@Override
-	protected void initLayout(Container content) {
+	protected void initLayout(JPanel content) {
 		JToolBar toolbar = new JToolBar();
 		toolbar.add(myNewButton);
 		toolbar.add(myLoadButton);
