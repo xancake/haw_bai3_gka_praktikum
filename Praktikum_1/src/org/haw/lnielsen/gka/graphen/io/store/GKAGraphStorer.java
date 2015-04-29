@@ -12,6 +12,12 @@ import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
+/**
+ * Klasse zum Speichern von Graphen in einen Ausgabestrom.
+ * Dabei wird das Format aus dem GKA-Praktikum eingehalten (vgl. GKAGraphParser).
+ * 
+ * @author Lars Nielsen
+ */
 public class GKAGraphStorer implements GraphStorer_I {
 	private static final String DIRECTED            = "#directed";
 	private static final String ATTRIBUTED          = "#attributed";
@@ -60,6 +66,13 @@ public class GKAGraphStorer implements GraphStorer_I {
 		}
 	}
 	
+	/**
+	 * Schreibt einen Knoten in den Ausgabestrom. Dabei wird das Attribut nur mit geschrieben,
+	 * wenn es sich um einen attributierten Graphen handelt.
+	 * @param out Der Ausgabestrom
+	 * @param knoten Der zu schreibende Knoten
+	 * @param attributed Ob der Knoten attributiert geschrieben werden soll oder nicht
+	 */
 	private void printKnoten(PrintStream out, Knoten knoten, boolean attributed) {
 		out.print(knoten.getName());
 		if(attributed) {
