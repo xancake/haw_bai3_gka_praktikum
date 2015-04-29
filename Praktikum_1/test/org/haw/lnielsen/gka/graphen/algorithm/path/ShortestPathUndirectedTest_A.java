@@ -112,6 +112,20 @@ public abstract class ShortestPathUndirectedTest_A {
 	}
 	
 	@Test
+	public void testCalculatePath_Undirected_MultipleComponents() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp6 - undirected numbers as names and single vertices.graph"));
+		Knoten start = new Knoten("7");
+		Knoten destination = new Knoten("9");
+		
+		GraphPath<Knoten, DefaultEdge> shortestPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertGraphPath(Arrays.asList(
+				start,
+				destination
+		), 1, shortestPath);
+	}
+	
+	@Test
 	public void testCalculatePath_Undirected_NoPath() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/bsp/bsp6 - undirected numbers as names and single vertices.graph"));
 		Knoten start = new Knoten("12");
@@ -134,6 +148,21 @@ public abstract class ShortestPathUndirectedTest_A {
 		GraphPath<Knoten, DefaultEdge> jgraphtPath = new DijkstraShortestPath<Knoten, DefaultEdge>(graph, start, destination).getPath();
 		GraphPath<Knoten, DefaultEdge> larsPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
 		assertGraphPath(jgraphtPath, larsPath);
+	}
+	
+	@Test
+	public void testCalculatePath_SamePathOverAndOverAgain() throws Exception {
+		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
+		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
+		generator.generateGraph(graph, new KnotenFactory(), null);
+		
+		Knoten start = new Knoten("0");
+		Knoten destination = new Knoten("99");
+		
+		GraphPath<Knoten, DefaultEdge> path = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		for(int i=0; i<10; i++) {
+			assertGraphPath(path, createShortestPathAlgorithm().calculatePath(graph, start, destination));
+		}
 	}
 	
 	/**
