@@ -30,6 +30,10 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 			V aktuellerKnoten = sucheKleinsteEntf(graph, dijkstraMap);
 			E aktuelleKante;
 			
+			if(aktuellerKnoten == null) {
+				return null;
+			}
+			
 			Attribut nextAttribut = dijkstraMap.get(aktuellerKnoten);
 			nextAttribut._ok = true;
 			
