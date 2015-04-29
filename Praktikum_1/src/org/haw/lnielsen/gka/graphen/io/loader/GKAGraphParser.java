@@ -5,16 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-import org.haw.lnielsen.gka.graphen.GewichteteKante;
-import org.haw.lnielsen.gka.graphen.Kante;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.ListenableDirectedGraph;
-import org.jgrapht.graph.ListenableDirectedWeightedGraph;
-import org.jgrapht.graph.ListenableUndirectedGraph;
-import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 
 /**
  * Die standart Implementation eines Graph-Parsers.
@@ -86,7 +82,7 @@ public class GKAGraphParser implements GraphParser_I {
 				throw new GraphParseException("File is empty");
 			}
 			
-			Graph<Knoten, DefaultEdge> graph = createGraph(directed, weighted);
+			Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(directed, weighted);
 			if(headerLine == NO_HEADER_FOUND) {
 				parseDefinitionLine(graph, directed, attributed, weighted, line, currentLine);
 			}
@@ -156,24 +152,6 @@ public class GKAGraphParser implements GraphParser_I {
 			} catch(IllegalArgumentException e) {
 				throw new GraphParseException("Couldn't parse definition line " + currentLine + ": " + line, e);
 			}
-		}
-	}
-	
-	/**
-	 * Erzeugt den korrekten Graphen für die übergebene Konfiguration.
-	 * @param directed Ob der zu erzeugende Graph gerichtet sein soll
-	 * @param weighted Ob der zu erzeugende Graph gewichtet sein soll
-	 * @return Ein Graph, der der gewünschten Konfiguration entspricht
-	 */
-	private Graph<Knoten, DefaultEdge> createGraph(boolean directed, boolean weighted) {
-		if(directed && weighted) {
-			return new ListenableDirectedWeightedGraph<Knoten, DefaultEdge>(GewichteteKante.class);
-		} else if(directed && !weighted) {
-			return new ListenableDirectedGraph<Knoten, DefaultEdge>(Kante.class);
-		} else if(!directed && weighted) {
-			return new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(GewichteteKante.class);
-		} else {
-			return new ListenableUndirectedGraph<Knoten, DefaultEdge>(Kante.class);
 		}
 	}
 }
