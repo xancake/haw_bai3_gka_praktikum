@@ -33,13 +33,38 @@ public class GKAGraphStorer implements GraphStorer_I {
 			if(weighted)   out.print(WEIGHTED);
 			out.println();
 			
-			Set<Knoten> vertices = graph.vertexSet();
 			Set<DefaultEdge> edges = graph.edgeSet();
-			for(Knoten knoten : vertices) {
+			for(DefaultEdge edge : edges) {
+				Knoten source = graph.getEdgeSource(edge);
+				Knoten target = graph.getEdgeTarget(edge);
 				
+				printKnoten(out, source, attributed);
+				out.print(KANTEN_SEPARATOR);
+				printKnoten(out, target, attributed);
+				
+				if(weighted) {
+					out.print(WEIGHT_SEPARATOR);
+					out.print((int)graph.getEdgeWeight(edge));
+				}
 				
 				out.println();
 			}
+			
+			Set<Knoten> vertices = graph.vertexSet();
+			for(Knoten vertex : vertices) {
+				if(graph.edgesOf(vertex).isEmpty()) {
+					printKnoten(out, vertex, attributed);
+					out.println();
+				}
+			}
+		}
+	}
+	
+	private void printKnoten(PrintStream out, Knoten knoten, boolean attributed) {
+		out.print(knoten.getName());
+		if(attributed) {
+			out.print(ATTRIBUTE_SEPARATOR);
+			out.print(knoten.getAttribut());
 		}
 	}
 }
