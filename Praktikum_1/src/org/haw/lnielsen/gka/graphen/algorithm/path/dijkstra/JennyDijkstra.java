@@ -43,7 +43,7 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 			for(V vertex : graph.vertexSet()){
 				Attribut knotenAttributVertex = dijkstraMap.get(vertex);
 				
-				if(knotenAttributVertex._ok == false && graph.containsEdge(aktuellerKnoten, vertex)) {
+				if(!knotenAttributVertex._ok && graph.containsEdge(aktuellerKnoten, vertex)) {
 					aktuelleKante = graph.getEdge(aktuellerKnoten, vertex);
 					neueEntf = nextAttribut._entfernung + (int)graph.getEdgeWeight(aktuelleKante);
 					if(dijkstraMap.get(vertex)._entfernung > neueEntf){
@@ -102,7 +102,7 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 		Boolean vertexOk = true;
 		for(V vertex : graph.vertexSet()){
 			vertexOk = (map.get(vertex))._ok;
-			if(vertexOk == false){
+			if(!vertexOk){
 				return vertexOk;
 			}
 		}
