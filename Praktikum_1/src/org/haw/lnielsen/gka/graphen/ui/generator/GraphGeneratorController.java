@@ -20,6 +20,11 @@ import org.jgrapht.graph.DefaultEdge;
 import de.xancake.pattern.listener.Event_A;
 import de.xancake.ui.mvc.window.WindowController_A;
 
+/**
+ * Der Controller für die Graph-Generator-View.
+ * 
+ * @author Lars Nielsen
+ */
 public class GraphGeneratorController
 		extends WindowController_A<Void, GraphGeneratorViewListener_I, GraphGeneratorView_I, GraphGeneratorControllerListener_I>
 		implements GraphGeneratorViewListener_I {

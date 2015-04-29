@@ -24,6 +24,11 @@ import org.jgrapht.graph.DefaultEdge;
 
 import de.xancake.ui.mvc.window.SwingWindowView_A;
 
+/**
+ * Die Swing-Implementation der Graph-Generator-View.
+ * 
+ * @author Lars Nielsen
+ */
 public class GraphGeneratorViewSwing
 		extends SwingWindowView_A<Void, GraphGeneratorViewListener_I>
 		implements GraphGeneratorView_I {
