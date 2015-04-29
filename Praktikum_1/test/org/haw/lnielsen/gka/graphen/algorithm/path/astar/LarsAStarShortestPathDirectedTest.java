@@ -8,6 +8,6 @@ import org.jgrapht.graph.DefaultEdge;
 public class LarsAStarShortestPathDirectedTest extends ShortestPathDirectedTest_A {
 	@Override
 	protected ShortestPath_I<Knoten, DefaultEdge> createShortestPathAlgorithm() {
-		return new LarsAStarShortestPath<Knoten, DefaultEdge>(new KnotenAStarProvider());
+		return new LarsAStarShortestPath<Knoten, DefaultEdge>(new KnotenHeuristikProvider());
 	}
 }

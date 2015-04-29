@@ -7,7 +7,7 @@ import org.haw.lnielsen.gka.graphen.Knoten;
  * 
  * @author Lars Nielsen
  */
-public class KnotenAStarProvider implements AStarProvider<Knoten> {
+public class KnotenHeuristikProvider implements HeuristikProvider_I<Knoten> {
 	@Override
 	public int getHeuristik(Knoten knoten) {
 		return knoten.getAttribut();

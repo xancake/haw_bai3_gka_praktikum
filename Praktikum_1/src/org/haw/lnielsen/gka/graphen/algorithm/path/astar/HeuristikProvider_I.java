@@ -5,7 +5,7 @@ package org.haw.lnielsen.gka.graphen.algorithm.path.astar;
  * 
  * @author Lars Nielsen
  */
-public interface AStarProvider<T> {
+public interface HeuristikProvider_I<T> {
 	/**
 	 * Ermittelt die Heuristik für einen übergebenen Knoten.
 	 * @param vertex Der Knoten

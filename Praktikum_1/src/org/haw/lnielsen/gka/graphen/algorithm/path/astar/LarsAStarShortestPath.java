@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
@@ -20,10 +21,10 @@ import org.jgrapht.graph.GraphPathImpl;
  * @author Lars Nielsen
  */
 public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
-	private AStarProvider<V> myAStarProvider;
+	private HeuristikProvider_I<V> myHeuristikProvider;
 	
-	public LarsAStarShortestPath(AStarProvider<V> provider) {
-		myAStarProvider = provider;
+	public LarsAStarShortestPath(HeuristikProvider_I<V> provider) {
+		myHeuristikProvider = Objects.requireNonNull(provider);
 	}
 	
 	@Override
@@ -63,7 +64,7 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 					int entfNeu = vertexAttribute.entfernung + (int)graph.getEdgeWeight(edge);
 					if(entfNeu < otherAttribute.entfernung) {
 						otherAttribute.entfernung = entfNeu;
-						otherAttribute.schaetzung = entfNeu + myAStarProvider.getHeuristik(other);
+						otherAttribute.schaetzung = entfNeu + myHeuristikProvider.getHeuristik(other);
 						otherAttribute.vorgaenger = vertex;
 					}
 				}
@@ -96,7 +97,7 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 		AStarAttribute startAttributes = dijkstraTable.get(start);
 		startAttributes.entfernung = 0;
 		startAttributes.vorgaenger = start;
-		startAttributes.schaetzung = myAStarProvider.getHeuristik(start);
+		startAttributes.schaetzung = myHeuristikProvider.getHeuristik(start);
 		return dijkstraTable;
 	}
 	
