@@ -77,6 +77,8 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	
 	@Override
 	protected void initLayout(JPanel content) {
+		content.setLayout(new BorderLayout());
+		
 		JToolBar toolbar = new JToolBar();
 		toolbar.add(myNewButton);
 		toolbar.add(myLoadButton);
