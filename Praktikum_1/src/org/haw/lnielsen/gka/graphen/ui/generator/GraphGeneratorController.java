@@ -8,10 +8,16 @@ import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.generator.RandomAttributedKnotenFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteBipartiteGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.EmptyGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.GraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.GridGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.LinearGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.RandomGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.RingGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.ScaleFreeGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.StarGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.WheelGraphGeneratorFactory;
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
 import org.jgrapht.generate.GraphGenerator;
@@ -34,7 +40,13 @@ public class GraphGeneratorController
 		generatoren.add(new RandomGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new EmptyGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new LinearGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new RingGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new WheelGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new StarGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new GridGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new CompleteGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new CompleteBipartiteGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new ScaleFreeGraphGeneratorFactory<Knoten, DefaultEdge>());
 		getView().setGraphGenerators(generatoren);
 	}
 	
