@@ -4,6 +4,7 @@ import static org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPathAsserts.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
@@ -146,8 +147,12 @@ public abstract class ShortestPathUndirectedTest_A {
 		Knoten destination = new Knoten("99");
 		
 		GraphPath<Knoten, DefaultEdge> jgraphtPath = new DijkstraShortestPath<Knoten, DefaultEdge>(graph, start, destination).getPath();
-		GraphPath<Knoten, DefaultEdge> larsPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
-		assertGraphPath(jgraphtPath, larsPath);
+		GraphPath<Knoten, DefaultEdge> ourPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
+		
+		assertNotNull(ourPath);
+		assertEquals(jgraphtPath.getStartVertex(), ourPath.getStartVertex());
+		assertEquals(jgraphtPath.getEndVertex(), ourPath.getEndVertex());
+		assertEquals(jgraphtPath.getWeight(), ourPath.getWeight(), 0);
 	}
 	
 	@Test
