@@ -28,8 +28,7 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 		
 		while(alleKnotenBesucht(graph, dijkstraMap) == false){
 			V aktuellerKnoten = sucheKleinsteEntf(graph, dijkstraMap);
-			E aktuelleKante;
-			
+		
 			if(aktuellerKnoten == null) {
 				return null;
 			}
@@ -37,19 +36,24 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 			Attribut nextAttribut = dijkstraMap.get(aktuellerKnoten);
 			nextAttribut._ok = true;
 			
-			int neueEntf = 0;
-			
+			//Wenn man am Ziel angekommen ist und die kürzeste Entfernung für den Zielknoten gefunden wurde,
+			//breche Schleife ab und gebe den Path aus.
+			if(dijkstraMap.get(destination)._ok && aktuellerKnoten.equals(destination)){
+				break;
+			}
 			
 			for(V vertex : graph.vertexSet()){
 				Attribut knotenAttributVertex = dijkstraMap.get(vertex);
-				
+				int neueEntf = 0;
+				E aktuelleKante;
+		
 				if(!knotenAttributVertex._ok && graph.containsEdge(aktuellerKnoten, vertex)) {
 					aktuelleKante = graph.getEdge(aktuellerKnoten, vertex);
 					neueEntf = nextAttribut._entfernung + (int)graph.getEdgeWeight(aktuelleKante);
 					if(dijkstraMap.get(vertex)._entfernung > neueEntf){
 						knotenAttributVertex._entfernung = neueEntf;
-						knotenAttributVertex._vorgaenger = aktuellerKnoten;
-					}				
+						knotenAttributVertex._vorgaenger = aktuellerKnoten;	
+					}
 				}
 			}
 		}
@@ -83,7 +87,7 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 		V minVertex = null;
 		for(V vertex : graph.vertexSet()){
 			Attribut attrVertex = map.get(vertex);
-			if(attrVertex._ok == false && (attrVertex._entfernung < min)) {
+			if(!attrVertex._ok && (attrVertex._entfernung < min)) {
 				min = attrVertex._entfernung;
 				minVertex = vertex;
 			}
