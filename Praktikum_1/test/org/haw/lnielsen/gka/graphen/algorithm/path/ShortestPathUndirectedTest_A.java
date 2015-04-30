@@ -4,7 +4,6 @@ import static org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPathAsserts.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
