@@ -35,4 +35,12 @@ public class RandomAttributedKnotenFactory implements VertexFactory<Knoten> {
 		}
 		return new Knoten(String.valueOf(myVertexCounter++), 1 + (int)(myRandom.nextInt(myAttributeMaxValue)));
 	}
+	
+	/**
+	 * Gibt zurück, wieviele Knoten von dieser Fabrik erzeugt wurden.
+	 * @return wieviele Knoten erstellt wurden
+	 */
+	public int getVertexCounter() {
+		return myVertexCounter;
+	}
 }

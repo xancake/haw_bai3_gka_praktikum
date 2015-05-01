@@ -19,6 +19,10 @@ public class ZugriffszaehlenderGraph<V, E> implements Graph<V, E> {
 	protected int myLesenZaehler;
 	protected int mySchreibenZaehler;
 	
+	/**
+	 * Initialisiert den zugriffszählenden Graphen mit dem übergebenen Graphen.
+	 * @param graph Ein Graph, darf nicht {@code null} sein
+	 */
 	public ZugriffszaehlenderGraph(Graph<V, E> graph) {
 		myGraph = Objects.requireNonNull(graph);
 	}

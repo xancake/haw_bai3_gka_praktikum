@@ -14,6 +14,10 @@ import org.jgrapht.DirectedGraph;
 public class ZugriffszaehlenderGerichteterGraph<V, E> extends ZugriffszaehlenderGraph<V, E> implements DirectedGraph<V, E> {
 	private DirectedGraph<V, E> myDirectedGraph;
 	
+	/**
+	 * Initialisiert den zugriffszählenden Graphen mit dem übergebenen Graphen.
+	 * @param graph Ein Graph, darf nicht {@code null} sein
+	 */
 	public ZugriffszaehlenderGerichteterGraph(DirectedGraph<V, E> graph) {
 		super(graph);
 		myDirectedGraph = graph;

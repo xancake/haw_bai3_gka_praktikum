@@ -11,6 +11,11 @@ import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.GraphPathImpl;
 
+/**
+ * Implementation des Dijkstra-Shortest-Path-Algorithmus wie in der Vorlesung gelernt.
+ * 
+ * @author Jennifer Momsen
+ */
 public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 
 	@Override
