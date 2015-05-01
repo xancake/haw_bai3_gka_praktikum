@@ -3,10 +3,15 @@ package org.haw.lnielsen.gka.graphen.algorithm.path;
 import static org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPathAsserts.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
 import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
+import org.haw.lnielsen.gka.graphen.generator.HeuristikGraphGenerator;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -14,6 +19,7 @@ import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.generate.RandomGraphGenerator;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
@@ -138,12 +144,14 @@ public abstract class ShortestPathUndirectedTest_A {
 	
 	@Test
 	public void testCalculatePath_Aufgabe_Random_100_4000() throws Exception {
-		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
-		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
-		generator.generateGraph(graph, new KnotenFactory(), null);
+		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new HeuristikGraphGenerator<>(new KnotenHeuristikProvider(), 100, 4000, 50);
+		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
 		
-		Knoten start = new Knoten("0");
-		Knoten destination = new Knoten("99");
+		Map<String, Knoten> resultMap = new HashMap<String, Knoten>();
+		generator.generateGraph(graph, new KnotenFactory(), resultMap);
+		
+		Knoten start = new ArrayList<Knoten>(graph.vertexSet()).get((int)(Math.random()*graph.vertexSet().size()));
+		Knoten destination = resultMap.get(HeuristikGraphGenerator.ZERO_HEURISTIK_VERTEX);
 		
 		GraphPath<Knoten, DefaultEdge> jgraphtPath = new DijkstraShortestPath<Knoten, DefaultEdge>(graph, start, destination).getPath();
 		GraphPath<Knoten, DefaultEdge> ourPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);

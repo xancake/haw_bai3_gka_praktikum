@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.generator.RandomAttributedKnotenFactory;
@@ -17,6 +18,7 @@ import org.haw.lnielsen.gka.graphen.ui.generator.factory.RandomGraphGeneratorFac
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.RingGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.ScaleFreeGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.StarGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.HeuristikGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.WheelGraphGeneratorFactory;
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
@@ -37,6 +39,7 @@ public class GraphGeneratorController
 	public GraphGeneratorController() {
 		super(null, new GraphGeneratorViewSwing());
 		List<GraphGeneratorFactory<Knoten, DefaultEdge, Knoten>> generatoren = new ArrayList<>();
+		generatoren.add(new HeuristikGraphGeneratorFactory<Knoten, DefaultEdge>(new KnotenHeuristikProvider()));
 		generatoren.add(new RandomGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new EmptyGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new LinearGraphGeneratorFactory<Knoten, DefaultEdge>());
@@ -62,9 +65,6 @@ public class GraphGeneratorController
 	
 	@Override
 	public void onGeneratorSelected(GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> generator) {
-		generator.getParameterCount();
-		
-		
 		
 	}
 	
@@ -75,9 +75,13 @@ public class GraphGeneratorController
 		if(parameter != null && factory.getParameterCount() == parameter.length) {
 			GraphGenerator<Knoten, DefaultEdge, Knoten> generator = factory.createGenerator(parameter);
 			VertexFactory<Knoten> vertexFactory = attributed ? new RandomAttributedKnotenFactory(100) : new KnotenFactory();
-			generator.generateGraph(graph, vertexFactory, null);
-			
-			fireEvent(new GenerateEvent(graph));
+			try {
+				generator.generateGraph(graph, vertexFactory, null);
+				
+				fireEvent(new GenerateEvent(graph));
+			} catch(IllegalArgumentException e) {
+				getView().showFehlermeldung(e, false);
+			}
 		} else {
 			getView().showFehlermeldung("Die Menge der angegebenen Parameter stimmt nicht mit der erwarteten Menge überein.\nBitte geben Sie " + factory.getParameterCount() + " Parameter an.");
 		}
