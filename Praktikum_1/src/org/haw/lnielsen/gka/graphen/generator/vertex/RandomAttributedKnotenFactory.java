@@ -20,6 +20,7 @@ public class RandomAttributedKnotenFactory implements VertexFactory<Knoten> {
 	private int myAttributeMinValue;
 	private int myAttributeMaxValue;
 	private Random myRandom;
+	private Knoten myHeuristikZeroKnoten;
 	
 	/**
 	 * Initialisiert eine neue Knotenfabrik für zufällig attributierte Knoten.
@@ -39,7 +40,8 @@ public class RandomAttributedKnotenFactory implements VertexFactory<Knoten> {
 	@Override
 	public Knoten createVertex() {
 		if(myVertexCounter == 0) {
-			return new Knoten(String.valueOf(myVertexCounter++), 0);
+			myHeuristikZeroKnoten = new Knoten(String.valueOf(myVertexCounter++), 0);
+			return myHeuristikZeroKnoten;
 		}
 		int attribute = 0;
 		while(attribute == 0) {
@@ -54,5 +56,13 @@ public class RandomAttributedKnotenFactory implements VertexFactory<Knoten> {
 	 */
 	public int getVertexCounter() {
 		return myVertexCounter;
+	}
+	
+	/**
+	 * Gibt den von dieser Fabrik erzeugten Knoten mit dem Heuristikwert 0 zurück.
+	 * @return Der Knoten mit dem Heuristikwert 0
+	 */
+	public Knoten getHeuristikZeroKnoten() {
+		return myHeuristikZeroKnoten;
 	}
 }

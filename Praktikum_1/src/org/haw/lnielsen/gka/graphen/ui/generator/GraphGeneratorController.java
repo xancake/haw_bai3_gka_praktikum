@@ -6,6 +6,7 @@ import java.util.List;
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
+import org.haw.lnielsen.gka.graphen.generator.GraphWeighter;
 import org.haw.lnielsen.gka.graphen.generator.vertex.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.generator.vertex.RandomAttributedKnotenFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteBipartiteGraphGeneratorFactory;
@@ -18,10 +19,10 @@ import org.haw.lnielsen.gka.graphen.ui.generator.factory.RandomGraphGeneratorFac
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.RingGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.ScaleFreeGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.StarGraphGeneratorFactory;
-import org.haw.lnielsen.gka.graphen.ui.generator.factory.HeuristikGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.WheelGraphGeneratorFactory;
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
+import org.jgrapht.WeightedGraph;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -39,7 +40,6 @@ public class GraphGeneratorController
 	public GraphGeneratorController() {
 		super(null, new GraphGeneratorViewSwing());
 		List<GraphGeneratorFactory<Knoten, DefaultEdge, Knoten>> generatoren = new ArrayList<>();
-		generatoren.add(new HeuristikGraphGeneratorFactory<Knoten, DefaultEdge>(new KnotenHeuristikProvider()));
 		generatoren.add(new RandomGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new EmptyGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new LinearGraphGeneratorFactory<Knoten, DefaultEdge>());
@@ -105,6 +105,15 @@ public class GraphGeneratorController
 			try {
 				GraphGenerator<Knoten, DefaultEdge, Knoten> generator = factory.createGenerator(parameter);
 				generator.generateGraph(graph, vertexFactory, null);
+				
+				if(weighted) {
+					int weightModifikator = getView().getWeightModifier();
+					GraphWeighter<Knoten, DefaultEdge> weighter = attributed
+							? new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), weightModifikator)
+							: new GraphWeighter<Knoten, DefaultEdge>(weightModifikator);
+					weighter.appendGraphWeights((WeightedGraph<Knoten, DefaultEdge>)graph);
+				}
+				
 				fireEvent(new GenerateEvent(graph));
 			} catch(IllegalArgumentException e) {
 				getView().showFehlermeldung(e, false);

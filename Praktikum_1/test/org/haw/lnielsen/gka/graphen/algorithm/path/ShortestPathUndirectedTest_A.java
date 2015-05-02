@@ -5,17 +5,15 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
-import org.haw.lnielsen.gka.graphen.generator.HeuristikGraphGenerator;
-import org.haw.lnielsen.gka.graphen.generator.vertex.KnotenFactory;
+import org.haw.lnielsen.gka.graphen.generator.GraphWeighter;
 import org.haw.lnielsen.gka.graphen.generator.vertex.RandomAttributedKnotenFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
+import org.jgrapht.WeightedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.generate.RandomGraphGenerator;
@@ -145,14 +143,16 @@ public abstract class ShortestPathUndirectedTest_A {
 	
 	@Test
 	public void testCalculatePath_Aufgabe_Random_100_4000() throws Exception {
-		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new HeuristikGraphGenerator<>(new KnotenHeuristikProvider(), 100, 4000, 50);
-		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
+		WeightedGraph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
 		
-		Map<String, Knoten> resultMap = new HashMap<String, Knoten>();
-		generator.generateGraph(graph, new RandomAttributedKnotenFactory(1, 100), resultMap);
+		RandomAttributedKnotenFactory knotenFabrik = new RandomAttributedKnotenFactory(1, 100);
+		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
+		generator.generateGraph(graph, knotenFabrik, null);
+		GraphWeighter<Knoten, DefaultEdge> weighter = new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), 50);
+		weighter.appendGraphWeights(graph);
 		
 		Knoten start = new ArrayList<Knoten>(graph.vertexSet()).get((int)(Math.random()*graph.vertexSet().size()));
-		Knoten destination = resultMap.get(HeuristikGraphGenerator.ZERO_HEURISTIK_VERTEX);
+		Knoten destination = knotenFabrik.getHeuristikZeroKnoten();
 		
 		GraphPath<Knoten, DefaultEdge> jgraphtPath = new DijkstraShortestPath<Knoten, DefaultEdge>(graph, start, destination).getPath();
 		GraphPath<Knoten, DefaultEdge> ourPath = myShortestPathAlgorithm.calculatePath(graph, start, destination);
@@ -165,12 +165,16 @@ public abstract class ShortestPathUndirectedTest_A {
 	
 	@Test
 	public void testCalculatePath_SamePathOverAndOverAgain() throws Exception {
-		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
-		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultEdge.class);
-		generator.generateGraph(graph, new KnotenFactory(), null);
+		WeightedGraph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
 		
-		Knoten start = new Knoten("0");
-		Knoten destination = new Knoten("99");
+		RandomAttributedKnotenFactory knotenFabrik = new RandomAttributedKnotenFactory(1, 100);
+		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
+		generator.generateGraph(graph, knotenFabrik, null);
+		GraphWeighter<Knoten, DefaultEdge> weighter = new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), 50);
+		weighter.appendGraphWeights(graph);
+		
+		Knoten start = new ArrayList<Knoten>(graph.vertexSet()).get((int)(Math.random()*graph.vertexSet().size()));
+		Knoten destination = knotenFabrik.getHeuristikZeroKnoten();
 		
 		GraphPath<Knoten, DefaultEdge> path = myShortestPathAlgorithm.calculatePath(graph, start, destination);
 		for(int i=0; i<10; i++) {
