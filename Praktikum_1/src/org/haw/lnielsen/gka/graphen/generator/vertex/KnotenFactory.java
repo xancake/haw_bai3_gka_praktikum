@@ -1,4 +1,4 @@
-package org.haw.lnielsen.gka.graphen.generator;
+package org.haw.lnielsen.gka.graphen.generator.vertex;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.jgrapht.VertexFactory;

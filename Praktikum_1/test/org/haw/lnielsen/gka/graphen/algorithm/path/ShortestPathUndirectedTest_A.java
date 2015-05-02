@@ -10,9 +10,9 @@ import java.util.Map;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
-import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.generator.HeuristikGraphGenerator;
-import org.haw.lnielsen.gka.graphen.generator.RandomAttributedKnotenFactory;
+import org.haw.lnielsen.gka.graphen.generator.vertex.KnotenFactory;
+import org.haw.lnielsen.gka.graphen.generator.vertex.RandomAttributedKnotenFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
