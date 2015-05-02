@@ -34,7 +34,7 @@ public class HeuristikGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
 	 * @param heuristikProvider Der {@link HeuristikProvider_I}
 	 * @param vertexCount Die Anzahl der Knoten (muss >= 0 sein)
 	 * @param edgeCount Die Anzahl der Kanten (muss >= 0 sein)
-	 * @param weightModifier Der Gewichtsmodifikator (muss >= 0 sein)
+	 * @param weightModifier Der Gewichtsmodifikator (muss > 0 sein)
 	 */
 	public HeuristikGraphGenerator(HeuristikProvider_I<V> heuristikProvider, int vertexCount, int edgeCount, int weightModifier) {
 		if(vertexCount < 0) {
@@ -43,8 +43,8 @@ public class HeuristikGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
 		if(edgeCount < 0) {
 			throw new IllegalArgumentException("Die Kantenzahl darf nicht kleiner als 0 sein!");
 		}
-		if(weightModifier < 0) {
-			throw new IllegalArgumentException("Der Gewichts-Modifikator darf nicht kleiner als 0 sein!");
+		if(weightModifier <= 0) {
+			throw new IllegalArgumentException("Der Gewichts-Modifikator darf nicht kleiner oder gleich 0 sein!");
 		}
 		myHeuristikProvider = Objects.requireNonNull(heuristikProvider);
 		myVertexCount = vertexCount;

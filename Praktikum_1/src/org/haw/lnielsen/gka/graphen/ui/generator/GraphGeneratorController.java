@@ -51,6 +51,8 @@ public class GraphGeneratorController
 		generatoren.add(new CompleteBipartiteGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new ScaleFreeGraphGeneratorFactory<Knoten, DefaultEdge>());
 		getView().setGraphGenerators(generatoren);
+		getView().enableAttributeConfiguration(false);
+		getView().enableWeightConfiguration(false);
 	}
 	
 	@Override
@@ -64,20 +66,45 @@ public class GraphGeneratorController
 	}
 	
 	@Override
-	public void onGeneratorSelected(GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> generator) {
+	public void onAttributedSelected(boolean selected) {
+		getView().enableAttributeConfiguration(selected);
+	}
+	
+	@Override
+	public void onDirectedSelected(boolean selected) {
 		
 	}
 	
 	@Override
+	public void onWeightedSelected(boolean selected) {
+		getView().enableWeightConfiguration(selected);
+	}
+	
+	@Override
+	public void onGeneratorSelected(GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> generator) {
+		getView().setGeneratorParameters(generator.getParameterNames());
+	}
+	
+	@Override
 	public void onGenerateGraph(boolean attributed, boolean directed, boolean weighted, GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> factory, Integer... parameter) {
-		Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(directed, weighted);
-		
 		if(parameter != null && factory.getParameterCount() == parameter.length) {
-			GraphGenerator<Knoten, DefaultEdge, Knoten> generator = factory.createGenerator(parameter);
-			VertexFactory<Knoten> vertexFactory = attributed ? new RandomAttributedKnotenFactory(100) : new KnotenFactory();
+			Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(directed, weighted);
+			
+			VertexFactory<Knoten> vertexFactory = null;
+			if(attributed) {
+				if(getView().getAttributeMinValue() <= getView().getAttributeMaxValue()) {
+					vertexFactory = new RandomAttributedKnotenFactory(getView().getAttributeMinValue(), getView().getAttributeMaxValue());
+				} else {
+					getView().showFehlermeldung("Der Minimalwert für die Attributierung muss kleiner oder gleich dem Maximalwert sein!");
+					return;
+				}
+			} else {
+				vertexFactory = new KnotenFactory();
+			}
+			
 			try {
+				GraphGenerator<Knoten, DefaultEdge, Knoten> generator = factory.createGenerator(parameter);
 				generator.generateGraph(graph, vertexFactory, null);
-				
 				fireEvent(new GenerateEvent(graph));
 			} catch(IllegalArgumentException e) {
 				getView().showFehlermeldung(e, false);

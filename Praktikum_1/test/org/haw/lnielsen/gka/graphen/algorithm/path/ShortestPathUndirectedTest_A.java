@@ -12,6 +12,7 @@ import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
 import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.generator.HeuristikGraphGenerator;
+import org.haw.lnielsen.gka.graphen.generator.RandomAttributedKnotenFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -148,7 +149,7 @@ public abstract class ShortestPathUndirectedTest_A {
 		Graph<Knoten, DefaultEdge> graph = new ListenableUndirectedWeightedGraph<Knoten, DefaultEdge>(DefaultWeightedEdge.class);
 		
 		Map<String, Knoten> resultMap = new HashMap<String, Knoten>();
-		generator.generateGraph(graph, new KnotenFactory(), resultMap);
+		generator.generateGraph(graph, new RandomAttributedKnotenFactory(1, 100), resultMap);
 		
 		Knoten start = new ArrayList<Knoten>(graph.vertexSet()).get((int)(Math.random()*graph.vertexSet().size()));
 		Knoten destination = resultMap.get(HeuristikGraphGenerator.ZERO_HEURISTIK_VERTEX);

@@ -21,6 +21,36 @@ public interface GraphGeneratorView_I extends WindowView_I<Void, GraphGeneratorV
 	void setGraphGenerators(List<GraphGeneratorFactory<Knoten, DefaultEdge, Knoten>> generators);
 	
 	/**
+	 * Zeigt die Parameter an, die für einen Generator gebraucht werden.
+	 * @param parameters Die Parameter
+	 */
+	void setGeneratorParameters(String[] parameters);
+	
+	/**
+	 * Ermöglicht dem Benutzer das Konfigurieren von Attributen.
+	 * @param enable {@code true}, wenn das Konfigurieren erlaubt werden soll, ansonsten {@code false}
+	 */
+	void enableAttributeConfiguration(boolean enable);
+	
+	/**
+	 * Ermöglicht dem Benutzer das Konfigurieren von Gewichten.
+	 * @param enable {@code true}, wenn das Konfigurieren erlaubt werden soll, ansonsten {@code false}
+	 */
+	void enableWeightConfiguration(boolean enable);
+	
+	/**
+	 * Gibt den ausgewählten Minimalwert für die Attributierung von Knoten zurück.
+	 * @return Der Minimalwert für die Attributierung von Knoten
+	 */
+	int getAttributeMinValue();
+	
+	/**
+	 * Gibt den ausgewählten Maximalwert für die Attributierung von Knoten zurück.
+	 * @return Der Maximalwert für die Attributierung von Knoten
+	 */
+	int getAttributeMaxValue();
+	
+	/**
 	 * Zeigt die übergebene Nachricht als Fehlermeldung an.
 	 * @param message Die Nachricht
 	 */
