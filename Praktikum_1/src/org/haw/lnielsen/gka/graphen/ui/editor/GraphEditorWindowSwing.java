@@ -138,11 +138,17 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 				GraphSelectionModel selectionModel = myGraphComponent.getSelectionModel();
 				if(selectionModel.getSelectionCount() == 2) {
 					Object[] selectedElements = selectionModel.getSelectionCells();
-					Knoten start = (Knoten)((DefaultGraphCell)selectedElements[0]).getUserObject();
-					Knoten end = (Knoten)((DefaultGraphCell)selectedElements[1]).getUserObject();
-					myListener.onCalculateShortestPath((ShortestPath_I<Knoten, DefaultEdge>)myShortestPathAlgorithms.getSelectedItem(), start, end);
+					Object firstUserObject  = ((DefaultGraphCell)selectedElements[0]).getUserObject();
+					Object secondUserObject = ((DefaultGraphCell)selectedElements[1]).getUserObject();
+					if(firstUserObject instanceof Knoten && secondUserObject instanceof Knoten) {
+						Knoten start = (Knoten)firstUserObject;
+						Knoten end = (Knoten)secondUserObject;
+						myListener.onCalculateShortestPath((ShortestPath_I<Knoten, DefaultEdge>)myShortestPathAlgorithms.getSelectedItem(), start, end);
+					} else {
+						showFehlermeldung("Sie müssen zwei 'Knoten' auswählen.");
+					}
 				} else {
-					JOptionPane.showMessageDialog(myFrame, "Es kann nur der kürzeste Pfad zwischen zwei Knoten berechnet werden. Bitte wählen Sie genau zwei Knoten aus (Strg+Mausklick).", "Fehler", JOptionPane.ERROR_MESSAGE);
+					showFehlermeldung("Es kann nur der kürzeste Pfad zwischen zwei Knoten berechnet werden. Bitte wählen Sie genau zwei Knoten aus (Strg+Mausklick).");
 				}
 			}
 		});
@@ -151,11 +157,15 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			public void actionPerformed(ActionEvent e) {
 				GraphSelectionModel selectionModel = myGraphComponent.getSelectionModel();
 				if(selectionModel.getSelectionCount() == 1) {
-					Object selectedElement = selectionModel.getSelectionCell();
-					Knoten start = (Knoten)((DefaultGraphCell)selectedElement).getUserObject();
-					myListener.onTraverse(start);
+					Object selectedElement = ((DefaultGraphCell)selectionModel.getSelectionCell()).getUserObject();
+					if(selectedElement instanceof Knoten) {
+						Knoten start = (Knoten)selectedElement;
+						myListener.onTraverse(start);
+					} else {
+						showFehlermeldung("Sie müssen einen 'Knoten' auswählen.");
+					}
 				} else {
-					JOptionPane.showMessageDialog(myFrame, "Es kann nur ein Knoten als Startknoten ausgewählt werden. Bitte wählen Sie genau einen Knoten aus.", "Fehler", JOptionPane.ERROR_MESSAGE);
+					showFehlermeldung("Es kann nur ein Knoten als Startknoten ausgewählt werden. Bitte wählen Sie genau einen Knoten aus.");
 				}
 			}
 		});
