@@ -9,6 +9,7 @@ import java.util.Random;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.HeuristikProvider_I;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
+import org.jgrapht.UndirectedGraph;
 import org.jgrapht.VertexFactory;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.generate.GraphGenerator;
@@ -54,11 +55,7 @@ public class HeuristikGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
 	
 	@Override
 	public void generateGraph(Graph<V, E> graph, VertexFactory<V> vertexFactory, Map<String, V> resultMap) {
-		int maxEdges = 0;
-		for(int i=myVertexCount-1; i>0; i--) {
-			maxEdges += i * (graph instanceof DirectedGraph ? 2 : 1);
-		}
-		
+		int maxEdges = calculateMaxEdges(graph, myVertexCount);
 		if(maxEdges < myEdgeCount) {
 			// Eine checked-Exception wäre hier schöner, aber durch die JGraphT-Generator-Schnittstelle leider nicht möglich
 			throw new IllegalArgumentException("Die Anzahl der möglichen Kanten (" + maxEdges + ") für den Graphen ist kleiner als die gewünschte Anzahl an Kanten (" + myEdgeCount + ")");
@@ -101,5 +98,23 @@ public class HeuristikGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
 				// Kante wurde nicht hinzugefügt
 			}
 		}
+	}
+	
+	/**
+	 * Berechnet die maximal mögliche Anzahl an Kanten für den Graphen bei der gewünschten Knotenanzahl.
+	 * @param graph Der Graph
+	 * @param vertexCount Die gewünschte Knotenzahl
+	 * @return Die Anzahl der maximal möglichen Kanten
+	 */
+	private int calculateMaxEdges(Graph<V, E> graph, int vertexCount) {
+		int maxEdges = 0;
+		if(graph instanceof UndirectedGraph) {
+			for(int i=vertexCount-1; i>0; i--) {
+				maxEdges += i;
+			}
+		} else if(graph instanceof DirectedGraph) {
+			maxEdges = vertexCount * vertexCount;
+		}
+		return maxEdges;
 	}
 }
