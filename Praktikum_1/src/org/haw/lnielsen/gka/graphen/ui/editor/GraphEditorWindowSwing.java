@@ -8,8 +8,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -67,12 +67,16 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myShortestPathAlgorithms = new JComboBox<>();
 		myGraphComponent = new JGraph();
 		myGraphComponent.setEditable(false);
-		myNewButton = new JButton("Neu...");
-		myLoadButton = new JButton("Laden");
-		myStoreButton = new JButton("Speichern");
+		myNewButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_new.gif")));
+		myLoadButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_open.gif")));
+		myStoreButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_save.gif")));
 		myShortestPathButton = new JButton("Kürzester Weg");
 		myShortestPathButton.setEnabled(false);
 		myTraverseButton = new JButton("Traversieren");
+		
+		myNewButton.setToolTipText("Neu...");
+		myLoadButton.setToolTipText("Laden");
+		myStoreButton.setToolTipText("Speichern");
 	}
 	
 	@Override
@@ -83,19 +87,13 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		toolbar.add(myNewButton);
 		toolbar.add(myLoadButton);
 		toolbar.add(myStoreButton);
+		toolbar.addSeparator();
+		toolbar.add(myShortestPathAlgorithms);
+		toolbar.add(myShortestPathButton);
+		toolbar.add(myTraverseButton);
+		toolbar.add(Box.createGlue());
 		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
-		buttonPanel.add(myNewButton);
-		buttonPanel.add(myLoadButton);
-		buttonPanel.add(myStoreButton);
-		buttonPanel.add(Box.createHorizontalStrut(11));
-		buttonPanel.add(myShortestPathAlgorithms);
-		buttonPanel.add(myShortestPathButton);
-		buttonPanel.add(myTraverseButton);
-		buttonPanel.add(Box.createHorizontalGlue());
-		
-		content.add(buttonPanel, BorderLayout.PAGE_START);
+		content.add(toolbar, BorderLayout.PAGE_START);
 		content.add(new JScrollPane(myGraphComponent), BorderLayout.CENTER);
 		myFrame.setSize(800, 600);
 		myFrame.setLocationRelativeTo(null);
