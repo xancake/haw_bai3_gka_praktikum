@@ -13,6 +13,24 @@ import de.xancake.ui.mvc.window.WindowViewListener_I;
  */
 public interface GraphGeneratorViewListener_I extends WindowViewListener_I {
 	/**
+	 * Wird aufgerufen, wenn die Graph-Eigenschaft "attributiert" ausgewählt wurde.
+	 * @param selected {@code true}, wenn die Eigenschaft ausgewählt wurde, ansonsten {@code false}
+	 */
+	void onAttributedSelected(boolean selected);
+	
+	/**
+	 * Wird aufgerufen, wenn die Graph-Eigenschaft "gerichtet" ausgewählt wurde.
+	 * @param selected {@code true}, wenn die Eigenschaft ausgewählt wurde, ansonsten {@code false}
+	 */
+	void onDirectedSelected(boolean selected);
+	
+	/**
+	 * Wird aufgerufen, wenn die Graph-Eigenschaft "gewichtet" ausgewählt wurde.
+	 * @param selected {@code true}, wenn die Eigenschaft ausgewählt wurde, ansonsten {@code false}
+	 */
+	void onWeightedSelected(boolean selected);
+	
+	/**
 	 * Wird aufgerufen, wenn ein Generator ausgewählt wurde.
 	 * @param generator Der ausgewählte Generator
 	 */

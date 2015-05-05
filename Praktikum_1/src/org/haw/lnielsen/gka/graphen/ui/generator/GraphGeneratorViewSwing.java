@@ -1,5 +1,7 @@
 package org.haw.lnielsen.gka.graphen.ui.generator;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,8 +17,12 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.GraphGeneratorFactory;
@@ -36,6 +42,13 @@ public class GraphGeneratorViewSwing
 	private JCheckBox myDirectedCheckBox;
 	private JCheckBox myWeightedCheckBox;
 	
+	private JPanel myAttributePanel;
+	private JSpinner myAttributeMinValue;
+	private JSpinner myAttributeMaxValue;
+	
+	private JPanel myWeightPanel;
+	private JSpinner myWeightModifikator;
+	
 	private JComboBox<GraphGeneratorFactory<Knoten, DefaultEdge, Knoten>> myGeneratorFactories;
 	private JLabel myParameterLabel;
 	private JTextField myParameterField;
@@ -52,46 +65,74 @@ public class GraphGeneratorViewSwing
 		myAttributedCheckBox = new JCheckBox("Attributiert");
 		myDirectedCheckBox = new JCheckBox("Gerichtet");
 		myWeightedCheckBox = new JCheckBox("Gewichtet");
+		
+		myAttributePanel = new JPanel();
+		myAttributeMinValue = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+		myAttributeMaxValue = new JSpinner(new SpinnerNumberModel(100, 1, Integer.MAX_VALUE, 1));
+		
+		myWeightPanel = new JPanel();
+		myWeightModifikator = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
+		
 		myGeneratorFactories = new JComboBox<>();
 		myParameterLabel = new JLabel("<Parameter-Template>", SwingConstants.LEFT);
 		myParameterField = new JTextField();
+		
 		myNewButton = new JButton("Erzeugen");
 		myCancelButton = new JButton("Abbrechen");
 		
 		myAttributedCheckBox.setToolTipText("Gibt an, ob die Knoten des zu erzeugenden Graphen attributiert sein sollen");
 		myDirectedCheckBox.setToolTipText("Gibt an, ob der zu erzeugende Graph gerichtet sein soll");
 		myWeightedCheckBox.setToolTipText("Gibt an, ob der zu erzeugende Graph gewichtet sein soll");
+		myAttributeMinValue.setToolTipText("Legt den Minimalwert für die Attribute fest");
+		myAttributeMaxValue.setToolTipText("Legt dem Maximalwert für die Attribute fest");
+		myWeightModifikator.setToolTipText("Legt einen Faktor für die Kantengewichte fest");
 	}
 	
 	@Override
 	protected void initLayout(JPanel content) {
-		content.setLayout(new BoxLayout(content, BoxLayout.PAGE_AXIS));
-		content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		myParameterLabel.setForeground(Color.RED);
 		
+		myAttributeMinValue.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
+		myAttributeMaxValue.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
+		myWeightModifikator.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
 		myGeneratorFactories.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
 		myParameterLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, myParameterLabel.getPreferredSize().height));
 		myParameterField.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
 		
+		myAttributePanel.setAlignmentY(SwingConstants.BOTTOM);
+		myWeightPanel.setAlignmentY(SwingConstants.TOP);
 		myParameterLabel.setAlignmentX(SwingConstants.LEFT);
+		
+		myAttributePanel.setBorder(BorderFactory.createTitledBorder("Attributierung"));
+		myAttributePanel.setLayout(new BoxLayout(myAttributePanel, BoxLayout.PAGE_AXIS));
+		myAttributePanel.add(labelComponent(myAttributeMinValue, "Minimum: "));
+		myAttributePanel.add(Box.createVerticalStrut(5));
+		myAttributePanel.add(labelComponent(myAttributeMaxValue, "Maximum: "));
+		myAttributePanel.add(Box.createHorizontalGlue());
+		
+		myWeightPanel.setBorder(BorderFactory.createTitledBorder("Gewichtung"));
+		myWeightPanel.setLayout(new BoxLayout(myWeightPanel, BoxLayout.PAGE_AXIS));
+		myWeightPanel.add(labelComponent(myWeightModifikator, "Modifikator: "));
+		myWeightPanel.add(Box.createHorizontalGlue());
 		
 		JPanel graphPanel = new JPanel();
 		graphPanel.setBorder(BorderFactory.createTitledBorder("Graph Eigenschaften"));
 		graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.LINE_AXIS));
-		graphPanel.setAlignmentX(SwingConstants.LEFT);
-		graphPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, graphPanel.getMaximumSize().height));
 		graphPanel.add(myAttributedCheckBox);
 		graphPanel.add(myDirectedCheckBox);
 		graphPanel.add(myWeightedCheckBox);
+		graphPanel.add(Box.createHorizontalGlue());
 		
-		JPanel factoryPanel = new JPanel();
-		factoryPanel.setLayout(new BoxLayout(factoryPanel, BoxLayout.LINE_AXIS));
-		factoryPanel.add(new JLabel("Generator: "));
-		factoryPanel.add(myGeneratorFactories);
+		JPanel propertiesPanel = new JPanel();
+		propertiesPanel.setLayout(new BoxLayout(propertiesPanel, BoxLayout.LINE_AXIS));
+		propertiesPanel.add(myAttributePanel);
+		propertiesPanel.add(Box.createRigidArea(new Dimension(5, 5)));
+		propertiesPanel.add(myWeightPanel);
 		
 		JPanel generatePanel = new JPanel();
-		generatePanel.setBorder(BorderFactory.createTitledBorder("Graph Generieren"));
+		generatePanel.setBorder(BorderFactory.createTitledBorder("Generator"));
 		generatePanel.setLayout(new BoxLayout(generatePanel, BoxLayout.PAGE_AXIS));
-		generatePanel.add(factoryPanel);
+		generatePanel.add(labelComponent(myGeneratorFactories, "Generator: "));
 		generatePanel.add(Box.createVerticalStrut(5));
 		generatePanel.add(myParameterLabel);
 		generatePanel.add(myParameterField);
@@ -104,30 +145,61 @@ public class GraphGeneratorViewSwing
 		buttonPanel.add(Box.createHorizontalStrut(5));
 		buttonPanel.add(myCancelButton);
 		
+		content.setLayout(new BoxLayout(content, BoxLayout.PAGE_AXIS));
+		content.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		content.add(graphPanel);
-		content.add(Box.createVerticalStrut(11));
+		content.add(Box.createVerticalStrut(5));
+		content.add(propertiesPanel);
+		content.add(Box.createVerticalStrut(5));
 		content.add(generatePanel);
+		content.add(Box.createVerticalStrut(11));
 		content.add(Box.createVerticalGlue());
 		content.add(buttonPanel);
-		myFrame.setSize(600, 450);
+		
+		myFrame.setSize(450, 300);
 		myFrame.setLocationRelativeTo(null);
+	}
+	
+	private static JPanel labelComponent(Component component, String label) {
+		JLabel jlabel = new JLabel(label);
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
+		panel.add(jlabel);
+		panel.add(component);
+		return panel;
 	}
 	
 	@Override
 	protected void initListeners() {
+		myAttributedCheckBox.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				myListener.onAttributedSelected(myAttributedCheckBox.isSelected());
+			}
+		});
+		myDirectedCheckBox.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				myListener.onDirectedSelected(myDirectedCheckBox.isSelected());
+			}
+		});
+		myWeightedCheckBox.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				myListener.onWeightedSelected(myWeightedCheckBox.isSelected());
+			}
+		});
 		myGeneratorFactories.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> factory = getSelectedGeneratorFactory();
-				updateParameterLabel(factory);
-				myListener.onGeneratorSelected(factory);
+				myListener.onGeneratorSelected(getSelectedGeneratorFactory());
 			}
 		});
 		myNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> generator = getSelectedGeneratorFactory();
 				try {
+					GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> generator = getSelectedGeneratorFactory();
 					Integer[] parameters = getParameters();
 					myListener.onGenerateGraph(myAttributedCheckBox.isSelected(), myDirectedCheckBox.isSelected(), myWeightedCheckBox.isSelected(), generator, parameters);
 				} catch(NumberFormatException ex) {
@@ -156,15 +228,6 @@ public class GraphGeneratorViewSwing
 	private GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> getSelectedGeneratorFactory() {
 		return (GraphGeneratorFactory<Knoten, DefaultEdge, Knoten>)myGeneratorFactories.getSelectedItem();
 	}
-	
-	private void updateParameterLabel(GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> factory) {
-		String text = "";
-		for(String param : factory.getParameterNames()) {
-			text += "<" + param + ">,";
-		}
-		text = text.substring(0, text.length()-1);
-		myParameterLabel.setText(text);
-	}
 
 	@Override
 	public void fillViewWithModel(Void model) {
@@ -178,7 +241,43 @@ public class GraphGeneratorViewSwing
 			model.addElement(factory);
 		}
 		myGeneratorFactories.setModel(model);
-		updateParameterLabel(getSelectedGeneratorFactory());
+		setGeneratorParameters(getSelectedGeneratorFactory().getParameterNames());
+	}
+	
+	@Override
+	public void setGeneratorParameters(String[] parameters) {
+		String text = "";
+		for(String param : parameters) {
+			text += "<" + param + ">,";
+		}
+		text = text.substring(0, text.length()-1);
+		myParameterLabel.setText(text);
+	}
+	
+	@Override
+	public void enableAttributeConfiguration(boolean enable) {
+		myAttributeMinValue.setEnabled(enable);
+		myAttributeMaxValue.setEnabled(enable);
+	}
+	
+	@Override
+	public void enableWeightConfiguration(boolean enable) {
+		myWeightModifikator.setEnabled(enable);
+	}
+	
+	@Override
+	public int getAttributeMinValue() {
+		return (Integer)myAttributeMinValue.getValue();
+	}
+	
+	@Override
+	public int getAttributeMaxValue() {
+		return (Integer)myAttributeMaxValue.getValue();
+	}
+	
+	@Override
+	public int getWeightModifier() {
+		return (Integer)myWeightModifikator.getValue();
 	}
 	
 	@Override

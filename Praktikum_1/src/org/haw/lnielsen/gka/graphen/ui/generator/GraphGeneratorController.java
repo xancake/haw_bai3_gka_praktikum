@@ -6,8 +6,9 @@ import java.util.List;
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
-import org.haw.lnielsen.gka.graphen.generator.KnotenFactory;
-import org.haw.lnielsen.gka.graphen.generator.RandomAttributedKnotenFactory;
+import org.haw.lnielsen.gka.graphen.generator.GraphWeighter;
+import org.haw.lnielsen.gka.graphen.generator.vertex.KnotenFactory;
+import org.haw.lnielsen.gka.graphen.generator.vertex.RandomAttributedKnotenFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteBipartiteGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.EmptyGraphGeneratorFactory;
@@ -18,10 +19,10 @@ import org.haw.lnielsen.gka.graphen.ui.generator.factory.RandomGraphGeneratorFac
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.RingGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.ScaleFreeGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.StarGraphGeneratorFactory;
-import org.haw.lnielsen.gka.graphen.ui.generator.factory.HeuristikGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.WheelGraphGeneratorFactory;
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
+import org.jgrapht.WeightedGraph;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -39,7 +40,6 @@ public class GraphGeneratorController
 	public GraphGeneratorController() {
 		super(null, new GraphGeneratorViewSwing());
 		List<GraphGeneratorFactory<Knoten, DefaultEdge, Knoten>> generatoren = new ArrayList<>();
-		generatoren.add(new HeuristikGraphGeneratorFactory<Knoten, DefaultEdge>(new KnotenHeuristikProvider()));
 		generatoren.add(new RandomGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new EmptyGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new LinearGraphGeneratorFactory<Knoten, DefaultEdge>());
@@ -51,6 +51,8 @@ public class GraphGeneratorController
 		generatoren.add(new CompleteBipartiteGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new ScaleFreeGraphGeneratorFactory<Knoten, DefaultEdge>());
 		getView().setGraphGenerators(generatoren);
+		getView().enableAttributeConfiguration(false);
+		getView().enableWeightConfiguration(false);
 	}
 	
 	@Override
@@ -64,19 +66,53 @@ public class GraphGeneratorController
 	}
 	
 	@Override
-	public void onGeneratorSelected(GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> generator) {
+	public void onAttributedSelected(boolean selected) {
+		getView().enableAttributeConfiguration(selected);
+	}
+	
+	@Override
+	public void onDirectedSelected(boolean selected) {
 		
 	}
 	
 	@Override
+	public void onWeightedSelected(boolean selected) {
+		getView().enableWeightConfiguration(selected);
+	}
+	
+	@Override
+	public void onGeneratorSelected(GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> generator) {
+		getView().setGeneratorParameters(generator.getParameterNames());
+	}
+	
+	@Override
 	public void onGenerateGraph(boolean attributed, boolean directed, boolean weighted, GraphGeneratorFactory<Knoten, DefaultEdge, Knoten> factory, Integer... parameter) {
-		Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(directed, weighted);
-		
 		if(parameter != null && factory.getParameterCount() == parameter.length) {
-			GraphGenerator<Knoten, DefaultEdge, Knoten> generator = factory.createGenerator(parameter);
-			VertexFactory<Knoten> vertexFactory = attributed ? new RandomAttributedKnotenFactory(100) : new KnotenFactory();
+			Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(directed, weighted);
+			
+			VertexFactory<Knoten> vertexFactory = null;
+			if(attributed) {
+				if(getView().getAttributeMinValue() <= getView().getAttributeMaxValue()) {
+					vertexFactory = new RandomAttributedKnotenFactory(getView().getAttributeMinValue(), getView().getAttributeMaxValue());
+				} else {
+					getView().showFehlermeldung("Der Minimalwert für die Attributierung muss kleiner oder gleich dem Maximalwert sein!");
+					return;
+				}
+			} else {
+				vertexFactory = new KnotenFactory();
+			}
+			
 			try {
+				GraphGenerator<Knoten, DefaultEdge, Knoten> generator = factory.createGenerator(parameter);
 				generator.generateGraph(graph, vertexFactory, null);
+				
+				if(weighted) {
+					int weightModifikator = getView().getWeightModifier();
+					GraphWeighter<Knoten, DefaultEdge> weighter = attributed
+							? new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), weightModifikator)
+							: new GraphWeighter<Knoten, DefaultEdge>(weightModifikator);
+					weighter.appendGraphWeights((WeightedGraph<Knoten, DefaultEdge>)graph);
+				}
 				
 				fireEvent(new GenerateEvent(graph));
 			} catch(IllegalArgumentException e) {
