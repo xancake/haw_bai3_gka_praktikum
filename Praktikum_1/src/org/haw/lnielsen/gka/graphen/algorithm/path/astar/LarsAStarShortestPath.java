@@ -61,7 +61,7 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 				AStarAttribute otherAttribute = aStarTable.get(other);
 				if(!bereitsVerarbeitet.contains(other)) {
 					AStarAttribute vertexAttribute = aStarTable.get(vertex);
-					int entfNeu = vertexAttribute.entfernung + (int)graph.getEdgeWeight(edge);
+					double entfNeu = vertexAttribute.entfernung + graph.getEdgeWeight(edge);
 					if(entfNeu < otherAttribute.entfernung) {
 						otherAttribute.entfernung = entfNeu;
 						otherAttribute.schaetzung = entfNeu + myHeuristikProvider.getHeuristik(other);
@@ -76,7 +76,7 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 			return null;
 		}
 		
-		int weight = aStarTable.get(destination).entfernung;
+		double weight = aStarTable.get(destination).entfernung;
 		List<E> edgeList = createEdgeList(graph, aStarTable, start, destination);
 		return new GraphPathImpl<V, E>(graph, start, destination, edgeList, weight);
 	}
@@ -110,7 +110,7 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 	 */
 	private V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, AStarAttribute> aStarTable) {
 		V next = null;
-		int schaetzung = Integer.MAX_VALUE;
+		double schaetzung = Double.MAX_VALUE;
 		for(V vertex : nichtVerarbeitet) {
 			AStarAttribute vertexAttributes = aStarTable.get(vertex);
 			if(vertexAttributes.schaetzung < schaetzung) {
@@ -157,12 +157,12 @@ public class LarsAStarShortestPath<V, E> implements ShortestPath_I<V, E> {
 	}
 	
 	private class AStarAttribute {
-		private int entfernung;
-		private int schaetzung;
+		private double entfernung;
+		private double schaetzung;
 		private V vorgaenger;
 		
 		public AStarAttribute() {
-			entfernung = Integer.MAX_VALUE;
+			entfernung = Double.MAX_VALUE;
 			schaetzung = 0;
 			vorgaenger = null;
 		}

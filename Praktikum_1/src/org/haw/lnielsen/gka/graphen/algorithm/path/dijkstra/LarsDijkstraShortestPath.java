@@ -54,7 +54,7 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 				DijkstraAttribute otherAttribute = dijkstraTable.get(other);
 				if(!bereitsVerarbeitet.contains(other)) {
 					DijkstraAttribute vertexAttribute = dijkstraTable.get(vertex);
-					int entfNeu = vertexAttribute.entfernung + (int)graph.getEdgeWeight(edge);
+					double entfNeu = vertexAttribute.entfernung + graph.getEdgeWeight(edge);
 					if(entfNeu < otherAttribute.entfernung) {
 						otherAttribute.entfernung = entfNeu;
 						otherAttribute.vorgaenger = vertex;
@@ -68,7 +68,7 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 			return null;
 		}
 		
-		int weight = dijkstraTable.get(destination).entfernung;
+		double weight = dijkstraTable.get(destination).entfernung;
 		List<E> edgeList = createEdgeList(graph, dijkstraTable, start, destination);
 		return new GraphPathImpl<V, E>(graph, start, destination, edgeList, weight);
 	}
@@ -100,7 +100,7 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 	 */
 	private V getNaechstenNichtVerarbeitetenKnoten(Set<V> nichtVerarbeitet, Map<V, DijkstraAttribute> dijkstraTable) {
 		V next = null;
-		int entfernung = Integer.MAX_VALUE;
+		double entfernung = Double.MAX_VALUE;
 		for(V vertex : nichtVerarbeitet) {
 			DijkstraAttribute vertexAttributes = dijkstraTable.get(vertex);
 			if(vertexAttributes.entfernung < entfernung) {
@@ -147,11 +147,11 @@ public class LarsDijkstraShortestPath<V, E> implements ShortestPath_I<V, E> {
 	}
 	
 	private class DijkstraAttribute {
-		private int entfernung;
+		private double entfernung;
 		private V vorgaenger;
 		
 		public DijkstraAttribute() {
-			entfernung = Integer.MAX_VALUE;
+			entfernung = Double.MAX_VALUE;
 			vorgaenger = null;
 		}
 		

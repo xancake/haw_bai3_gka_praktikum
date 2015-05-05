@@ -49,12 +49,12 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 			
 			for(V vertex : graph.vertexSet()){
 				Attribut knotenAttributVertex = dijkstraMap.get(vertex);
-				int neueEntf = 0;
+				double neueEntf = 0;
 				E aktuelleKante;
 		
 				if(!knotenAttributVertex._ok && graph.containsEdge(aktuellerKnoten, vertex)) {
 					aktuelleKante = graph.getEdge(aktuellerKnoten, vertex);
-					neueEntf = nextAttribut._entfernung + (int)graph.getEdgeWeight(aktuelleKante);
+					neueEntf = nextAttribut._entfernung + graph.getEdgeWeight(aktuelleKante);
 					if(dijkstraMap.get(vertex)._entfernung > neueEntf){
 						knotenAttributVertex._entfernung = neueEntf;
 						knotenAttributVertex._vorgaenger = aktuellerKnoten;	
@@ -63,7 +63,7 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 			}
 		}
 		List<E> edgeList = ermittleEdgeList(start, destination, dijkstraMap, graph);
-		int weight = dijkstraMap.get(destination)._entfernung;
+		double weight = dijkstraMap.get(destination)._entfernung;
 		GraphPathImpl<V, E> graphPath = new GraphPathImpl<V, E>(graph, start, destination, edgeList, weight);
 		return graphPath;
 	}
@@ -88,7 +88,7 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 	 * @return V der Knoten mit der kleinsten Entfernung
 	 */
 	private V sucheKleinsteEntf(Graph<V, E> graph, Map<V, Attribut> map) {
-		int min = Integer.MAX_VALUE;
+		double min = Double.MAX_VALUE;
 		V minVertex = null;
 		for(V vertex : graph.vertexSet()){
 			Attribut attrVertex = map.get(vertex);
@@ -143,13 +143,13 @@ public class JennyDijkstra<V, E> implements ShortestPath_I<V, E> {
 	
 	private class Attribut {
 		private V _vorgaenger;
-		private int _entfernung;
+		private double _entfernung;
 		private boolean _ok;
 		
 		private Attribut() {
-			this(null, Integer.MAX_VALUE,false);
+			this(null, Double.MAX_VALUE,false);
 		}
-		private Attribut(V vorgaenger, int entfernung, boolean ok){
+		private Attribut(V vorgaenger, double entfernung, boolean ok){
 			this._vorgaenger = vorgaenger;
 			this._entfernung = entfernung;
 			this._ok = ok;
