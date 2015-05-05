@@ -47,6 +47,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	private JComboBox<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
 	private JButton myShortestPathButton;
 	private JButton myTraverseButton;
+	private JButton mySpanningTreeButton;
 	
 	private JFileChooser myChooser;
 	private JGraph myGraphComponent;
@@ -66,17 +67,22 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myChooser.setFileFilter(new GraphFileFilter());
 		myShortestPathAlgorithms = new JComboBox<>();
 		myGraphComponent = new JGraph();
-		myGraphComponent.setEditable(false);
 		myNewButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_new.gif")));
 		myLoadButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_open.gif")));
 		myStoreButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_save.gif")));
-		myShortestPathButton = new JButton("Kürzester Weg");
-		myShortestPathButton.setEnabled(false);
-		myTraverseButton = new JButton("Traversieren");
+		myShortestPathButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/shortestpath2.png")));
+		myTraverseButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/traversieren2.png")));
+		mySpanningTreeButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/spanningtree2.png")));
 		
 		myNewButton.setToolTipText("Neu...");
 		myLoadButton.setToolTipText("Laden");
 		myStoreButton.setToolTipText("Speichern");
+		myShortestPathButton.setToolTipText("Kürzester Weg");
+		myTraverseButton.setToolTipText("Traversieren");
+		mySpanningTreeButton.setToolTipText("Spannbaum");
+		
+		myGraphComponent.setEditable(false);
+		myShortestPathButton.setEnabled(false);
 	}
 	
 	@Override
@@ -91,6 +97,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		toolbar.add(myShortestPathAlgorithms);
 		toolbar.add(myShortestPathButton);
 		toolbar.add(myTraverseButton);
+		toolbar.add(mySpanningTreeButton);
 		toolbar.add(Box.createGlue());
 		
 		content.add(toolbar, BorderLayout.PAGE_START);
