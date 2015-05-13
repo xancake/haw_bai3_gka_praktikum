@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.jgrapht.graph.DefaultEdge;
 
 import de.xancake.ui.mvc.window.WindowViewListener_I;
@@ -45,4 +46,10 @@ public interface GraphEditorWindowListener_I extends WindowViewListener_I {
 	 * @param start Der Knoten von dem aus der Graph traversiert werden soll
 	 */
 	void onTraverse(Knoten start);
+	
+	/**
+	 * Wird aufgerufen, wenn die Aktion zum berechnen des Spannbaums eines Graphen aufgerufen wird.
+	 * @param algorithm Der Algorithmus der verwendet werden soll
+	 */
+	void onCalculateSpanningTree(SpanningTreeAlgorithm_I<Knoten, DefaultEdge> algorithm);
 }

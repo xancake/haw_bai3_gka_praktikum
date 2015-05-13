@@ -18,6 +18,7 @@ import org.haw.lnielsen.gka.graphen.algorithm.path.astar.LarsAStarShortestPath;
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JGraphTDijkstraAdapter;
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JennyDijkstra;
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.LarsDijkstraShortestPath;
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
@@ -48,6 +49,7 @@ public class GraphEditorWindowController
 	private GraphParser_I myParser;
 	private GraphStorer_I myStorer;
 	private List<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
+	private List<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> mySpanningTreeAlgorithms;
 	
 	public GraphEditorWindowController() {
 		super(null, new GraphEditorWindowSwing());
@@ -60,7 +62,9 @@ public class GraphEditorWindowController
 		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath<Knoten, DefaultEdge>());
 		myShortestPathAlgorithms.add(new JennyDijkstra<Knoten, DefaultEdge>());
 		myShortestPathAlgorithms.add(new LarsAStarShortestPath<Knoten, DefaultEdge>(new KnotenHeuristikProvider()));
+		mySpanningTreeAlgorithms = new ArrayList<>();
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
+		getView().setSpanningTreeAlgorithms(mySpanningTreeAlgorithms);
 	}
 	
 	@Override
@@ -134,6 +138,14 @@ public class GraphEditorWindowController
 			knotenList.add(iterator.next());
 		}
 		getView().showTraverseTrace(knotenList);
+	}
+	
+	@Override
+	public void onCalculateSpanningTree(SpanningTreeAlgorithm_I<Knoten, DefaultEdge> algorithm) {
+		Graph<Knoten, DefaultEdge> spanningTree = algorithm.calculateSpanningTree(getModel());
+		GraphEditorWindowController controller = new GraphEditorWindowController();
+		controller.setModel(spanningTree);
+		controller.show();
 	}
 	
 	@Override

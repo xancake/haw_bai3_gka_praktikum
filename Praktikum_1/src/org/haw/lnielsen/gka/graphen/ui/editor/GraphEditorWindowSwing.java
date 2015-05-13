@@ -20,6 +20,7 @@ import javax.swing.JToolBar;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.haw.lnielsen.gka.graphen.ui.swing.GraphFileFilter;
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
@@ -47,6 +48,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	private JComboBox<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
 	private JButton myShortestPathButton;
 	private JButton myTraverseButton;
+	private JComboBox<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> mySpanningTreeAlgorithms;
 	private JButton mySpanningTreeButton;
 	
 	private JFileChooser myChooser;
@@ -66,6 +68,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myChooser.setMultiSelectionEnabled(false);
 		myChooser.setFileFilter(new GraphFileFilter());
 		myShortestPathAlgorithms = new JComboBox<>();
+		mySpanningTreeAlgorithms = new JComboBox<>();
 		myGraphComponent = new JGraph();
 		myNewButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_new.gif")));
 		myLoadButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_open.gif")));
@@ -83,6 +86,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		
 		myGraphComponent.setEditable(false);
 		myShortestPathButton.setEnabled(false);
+		mySpanningTreeButton.setEnabled(false);
 	}
 	
 	@Override
@@ -97,6 +101,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		toolbar.add(myShortestPathAlgorithms);
 		toolbar.add(myShortestPathButton);
 		toolbar.add(myTraverseButton);
+		toolbar.add(mySpanningTreeAlgorithms);
 		toolbar.add(mySpanningTreeButton);
 		toolbar.add(Box.createGlue());
 		
@@ -134,6 +139,12 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				myShortestPathButton.setEnabled(myShortestPathAlgorithms.getSelectedItem() != null);
+			}
+		});
+		mySpanningTreeAlgorithms.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mySpanningTreeButton.setEnabled(mySpanningTreeAlgorithms.getSelectedItem() != null);
 			}
 		});
 		myShortestPathButton.addActionListener(new ActionListener() {
@@ -174,6 +185,14 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 				}
 			}
 		});
+		mySpanningTreeButton.addActionListener(new ActionListener() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent e) {
+				SpanningTreeAlgorithm_I<Knoten, DefaultEdge> algorithm = (SpanningTreeAlgorithm_I<Knoten, DefaultEdge>)mySpanningTreeAlgorithms.getSelectedItem();
+				myListener.onCalculateSpanningTree(algorithm);
+			}
+		});
 	}
 
 	@Override
@@ -196,9 +215,24 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		for(ShortestPath_I<Knoten, DefaultEdge> algorithm : algorithms) {
 			model.addElement(algorithm);
 		}
-		model.setSelectedItem(algorithms.get(0));
 		myShortestPathAlgorithms.setModel(model);
-		myShortestPathButton.setEnabled(true);
+		if(!algorithms.isEmpty()) {
+			model.setSelectedItem(algorithms.get(0));
+			myShortestPathButton.setEnabled(true);
+		}
+	}
+	
+	@Override
+	public void setSpanningTreeAlgorithms(List<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> algorithms) {
+		DefaultComboBoxModel<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> model = new DefaultComboBoxModel<>();
+		for(SpanningTreeAlgorithm_I<Knoten, DefaultEdge> algorithm : algorithms) {
+			model.addElement(algorithm);
+		}
+		mySpanningTreeAlgorithms.setModel(model);
+		if(!algorithms.isEmpty()) {
+			model.setSelectedItem(algorithms.get(0));
+			mySpanningTreeButton.setEnabled(true);
+		}
 	}
 	
 	@Override

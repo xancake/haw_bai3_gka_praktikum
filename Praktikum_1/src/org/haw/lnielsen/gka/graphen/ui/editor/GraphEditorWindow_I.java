@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.graph.DefaultEdge;
@@ -22,6 +23,13 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	 * @param algorithms Eine Liste der Algorithmen
 	 */
 	void setShortestPathAlgorithms(List<ShortestPath_I<Knoten, DefaultEdge>> algorithms);
+	
+	/**
+	 * Legt die Algorithmen zur Berechnung des Spannbaums fest,
+	 * die die Benutzeroberfläche anbietet.
+	 * @param algorithms Eine Liste der Algorithmen
+	 */
+	void setSpanningTreeAlgorithms(List<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> algorithms);
 	
 	/**
 	 * Zeigt den übergebenen Pfad an.
