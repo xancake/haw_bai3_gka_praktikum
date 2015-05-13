@@ -1,17 +1,17 @@
 package org.haw.lnielsen.gka.graphen.ui.generator.factory;
 
 import org.jgrapht.generate.GraphGenerator;
-import org.jgrapht.generate.RandomGraphGenerator;
+import org.jgrapht.generate.RingGraphGenerator;
 
 public class RingGraphGeneratorFactory<V, E> extends GraphGeneratorFactory<V, E, V> {
 	@Override
 	protected String[] initParameterNames() {
-		return new String[] {"Vertex-Count", "Edge-Count"};
+		return new String[] {"Vertex-Count"};
 	}
 	
 	@Override
 	protected GraphGenerator<V, E, V> createGeneratorImpl(Integer... parameter) {
-		return new RandomGraphGenerator<>(parameter[0], parameter[1]);
+		return new RingGraphGenerator<>(parameter[0]);
 	}
 	
 	@Override
