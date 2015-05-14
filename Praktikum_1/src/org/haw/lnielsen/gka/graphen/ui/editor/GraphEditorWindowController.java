@@ -42,6 +42,8 @@ import de.xancake.ui.mvc.window.WindowController_A;
 public class GraphEditorWindowController
 		extends WindowController_A<Graph<Knoten, DefaultEdge>, GraphEditorWindowListener_I, GraphEditorWindow_I, ControllerListener_I>
 		implements GraphEditorWindowListener_I, GraphGeneratorControllerListener_I {
+	private static int OPEN_WINDOWS = 0;
+	
 	private GraphGeneratorController myGraphGenerator;
 	private GraphParser_I myParser;
 	private GraphStorer_I myStorer;
@@ -66,12 +68,15 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onViewOpened() {
-		
+		OPEN_WINDOWS++;
 	}
 	
 	@Override
 	public void onViewClosed() {
-		
+		OPEN_WINDOWS--;
+		if(OPEN_WINDOWS==0) {
+			System.exit(0);
+		}
 	}
 	
 	@Override
