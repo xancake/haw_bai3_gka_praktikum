@@ -71,7 +71,7 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onViewClosed() {
-		System.exit(0);
+		
 	}
 	
 	@Override
