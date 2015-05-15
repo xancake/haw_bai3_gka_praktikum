@@ -17,6 +17,7 @@ import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JennyDijkstra;
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.LarsDijkstraShortestPath;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.LarsKruskalSpanningTree;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
+import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParser_I;
@@ -29,6 +30,7 @@ import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGraph;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
+import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
@@ -146,7 +148,8 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onCalculateSpanningTree(SpanningTreeAlgorithm_I<Knoten, DefaultEdge> algorithm) {
-		Graph<Knoten, DefaultEdge> spanningTree = algorithm.calculateSpanningTree(getModel());
+		Graph<Knoten, DefaultEdge> spanningTree = GraphFactory.createGraph(getModel() instanceof DirectedGraph, getModel() instanceof WeightedGraph);
+		algorithm.calculateSpanningTree(getModel(), spanningTree);
 		GraphEditorWindowController controller = new GraphEditorWindowController();
 		controller.setModel(spanningTree);
 		controller.show();

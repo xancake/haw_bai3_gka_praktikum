@@ -4,31 +4,26 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import org.haw.lnielsen.gka.graphen.Knoten;
-import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultEdge;
 
-public class LarsKruskalSpanningTree implements SpanningTreeAlgorithm_I<Knoten, DefaultEdge> {
+public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E> {
 	@Override
-	public Graph<Knoten, DefaultEdge> calculateSpanningTree(Graph<Knoten, DefaultEdge> graph) {
-		Queue<DefaultEdge> edges = new PriorityQueue<DefaultEdge>(graph.edgeSet().size(), new EdgeWeightComparator(graph));
+	public Graph<V, E> calculateSpanningTree(Graph<V, E> graph, Graph<V, E> spanningTree) {
+		Queue<E> edges = new PriorityQueue<>(graph.edgeSet().size(), new EdgeWeightComparator(graph));
 		edges.addAll(graph.edgeSet());
 		
-		Graph<Knoten, DefaultEdge> spanningTree = GraphFactory.createGraph(graph instanceof DirectedGraph, graph instanceof WeightedGraph);
 		while(!edges.isEmpty()) {
-			DefaultEdge edge = edges.poll();
-			Knoten edgeSource = graph.getEdgeSource(edge);
-			Knoten edgeTarget = graph.getEdgeTarget(edge);
+			E edge = edges.poll();
+			V edgeSource = graph.getEdgeSource(edge);
+			V edgeTarget = graph.getEdgeTarget(edge);
 			if(!producesCircle(graph, spanningTree, edge)) {
 				spanningTree.addVertex(edgeSource);
 				spanningTree.addVertex(edgeTarget);
 				spanningTree.addEdge(edgeSource, edgeTarget);
 				if(spanningTree instanceof WeightedGraph) {
-					((WeightedGraph<Knoten, DefaultEdge>)spanningTree).setEdgeWeight(spanningTree.getEdge(edgeSource, edgeTarget), graph.getEdgeWeight(edge));
+					((WeightedGraph<V, E>)spanningTree).setEdgeWeight(spanningTree.getEdge(edgeSource, edgeTarget), graph.getEdgeWeight(edge));
 				}
 			}
 		}
@@ -36,9 +31,9 @@ public class LarsKruskalSpanningTree implements SpanningTreeAlgorithm_I<Knoten, 
 		return spanningTree;
 	}
 	
-	private boolean producesCircle(Graph<Knoten, DefaultEdge> graph, Graph<Knoten, DefaultEdge> spanningTree, DefaultEdge edge) {
+	private boolean producesCircle(Graph<V, E> graph, Graph<V, E> spanningTree, E edge) {
 		if(spanningTree.containsVertex(graph.getEdgeSource(edge)) && spanningTree.containsVertex(graph.getEdgeTarget(edge))) {
-			DijkstraShortestPath<Knoten, DefaultEdge> dijkstra = new DijkstraShortestPath<Knoten, DefaultEdge>(spanningTree, graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
+			DijkstraShortestPath<V, E> dijkstra = new DijkstraShortestPath<V, E>(spanningTree, graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
 			return dijkstra.getPath() != null;
 		}
 		return false;
@@ -49,15 +44,15 @@ public class LarsKruskalSpanningTree implements SpanningTreeAlgorithm_I<Knoten, 
 		return "Lars Kruskal Spanning Tree";
 	}
 	
-	private class EdgeWeightComparator implements Comparator<DefaultEdge> {
-		private Graph<Knoten, DefaultEdge> myGraph;
+	private class EdgeWeightComparator implements Comparator<E> {
+		private Graph<V, E> myGraph;
 		
-		public EdgeWeightComparator(Graph<Knoten, DefaultEdge> graph) {
+		public EdgeWeightComparator(Graph<V, E> graph) {
 			myGraph = graph;
 		}
 		
 		@Override
-		public int compare(DefaultEdge o1, DefaultEdge o2) {
+		public int compare(E o1, E o2) {
 			return (int)(myGraph.getEdgeWeight(o1)-myGraph.getEdgeWeight(o2));
 		}
 	}
