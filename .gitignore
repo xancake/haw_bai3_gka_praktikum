@@ -1,6 +1,5 @@
-/bin/
-/.settings/
-/.settings/*
+**/bin/
+**/.settings/
 *.class
 .DS_Store
 ~*
