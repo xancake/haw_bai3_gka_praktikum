@@ -8,6 +8,11 @@ import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
 
+/**
+ * Implementation des Kruskal-Spanning-Tree-Algorithmus.
+ * 
+ * @author Lars Nielsen
+ */
 public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E> {
 	@Override
 	public Graph<V, E> calculateSpanningTree(Graph<V, E> graph, Graph<V, E> spanningTree) {
@@ -31,6 +36,14 @@ public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V,
 		return spanningTree;
 	}
 	
+	/**
+	 * Prüft, ob die übergebene Kante einen Kreis erzeugen würde, wenn sie dem Spannbaum-Graphen
+	 * hinzugefügt werden würde.
+	 * @param graph Der ursprüngliche Graph
+	 * @param spanningTree Der Spannbaum des Graphen
+	 * @param edge Die Kante die dem Spannbaum hinzugefügt werden soll
+	 * @return {@code true}, wenn die Kante einen Kreis erzeugen würde, ansonsten {@code false}
+	 */
 	private boolean producesCircle(Graph<V, E> graph, Graph<V, E> spanningTree, E edge) {
 		if(spanningTree.containsVertex(graph.getEdgeSource(edge)) && spanningTree.containsVertex(graph.getEdgeTarget(edge))) {
 			DijkstraShortestPath<V, E> dijkstra = new DijkstraShortestPath<V, E>(spanningTree, graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
@@ -44,6 +57,11 @@ public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V,
 		return "Lars Kruskal Spanning Tree";
 	}
 	
+	/**
+	 * Comparator für die Prioritäts-Warteschlange, der Kanten aufsteigend nach ihrem Gewicht sortiert.
+	 * 
+	 * @author Lars Nielsen
+	 */
 	private class EdgeWeightComparator implements Comparator<E> {
 		private Graph<V, E> myGraph;
 		

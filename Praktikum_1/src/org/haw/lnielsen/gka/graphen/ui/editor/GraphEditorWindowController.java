@@ -16,6 +16,7 @@ import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JGraphTDijkstraAdapt
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.JennyDijkstra;
 import org.haw.lnielsen.gka.graphen.algorithm.path.dijkstra.LarsDijkstraShortestPath;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.LarsKruskalSpanningTree;
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.LarsPrimSpanningTree;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
@@ -65,7 +66,8 @@ public class GraphEditorWindowController
 		myShortestPathAlgorithms.add(new JennyDijkstra<Knoten, DefaultEdge>());
 		myShortestPathAlgorithms.add(new LarsAStarShortestPath<Knoten, DefaultEdge>(new KnotenHeuristikProvider()));
 		mySpanningTreeAlgorithms = new ArrayList<>();
-		mySpanningTreeAlgorithms.add(new LarsKruskalSpanningTree());
+		mySpanningTreeAlgorithms.add(new LarsKruskalSpanningTree<Knoten, DefaultEdge>());
+		mySpanningTreeAlgorithms.add(new LarsPrimSpanningTree<Knoten, DefaultEdge>());
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 		getView().setSpanningTreeAlgorithms(mySpanningTreeAlgorithms);
 	}
