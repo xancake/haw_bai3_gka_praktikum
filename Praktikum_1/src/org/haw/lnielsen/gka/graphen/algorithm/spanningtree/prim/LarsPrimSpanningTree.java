@@ -75,6 +75,6 @@ public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E>
 	
 	@Override
 	public String toString() {
-		return "Lars Prim Spanning Tree";
+		return "Lars Prim";
 	}
 }

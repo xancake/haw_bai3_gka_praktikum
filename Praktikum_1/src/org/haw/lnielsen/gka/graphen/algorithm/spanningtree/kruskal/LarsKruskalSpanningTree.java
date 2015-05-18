@@ -55,7 +55,7 @@ public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V,
 	
 	@Override
 	public String toString() {
-		return "Lars Kruskal Spanning Tree";
+		return "Lars Kruskal";
 	}
 	
 	/**

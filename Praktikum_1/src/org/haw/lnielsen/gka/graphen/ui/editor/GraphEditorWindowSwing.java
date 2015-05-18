@@ -70,6 +70,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myShortestPathAlgorithms = new JComboBox<>();
 		mySpanningTreeAlgorithms = new JComboBox<>();
 		myGraphComponent = new JGraph();
+		
 		myNewButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_new.gif")));
 		myLoadButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_open.gif")));
 		myStoreButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_save.gif")));
