@@ -1,8 +1,9 @@
-package org.haw.lnielsen.gka.graphen.algorithm.spanningtree;
+package org.haw.lnielsen.gka.graphen.algorithm.spanningtree.prim;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 

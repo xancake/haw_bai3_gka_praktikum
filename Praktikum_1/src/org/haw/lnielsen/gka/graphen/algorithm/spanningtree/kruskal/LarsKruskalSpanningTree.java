@@ -1,9 +1,10 @@
-package org.haw.lnielsen.gka.graphen.algorithm.spanningtree;
+package org.haw.lnielsen.gka.graphen.algorithm.spanningtree.kruskal;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
