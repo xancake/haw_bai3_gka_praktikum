@@ -33,6 +33,11 @@ public interface GraphEditorWindowListener_I extends WindowViewListener_I {
 	void onStoreGraph(File file);
 	
 	/**
+	 * Wird aufgerufen, wenn die Aktion zum Berechnen des Graphengewichts aufgerufen wird.
+	 */
+	void onCalculateGraphWeight();
+	
+	/**
 	 * Wird aufgerufen, wenn die Aktion zum berechnen des kürzesten Pfades zwischen zwei Knoten
 	 * aufgerufen wird.
 	 * @param algorithm Der Algorithmus der verwendet werden soll

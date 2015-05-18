@@ -45,6 +45,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	private JButton myNewButton;
 	private JButton myLoadButton;
 	private JButton myStoreButton;
+	private JButton myWeightButton;
 	private JComboBox<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
 	private JButton myShortestPathButton;
 	private JButton myTraverseButton;
@@ -74,6 +75,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myNewButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_new.gif")));
 		myLoadButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_open.gif")));
 		myStoreButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_save.gif")));
+		myWeightButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/graph_weight2.png")));
 		myShortestPathButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/shortestpath2.png")));
 		myTraverseButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/traversieren2.png")));
 		mySpanningTreeButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/spanningtree2.png")));
@@ -81,11 +83,13 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myNewButton.setToolTipText("Neu...");
 		myLoadButton.setToolTipText("Laden");
 		myStoreButton.setToolTipText("Speichern");
+		myWeightButton.setToolTipText("Gesamtgewicht ausgeben");
 		myShortestPathButton.setToolTipText("Kürzester Weg");
 		myTraverseButton.setToolTipText("Traversieren");
 		mySpanningTreeButton.setToolTipText("Spannbaum");
 		
 		myGraphComponent.setEditable(false);
+		myWeightButton.setEnabled(false);
 		myShortestPathButton.setEnabled(false);
 		mySpanningTreeButton.setEnabled(false);
 	}
@@ -99,6 +103,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		toolbar.add(myLoadButton);
 		toolbar.add(myStoreButton);
 		toolbar.addSeparator();
+		toolbar.add(myWeightButton);
 		toolbar.add(myShortestPathAlgorithms);
 		toolbar.add(myShortestPathButton);
 		toolbar.add(myTraverseButton);
@@ -134,6 +139,12 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 				if(myChooser.showSaveDialog(myFrame) == JFileChooser.APPROVE_OPTION) {
 					myListener.onStoreGraph(myChooser.getSelectedFile());
 				}
+			}
+		});
+		myWeightButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				myListener.onCalculateGraphWeight();
 			}
 		});
 		myShortestPathAlgorithms.addActionListener(new ActionListener() {
@@ -201,6 +212,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myGraphComponent.clearSelection();
 		myGraphComponent.setModel(model != null ? new JGraphModelAdapter<Knoten, DefaultEdge>(model) : null);
 		myGraphComponent.setEnabled(model != null);
+		myWeightButton.setEnabled(model != null);
 		
 		if(model != null) {
 			JGraphFacade facade = new JGraphFacade(myGraphComponent);
@@ -234,6 +246,11 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 			model.setSelectedItem(algorithms.get(0));
 			mySpanningTreeButton.setEnabled(true);
 		}
+	}
+	
+	@Override
+	public void showGraphWeight(double weight) {
+		JOptionPane.showMessageDialog(myFrame, "Das Gewicht des Graphen beträgt " + weight + ".", "Graph Gesamtgewicht", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	@Override

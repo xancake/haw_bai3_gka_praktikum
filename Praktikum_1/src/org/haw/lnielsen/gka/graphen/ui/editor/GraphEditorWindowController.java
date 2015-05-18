@@ -129,6 +129,15 @@ public class GraphEditorWindowController
 	}
 	
 	@Override
+	public void onCalculateGraphWeight() {
+		double weight = 0;
+		for(DefaultEdge edge : getModel().edgeSet()) {
+			weight += getModel().getEdgeWeight(edge);
+		}
+		getView().showGraphWeight(weight);
+	}
+	
+	@Override
 	public void onCalculateShortestPath(ShortestPath_I<Knoten, DefaultEdge> algorithm, Knoten start, Knoten end) {
 		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph = createZugriffszaehlenderGraph(getModel());
 		

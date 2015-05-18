@@ -32,6 +32,12 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	void setSpanningTreeAlgorithms(List<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> algorithms);
 	
 	/**
+	 * Zeigt das Graphengewicht auf der Benutzeroberfläche an.
+	 * @param weight Das Gesamtgewicht des Graphen
+	 */
+	void showGraphWeight(double weight);
+	
+	/**
 	 * Zeigt den übergebenen Pfad an.
 	 * @param path Der anzuzeigende Pfad
 	 * @param anzahlZugriffe Die Anzahl der Zugriffe auf den Graphen
