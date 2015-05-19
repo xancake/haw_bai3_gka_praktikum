@@ -28,6 +28,7 @@ import org.haw.lnielsen.gka.graphen.io.store.GKAGraphStorer;
 import org.haw.lnielsen.gka.graphen.io.store.GraphStorer_I;
 import org.haw.lnielsen.gka.graphen.ui.generator.GraphGeneratorController;
 import org.haw.lnielsen.gka.graphen.ui.generator.GraphGeneratorControllerListener_I;
+import org.haw.lnielsen.gka.graphen.util.GraphUtils;
 import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGerichteterGraph;
 import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGraph;
 import org.jgrapht.DirectedGraph;
@@ -63,15 +64,15 @@ public class GraphEditorWindowController
 		myParser = new GKAGraphParser();
 		myStorer = new GKAGraphStorer();
 		myShortestPathAlgorithms = new ArrayList<>();
-		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter<>());
-		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath<>());
-		myShortestPathAlgorithms.add(new JennyDijkstra<>());
-		myShortestPathAlgorithms.add(new LarsAStarShortestPath<>(new KnotenHeuristikProvider()));
+		myShortestPathAlgorithms.add(new JGraphTDijkstraAdapter<Knoten, DefaultEdge>());
+		myShortestPathAlgorithms.add(new LarsDijkstraShortestPath<Knoten, DefaultEdge>());
+		myShortestPathAlgorithms.add(new JennyDijkstra<Knoten, DefaultEdge>());
+		myShortestPathAlgorithms.add(new LarsAStarShortestPath<Knoten, DefaultEdge>(new KnotenHeuristikProvider()));
 		mySpanningTreeAlgorithms = new ArrayList<>();
-		mySpanningTreeAlgorithms.add(new JGraphTKruskalSpanningTreeAdapter<>());
-		mySpanningTreeAlgorithms.add(new LarsKruskalSpanningTree<>());
-		mySpanningTreeAlgorithms.add(new JGraphTPrimSpanningTreeAdapter<>());
-		mySpanningTreeAlgorithms.add(new LarsPrimSpanningTree<>());
+		mySpanningTreeAlgorithms.add(new JGraphTKruskalSpanningTreeAdapter<Knoten, DefaultEdge>());
+		mySpanningTreeAlgorithms.add(new LarsKruskalSpanningTree<Knoten, DefaultEdge>());
+		mySpanningTreeAlgorithms.add(new JGraphTPrimSpanningTreeAdapter<Knoten, DefaultEdge>());
+		mySpanningTreeAlgorithms.add(new LarsPrimSpanningTree<Knoten, DefaultEdge>());
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 		getView().setSpanningTreeAlgorithms(mySpanningTreeAlgorithms);
 	}
@@ -116,6 +117,9 @@ public class GraphEditorWindowController
 	@Override
 	public void onStoreGraph(File file) {
 		if(file != null && !file.isDirectory()) {
+			if(!file.getName().endsWith(".graph")) {
+				file = new File(file.getPath() + ".graph");
+			}
 			try {
 				myStorer.storeGraph(getModel(), new FileOutputStream(file));
 			} catch(FileNotFoundException e) {
@@ -130,11 +134,7 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onCalculateGraphWeight() {
-		double weight = 0;
-		for(DefaultEdge edge : getModel().edgeSet()) {
-			weight += getModel().getEdgeWeight(edge);
-		}
-		getView().showGraphWeight(weight);
+		getView().showGraphWeight(GraphUtils.calculateGraphWeight(getModel()));
 	}
 	
 	@Override
