@@ -1,10 +1,10 @@
 package org.haw.lnielsen.gka.graphen.algorithm.spanningtree.kruskal;
 
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
+import org.haw.lnielsen.gka.graphen.util.compare.EdgeWeightComparator;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
@@ -17,7 +17,7 @@ import org.jgrapht.alg.DijkstraShortestPath;
 public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E> {
 	@Override
 	public Graph<V, E> calculateSpanningTree(Graph<V, E> graph, Graph<V, E> spanningTree) {
-		Queue<E> edges = new PriorityQueue<>(graph.edgeSet().size(), new EdgeWeightComparator(graph));
+		Queue<E> edges = new PriorityQueue<>(graph.edgeSet().size(), new EdgeWeightComparator<E>(graph));
 		edges.addAll(graph.edgeSet());
 		
 		while(!edges.isEmpty()) {
@@ -56,23 +56,5 @@ public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V,
 	@Override
 	public String toString() {
 		return "Lars Kruskal";
-	}
-	
-	/**
-	 * Comparator für die Prioritäts-Warteschlange, der Kanten aufsteigend nach ihrem Gewicht sortiert.
-	 * 
-	 * @author Lars Nielsen
-	 */
-	private class EdgeWeightComparator implements Comparator<E> {
-		private Graph<V, E> myGraph;
-		
-		public EdgeWeightComparator(Graph<V, E> graph) {
-			myGraph = graph;
-		}
-		
-		@Override
-		public int compare(E o1, E o2) {
-			return (int)(myGraph.getEdgeWeight(o1)-myGraph.getEdgeWeight(o2));
-		}
 	}
 }
