@@ -44,7 +44,6 @@ public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E>
 				// Dann muss der neue Knoten und die Kante dem Spannbaum hinzugefügt werden
 				// und alle Kanten der Queue hinzugefügt werden.
 				if(spanningTree.containsVertex(source) ^ spanningTree.containsVertex(target)) {
-					V treeVertex = spanningTree.containsVertex(source) ? source : target;
 					V newVertex  = spanningTree.containsVertex(source) ? target : source;
 					
 					addVertex(newVertex, graph, spanningTree, vertices, edges);
