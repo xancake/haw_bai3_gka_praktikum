@@ -1,9 +1,12 @@
 package org.haw.lnielsen.gka.graphen.algorithm.spanningtree.prim;
 
 import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
+import org.haw.lnielsen.gka.graphen.util.compare.EdgeWeightComparator;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 
@@ -15,62 +18,53 @@ import org.jgrapht.WeightedGraph;
 public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E> {
 	@Override
 	public Graph<V, E> calculateSpanningTree(Graph<V, E> graph, Graph<V, E> spanningTree) {
-		Set<V> vertices = new HashSet<>(graph.vertexSet());
-		
-		V startVertex = vertices.iterator().next();
-		spanningTree.addVertex(startVertex);
-		vertices.remove(startVertex);
-		
-		while(!vertices.isEmpty()) {
-			E nextEdge = getNextEdge(graph, spanningTree);
-			
-			if(nextEdge == null) {
-				// Alle Knoten die jetzt noch in 'vertices' stecken, sind nicht mit den Knoten aus dem Spannbaum verbunden
-				break;
-			}
-			
-			V source = graph.getEdgeSource(nextEdge);
-			V target = graph.getEdgeTarget(nextEdge);
-			spanningTree.addVertex(source);
-			spanningTree.addVertex(target);
-			spanningTree.addEdge(source, target);
-			if(spanningTree instanceof WeightedGraph) {
-				((WeightedGraph<V, E>)spanningTree).setEdgeWeight(spanningTree.getEdge(source, target), graph.getEdgeWeight(nextEdge));
-			}
-			vertices.remove(source);
-			vertices.remove(target);
+		if(!spanningTree.vertexSet().isEmpty() || !spanningTree.edgeSet().isEmpty()) {
+			throw new IllegalArgumentException("Der Spannbaum muss leer sein!");
 		}
 		
-		return spanningTree;
-	}
-	
-	/**
-	 * Ermittelt die nächste zu verarbeitende Kante. Die nächste Kante ist über eine Kante
-	 * mit den Knoten aus dem Spannbaum verbunden und hat das niedrigste Gewicht gegenüber
-	 * anderen möglichen Kanditaten.
-	 * @param graph Der ursprüngliche Graph
-	 * @param spanningTree Der Spannbaum des Graphen
-	 * @return Die nächste zu verarbeitende Kante
-	 */
-	private E getNextEdge(Graph<V, E> graph, Graph<V, E> spanningTree) {
-		Set<V> spanningTreeVertices = spanningTree.vertexSet();
+		Set<V> vertices = new HashSet<>(graph.vertexSet());
+		Queue<E> edges = new PriorityQueue<>(graph.edgeSet().size(), new EdgeWeightComparator<E>(graph));
 		
-		E nextEdge = null;
-		for(V vertex : spanningTreeVertices) {
-			for(E edge : graph.edgesOf(vertex)) {
-				V edgeSource = graph.getEdgeSource(edge);
-				V edgeTarget = graph.getEdgeTarget(edge);
-				V other = (vertex == edgeSource ? edgeTarget : edgeSource);
+		while(!spanningTree.vertexSet().containsAll(graph.vertexSet())) {
+			V vertex = vertices.iterator().next();
+			addVertex(vertex, graph, spanningTree, vertices, edges);
+			
+			while(!edges.isEmpty()) {
+				E edge = edges.poll();
+				V source = graph.getEdgeSource(edge);
+				V target = graph.getEdgeTarget(edge);
 				
-				if(!spanningTree.containsVertex(other) && !spanningTree.containsEdge(edgeSource, edgeTarget)) {
-					if(nextEdge == null || graph.getEdgeWeight(edge) < graph.getEdgeWeight(nextEdge)) {
-						nextEdge = edge;
+				// Beide Knoten sind schon im Spannbaum, dann braucht die Kante nicht mehr betrachtet werden,
+				// da sie aufgrund der niedrigeren Priorität von einer alternativen Route ausgestochen wurde
+				if(spanningTree.containsVertex(source) && spanningTree.containsVertex(target)) {
+					continue;
+				}
+				
+				// Nur einer der beiden Knoten ist noch nicht im Spannbaum
+				// Dann muss der neue Knoten und die Kante dem Spannbaum hinzugefügt werden
+				// und alle Kanten der Queue hinzugefügt werden.
+				if(spanningTree.containsVertex(source) ^ spanningTree.containsVertex(target)) {
+					V treeVertex = spanningTree.containsVertex(source) ? source : target;
+					V newVertex  = spanningTree.containsVertex(source) ? target : source;
+					
+					addVertex(newVertex, graph, spanningTree, vertices, edges);
+					spanningTree.addEdge(source, target);
+					if(spanningTree instanceof WeightedGraph) {
+						((WeightedGraph<V, E>)spanningTree).setEdgeWeight(spanningTree.getEdge(source, target), graph.getEdgeWeight(edge));
 					}
 				}
 			}
 		}
 		
-		return nextEdge;
+		return spanningTree;
+	}
+	
+	private void addVertex(V vertex, Graph<V, E> graph, Graph<V, E> spanningTree, Set<V> vertices, Queue<E> edges) {
+		vertices.remove(vertex);
+		spanningTree.addVertex(vertex);
+		for(E edge : graph.edgesOf(vertex)) {
+			edges.add(edge);
+		}
 	}
 	
 	@Override
