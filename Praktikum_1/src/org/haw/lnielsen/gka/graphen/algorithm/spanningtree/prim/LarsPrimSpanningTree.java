@@ -59,8 +59,10 @@ public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E>
 	}
 	
 	/**
-	 * Fügt den Knoten dem Spannbaum hinzu unt entfernt ihn aus der Liste der noch nicht verarbeiteten
-	 * Knoten. Die Kanten des Knoten werden der Warteschlange hinzugefügt.
+	 * Fügt den Knoten dem Spannbaum hinzu und entfernt ihn aus der Liste der noch nicht verarbeiteten
+	 * Knoten. Die Kanten des Knoten werden der Warteschlange hinzugefügt, wenn sich einer der
+	 * beteiligten Knoten noch nicht im Spannbaum befindet und die Kante noch nicht in der
+	 * Warteschlange enthalten ist.
 	 * @param vertex Der Knoten
 	 * @param graph Der original-Graph
 	 * @param spanningTree Der Spannbaum zu dem der Knoten hinzugefügt werden soll
@@ -71,7 +73,9 @@ public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E>
 		vertices.remove(vertex);
 		spanningTree.addVertex(vertex);
 		for(E edge : graph.edgesOf(vertex)) {
-			if(!spanningTree.containsEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)) && !edges.contains(edge)) {
+			V source = graph.getEdgeSource(edge);
+			V target = graph.getEdgeTarget(edge);
+			if((spanningTree.containsVertex(source) ^ spanningTree.containsVertex(target)) && !edges.contains(edge)) {
 				edges.add(edge);
 			}
 		}
