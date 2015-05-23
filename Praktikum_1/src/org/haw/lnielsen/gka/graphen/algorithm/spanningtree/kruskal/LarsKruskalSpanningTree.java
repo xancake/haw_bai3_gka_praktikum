@@ -34,6 +34,12 @@ public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V,
 			}
 		}
 		
+		for(V vertex : graph.vertexSet()) {
+			if(!spanningTree.containsVertex(vertex)) {
+				spanningTree.addVertex(vertex);
+			}
+		}
+		
 		return spanningTree;
 	}
 	

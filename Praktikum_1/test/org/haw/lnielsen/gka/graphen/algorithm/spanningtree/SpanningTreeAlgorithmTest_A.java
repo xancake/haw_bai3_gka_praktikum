@@ -70,6 +70,20 @@ public abstract class SpanningTreeAlgorithmTest_A {
 	}
 	
 	/**
+	 * Test auf einem Graphen mit zwei Komponenten. Die beiden Komponenten sind für
+	 * sich gesehen bereits minimale Spannbäume. Eine der beiden Komponenten
+	 * besteht aber nur aus einem Knoten.
+	 */
+	@Test
+	public void testCalculateSpanningTree_TwoComponents_SingleVertex() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/two_components_single_vertex.graph"));
+		Graph<Knoten, DefaultEdge> spanningTree = GraphFactory.createGraph(graph instanceof DirectedGraph, graph instanceof WeightedGraph);
+		myAlgorithm.calculateSpanningTree(graph, spanningTree);
+		assertGraphWeight(17.0, spanningTree);
+		assertEqualsGraph(graph, spanningTree);
+	}
+	
+	/**
 	 * Fabrikmethode für erbende Tests um ihre entsprechende Implementation des Algorithmus
 	 * bereitzustellen.
 	 * @return Der Algorithmus
