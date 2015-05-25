@@ -40,10 +40,23 @@ public class GraphFactory {
 		}
 	}
 	
+	/**
+	 * Erzeugt einen neuen Graphen mit den gleichen Eigenschaften des übergebenen Graphen.
+	 * Die kopierten Eigenschaften sind ob der Graph gerichtet oder gewichtet ist.
+	 * @param graph Der Graph, dessen Eigenschaften kopiert werden sollen
+	 * @return Ein neuer, leerer Graph mit den gleichen Eigenschaften wie denen des übergebenen Graphen
+	 */
 	public static Graph<Knoten, DefaultEdge> createGraph(Graph<Knoten, DefaultEdge> graph) {
 		return createGraph(graph instanceof DirectedGraph, graph instanceof WeightedGraph);
 	}
 	
+	/**
+	 * Erzeugt einen {@link ZugriffszaehlenderGraph zugriffszählenden Graphen} der den übergebenen Graphen
+	 * wrapped, um ihn mit der Funktionalität zum Messen von Zugriffen zu erweitern. Dabei leitet der
+	 * zugriffszählende Graph die Methodenaufrufe nur an den eigentlichen Graph weiter.
+	 * @param graph Der eigentliche Graph
+	 * @return Der {@link ZugriffszaehlenderGraph}
+	 */
 	public static ZugriffszaehlenderGraph<Knoten, DefaultEdge> createZugriffszaehlenderGraph(Graph<Knoten, DefaultEdge> graph) {
 		return graph instanceof DirectedGraph
 				? new ZugriffszaehlenderGerichteterGraph<Knoten, DefaultEdge>((DirectedGraph<Knoten, DefaultEdge>)graph)
