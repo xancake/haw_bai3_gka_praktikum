@@ -20,7 +20,7 @@ import org.jgrapht.util.FibonacciHeapNode;
 public class PrimFibonacciHeapSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E> {
 	@Override
 	public Graph<V, E> calculateSpanningTree(Graph<V, E> graph, Graph<V, E> spanningTree) {
-		Set<V> vertices = new HashSet<>(graph.vertexSet());
+		Set<V> unspanned = new HashSet<>(graph.vertexSet());
 		
 		// Initialisieren des Fibonacci Heaps
 		Map<V, FibonacciHeapNode<V>> heapNodeMapping = new HashMap<>();
@@ -32,8 +32,8 @@ public class PrimFibonacciHeapSpanningTree<V, E> implements SpanningTreeAlgorith
 		}
 		
 		while(!spanningTree.vertexSet().containsAll(graph.vertexSet())) {
-			V vertex = vertices.iterator().next();
-			addVertex(vertex, graph, spanningTree, vertices, heapNodeMapping, heap);
+			V vertex = unspanned.iterator().next();
+			addVertex(vertex, graph, spanningTree, unspanned, heapNodeMapping, heap);
 			
 			while(heap.min().getKey() != Double.POSITIVE_INFINITY) {
 				FibonacciHeapNode<V> node = heap.removeMin();
@@ -51,7 +51,7 @@ public class PrimFibonacciHeapSpanningTree<V, E> implements SpanningTreeAlgorith
 				}
 				
 				// Knoten hinzufügen
-				addVertex(newVertex, graph, spanningTree, vertices, heapNodeMapping, heap);
+				addVertex(newVertex, graph, spanningTree, unspanned, heapNodeMapping, heap);
 				
 				// Kante hinzufügen
 				V source = graph.getEdgeSource(newEdge);
@@ -74,12 +74,12 @@ public class PrimFibonacciHeapSpanningTree<V, E> implements SpanningTreeAlgorith
 	 * @param vertex Der hinzuzufügende Knoten
 	 * @param graph Der original Graph
 	 * @param spanningTree Der Spannbaum des Graphen
-	 * @param vertices Die Menge der nicht verarbeiteten Knoten
+	 * @param unspanned Die Menge der nicht verarbeiteten Knoten
 	 * @param heapNodeMapping Das Mapping der Knoten zu ihren entsprechenden {@link FibonacciHeapNode}s
 	 * @param heap Der {@link FibonacciHeap}
 	 */
-	private void addVertex(V vertex, Graph<V, E> graph, Graph<V, E> spanningTree, Set<V> vertices, Map<V, FibonacciHeapNode<V>> heapNodeMapping, FibonacciHeap<V> heap) {
-		vertices.remove(vertex);
+	private void addVertex(V vertex, Graph<V, E> graph, Graph<V, E> spanningTree, Set<V> unspanned, Map<V, FibonacciHeapNode<V>> heapNodeMapping, FibonacciHeap<V> heap) {
+		unspanned.remove(vertex);
 		spanningTree.addVertex(vertex);
 		for(E edge : graph.edgesOf(vertex)) {
 			V source = graph.getEdgeSource(edge);
