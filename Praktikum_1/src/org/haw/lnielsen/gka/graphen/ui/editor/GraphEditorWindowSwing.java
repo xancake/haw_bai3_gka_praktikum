@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.Box;
@@ -301,6 +304,20 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		}
 		message.append("</ol></html>");
 		JOptionPane.showMessageDialog(myFrame, message.toString(), "Traversierung", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	@Override
+	public void showSpanningTreeData(long millis, int zugriffe, double graphWeight) {
+		Calendar calendar = GregorianCalendar.getInstance();
+		calendar.setTimeInMillis(millis);
+		
+		StringBuilder message = new StringBuilder();
+		message.append("<html>Der Spannbaum wurde <ul>");
+		message.append("<li>in ").append(new SimpleDateFormat("mm:ss:SSS").format(calendar.getTime())).append("(").append(millis).append("ms)").append("</li>");
+		message.append("<li>mit " + zugriffe + " Zugriffen</li>");
+		message.append("<li>und " + graphWeight + " Gesamtgewicht</li>");	
+		message.append("</ul> berechnet</html>");
+		JOptionPane.showMessageDialog(myFrame, message.toString(), "Spannbaum", JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	@Override

@@ -159,15 +159,14 @@ public class GraphEditorWindowController
 		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph = GraphFactory.createZugriffszaehlenderGraph(getModel());
 		Graph<Knoten, DefaultEdge> spanningTree = GraphFactory.createGraph(getModel());
 		
-		long before = System.nanoTime();
+		long before = System.currentTimeMillis();
 		algorithm.calculateSpanningTree(graph, spanningTree);
-		long after = System.nanoTime() - before;
-		
+		long millis = System.currentTimeMillis() - before;
 		
 		GraphEditorWindowController controller = new GraphEditorWindowController();
 		controller.setModel(spanningTree);
 		controller.show();
-		controller.getView().showFehlermeldung("<html>Der Spannbaum wurde <ul><li>in " + after + "ns</li><li>mit " + graph.getZugriffsZaehler() + " Zugriffen</li><li>und " + GraphUtils.calculateGraphWeight(spanningTree) + " Gesamtgewicht</li></ul> berechnet</html>");
+		controller.getView().showSpanningTreeData(millis, graph.getZugriffsZaehler(), GraphUtils.calculateGraphWeight(spanningTree));
 	}
 	
 	@Override

@@ -52,6 +52,16 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	void showTraverseTrace(List<Knoten> trace);
 	
 	/**
+	 * Zeigt an, wie lange für die Berechnung eines Spannbaums benötigt wurde.
+	 * Dabei werden auch die benötigten Zugriffe ausgegeben sowie das Gesamtgewicht
+	 * des erzeugten Spannbaums.
+	 * @param millis Die benötigte Zeit in Millisekunden
+	 * @param zugriffe Die Anzahl der Zugriffe
+	 * @param graphWeight Das Gesamtgewicht des Graphen
+	 */
+	void showSpanningTreeData(long millis, int zugriffe, double graphWeight);
+	
+	/**
 	 * Zeigt die übergebene Nachricht als Fehlermeldung an.
 	 * @param message Die Nachricht
 	 */
