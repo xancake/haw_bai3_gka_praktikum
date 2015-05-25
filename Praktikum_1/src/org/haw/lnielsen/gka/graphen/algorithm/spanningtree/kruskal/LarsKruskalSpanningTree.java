@@ -12,7 +12,7 @@ import org.jgrapht.alg.DijkstraShortestPath;
 /**
  * Implementation des Kruskal-Spanning-Tree-Algorithmus.
  * 
- * <p>Laufzeit: O(|E| + |V|), also O(|E|)
+ * <p>Laufzeit: O(|E|*Dijkstra + |V|), also O(|E|*Dijkstra)
  * 
  * @author Lars Nielsen
  */
