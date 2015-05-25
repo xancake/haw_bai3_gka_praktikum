@@ -20,6 +20,7 @@ import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.kruskal.JGraphTKruska
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.kruskal.LarsKruskalSpanningTree;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.prim.JGraphTPrimSpanningTreeAdapter;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.prim.LarsPrimSpanningTree;
+import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.prim.PrimFibonacciHeapSpanningTree;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.haw.lnielsen.gka.graphen.io.loader.GraphParseException;
@@ -70,6 +71,7 @@ public class GraphEditorWindowController
 		mySpanningTreeAlgorithms.add(new LarsKruskalSpanningTree<Knoten, DefaultEdge>());
 		mySpanningTreeAlgorithms.add(new JGraphTPrimSpanningTreeAdapter<Knoten, DefaultEdge>());
 		mySpanningTreeAlgorithms.add(new LarsPrimSpanningTree<Knoten, DefaultEdge>());
+		mySpanningTreeAlgorithms.add(new PrimFibonacciHeapSpanningTree<Knoten, DefaultEdge>());
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 		getView().setSpanningTreeAlgorithms(mySpanningTreeAlgorithms);
 	}
