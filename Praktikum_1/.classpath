@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="test_res"/>
+	<classpathentry kind="src" path="print"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/jgrapht-core-0.9.0.jar" sourcepath="C:/Program Files/Java/Libraries/JGraphT-0.9.0/source/jgrapht-core"/>
