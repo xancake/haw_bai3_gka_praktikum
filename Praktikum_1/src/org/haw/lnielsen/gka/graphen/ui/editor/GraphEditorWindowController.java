@@ -29,12 +29,9 @@ import org.haw.lnielsen.gka.graphen.io.store.GraphStorer_I;
 import org.haw.lnielsen.gka.graphen.ui.generator.GraphGeneratorController;
 import org.haw.lnielsen.gka.graphen.ui.generator.GraphGeneratorControllerListener_I;
 import org.haw.lnielsen.gka.graphen.util.GraphUtils;
-import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGerichteterGraph;
 import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGraph;
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
@@ -139,16 +136,10 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onCalculateShortestPath(ShortestPath_I<Knoten, DefaultEdge> algorithm, Knoten start, Knoten end) {
-		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph = createZugriffszaehlenderGraph(getModel());
+		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph = GraphFactory.createZugriffszaehlenderGraph(getModel());
 		
 		GraphPath<Knoten, DefaultEdge> shortestPath = algorithm.calculatePath(graph, start, end);
 		getView().showPath(shortestPath, graph.getZugriffsZaehler());
-	}
-	
-	private ZugriffszaehlenderGraph<Knoten, DefaultEdge> createZugriffszaehlenderGraph(Graph<Knoten, DefaultEdge> graph) {
-		return graph instanceof DirectedGraph
-				? new ZugriffszaehlenderGerichteterGraph<Knoten, DefaultEdge>((DirectedGraph<Knoten, DefaultEdge>)graph)
-				: new ZugriffszaehlenderGraph<Knoten, DefaultEdge>(graph);
 	}
 	
 	@Override
@@ -163,11 +154,18 @@ public class GraphEditorWindowController
 	
 	@Override
 	public void onCalculateSpanningTree(SpanningTreeAlgorithm_I<Knoten, DefaultEdge> algorithm) {
-		Graph<Knoten, DefaultEdge> spanningTree = GraphFactory.createGraph(getModel() instanceof DirectedGraph, getModel() instanceof WeightedGraph);
-		algorithm.calculateSpanningTree(getModel(), spanningTree);
+		ZugriffszaehlenderGraph<Knoten, DefaultEdge> graph = GraphFactory.createZugriffszaehlenderGraph(getModel());
+		Graph<Knoten, DefaultEdge> spanningTree = GraphFactory.createGraph(getModel());
+		
+		long before = System.nanoTime();
+		algorithm.calculateSpanningTree(graph, spanningTree);
+		long after = System.nanoTime() - before;
+		
+		
 		GraphEditorWindowController controller = new GraphEditorWindowController();
 		controller.setModel(spanningTree);
 		controller.show();
+		controller.getView().showFehlermeldung("<html>Der Spannbaum wurde <ul><li>in " + after + "ns</li><li>mit " + graph.getZugriffsZaehler() + " Zugriffen</li><li>und " + GraphUtils.calculateGraphWeight(spanningTree) + " Gesamtgewicht</li></ul> berechnet</html>");
 	}
 	
 	@Override

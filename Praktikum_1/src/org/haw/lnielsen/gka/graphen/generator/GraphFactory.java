@@ -3,7 +3,11 @@ package org.haw.lnielsen.gka.graphen.generator;
 import org.haw.lnielsen.gka.graphen.GewichteteKante;
 import org.haw.lnielsen.gka.graphen.Kante;
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGerichteterGraph;
+import org.haw.lnielsen.gka.graphen.zugriffszaehler.ZugriffszaehlenderGraph;
+import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
+import org.jgrapht.WeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.ListenableDirectedGraph;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
@@ -34,5 +38,15 @@ public class GraphFactory {
 		} else {
 			return new ListenableUndirectedGraph<Knoten, DefaultEdge>(Kante.class);
 		}
+	}
+	
+	public static Graph<Knoten, DefaultEdge> createGraph(Graph<Knoten, DefaultEdge> graph) {
+		return createGraph(graph instanceof DirectedGraph, graph instanceof WeightedGraph);
+	}
+	
+	public static ZugriffszaehlenderGraph<Knoten, DefaultEdge> createZugriffszaehlenderGraph(Graph<Knoten, DefaultEdge> graph) {
+		return graph instanceof DirectedGraph
+				? new ZugriffszaehlenderGerichteterGraph<Knoten, DefaultEdge>((DirectedGraph<Knoten, DefaultEdge>)graph)
+				: new ZugriffszaehlenderGraph<Knoten, DefaultEdge>(graph);
 	}
 }
