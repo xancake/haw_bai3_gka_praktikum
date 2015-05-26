@@ -7,38 +7,33 @@ import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm
 import org.haw.lnielsen.gka.graphen.util.compare.EdgeWeightComparator;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
-import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.traverse.BreadthFirstIterator;
 
 /**
  * Implementation des Kruskal-Spanning-Tree-Algorithmus.
  * 
- * <p>Laufzeit: O(|E|*Dijkstra + |V|), also O(|E|*Dijkstra)
+ * <p>Laufzeit: O(|E|*Breitensuche + |V|), also O(|E|*Breitensuche)
  * 
  * @author Lars Nielsen
  */
 public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E> {
 	@Override
 	public Graph<V, E> calculateSpanningTree(Graph<V, E> graph, Graph<V, E> spanningTree) {
+		for(V vertex : graph.vertexSet()) {
+			spanningTree.addVertex(vertex);
+		}
+		
 		Queue<E> edges = new PriorityQueue<>(graph.edgeSet().size(), new EdgeWeightComparator<E>(graph));
 		edges.addAll(graph.edgeSet());
-		
 		while(!edges.isEmpty()) {
 			E edge = edges.poll();
 			V edgeSource = graph.getEdgeSource(edge);
 			V edgeTarget = graph.getEdgeTarget(edge);
 			if(!producesCircle(graph, spanningTree, edge)) {
-				spanningTree.addVertex(edgeSource);
-				spanningTree.addVertex(edgeTarget);
 				spanningTree.addEdge(edgeSource, edgeTarget);
 				if(spanningTree instanceof WeightedGraph) {
 					((WeightedGraph<V, E>)spanningTree).setEdgeWeight(spanningTree.getEdge(edgeSource, edgeTarget), graph.getEdgeWeight(edge));
 				}
-			}
-		}
-		
-		for(V vertex : graph.vertexSet()) {
-			if(!spanningTree.containsVertex(vertex)) {
-				spanningTree.addVertex(vertex);
 			}
 		}
 		
@@ -54,9 +49,16 @@ public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V,
 	 * @return {@code true}, wenn die Kante einen Kreis erzeugen würde, ansonsten {@code false}
 	 */
 	private boolean producesCircle(Graph<V, E> graph, Graph<V, E> spanningTree, E edge) {
-		if(spanningTree.containsVertex(graph.getEdgeSource(edge)) && spanningTree.containsVertex(graph.getEdgeTarget(edge))) {
-			DijkstraShortestPath<V, E> dijkstra = new DijkstraShortestPath<V, E>(spanningTree, graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
-			return dijkstra.getPath() != null;
+		V source = graph.getEdgeSource(edge);
+		V target = graph.getEdgeTarget(edge);
+		if(spanningTree.containsVertex(source) && spanningTree.containsVertex(target)) {
+			BreadthFirstIterator<V, E> spanningTreeIterator = new BreadthFirstIterator<>(spanningTree, source);
+			while(spanningTreeIterator.hasNext()) {
+				V next = spanningTreeIterator.next();
+				if(target.equals(next)) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}
