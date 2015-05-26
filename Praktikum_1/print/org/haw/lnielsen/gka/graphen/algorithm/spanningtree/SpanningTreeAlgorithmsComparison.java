@@ -36,36 +36,6 @@ public class SpanningTreeAlgorithmsComparison {
 	}
 	
 	@Test
-	public void testRandom_500_2000() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_500v_2000e.graph"));
-		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
-	}
-	
-	@Test
-	public void testRandom_500_5000() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_500v_5000e.graph"));
-		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
-	}
-	
-	@Test
-	public void testRandom_500_50000() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_500v_50000e.graph"));
-		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
-	}
-	
-	@Test
-	public void testRandom_1000_50000() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_1000v_50000e.graph"));
-		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
-	}
-	
-	@Test
-	public void testRandom_1000_100000() throws Exception {
-		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_1000v_100000e.graph"));
-		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
-	}
-	
-	@Test
 	public void testRandom_5000_50000() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_5000v_50000e.graph"));
 		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
@@ -74,6 +44,48 @@ public class SpanningTreeAlgorithmsComparison {
 	@Test
 	public void testRandom_5000_100000() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_5000v_100000e.graph"));
+		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
+	}
+	
+	@Test
+	public void testRandom_6000_100000() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_6000v_100000e.graph"));
+		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
+	}
+	
+	@Test
+	public void testRandom_7000_100000() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_7000v_100000e.graph"));
+		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
+	}
+	
+	@Test
+	public void testRandom_7000_200000() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_7000v_200000e.graph"));
+		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
+	}
+	
+	@Test
+	public void testRandom_7000_300000() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_7000v_300000e.graph"));
+		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
+	}
+	
+	@Test
+	public void testRandom_7000_400000() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_7000v_400000e.graph"));
+		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
+	}
+	
+	@Test
+	public void testRandom_7000_500000() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_7000v_500000e.graph"));
+		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
+	}
+	
+	@Test
+	public void testRandom_10000_500000() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = parser.parseGraph(ClassLoader.getSystemResourceAsStream("loader/spanningtree/random_10000v_500000e.graph"));
 		profileAndPrintSpanningTreeAlgorithms(graph, algorithms);
 	}
 	
