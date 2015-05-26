@@ -1,12 +1,14 @@
 package org.haw.lnielsen.gka.graphen.algorithm.spanningtree.prim;
 
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
-import org.haw.lnielsen.gka.graphen.util.compare.EdgeWeightComparator;
 import org.jgrapht.Graph;
 import org.jgrapht.WeightedGraph;
 
@@ -18,39 +20,32 @@ import org.jgrapht.WeightedGraph;
 public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E> {
 	@Override
 	public Graph<V, E> calculateSpanningTree(Graph<V, E> graph, Graph<V, E> spanningTree) {
-		if(!spanningTree.vertexSet().isEmpty() || !spanningTree.edgeSet().isEmpty()) {
-			throw new IllegalArgumentException("Der Spannbaum muss leer sein!");
+		Set<V> unspanned = new HashSet<>(graph.vertexSet());
+		
+		Map<V, VertexAttribute> vertexAttributeMapping = new HashMap<>();
+		for(V vertex : unspanned) {
+			vertexAttributeMapping.put(vertex, new VertexAttribute());
 		}
 		
-		Set<V> vertices = new HashSet<>(graph.vertexSet());
-		Queue<E> edges = new PriorityQueue<>(graph.edgeSet().size(), new EdgeWeightComparator<E>(graph));
+		Queue<V> queue = new PriorityQueue<>(new VertexAttributeComparator(vertexAttributeMapping));
 		
 		while(!spanningTree.vertexSet().containsAll(graph.vertexSet())) {
-			V vertex = vertices.iterator().next();
-			addVertex(vertex, graph, spanningTree, vertices, edges);
+			V vertex = unspanned.iterator().next();
+			addVertex(vertex, graph, spanningTree, unspanned, vertexAttributeMapping, queue);
 			
-			while(!edges.isEmpty()) {
-				E edge = edges.poll();
+			while(!queue.isEmpty() && vertexAttributeMapping.get(queue.peek()).weight != Double.POSITIVE_INFINITY) {
+				V newVertex = queue.poll();
+				E edge      = vertexAttributeMapping.get(newVertex).edge;
+				
+				// Knoten hinzufügen
+				addVertex(newVertex, graph, spanningTree, unspanned, vertexAttributeMapping, queue);
+				
+				// Kante hinzufügen
 				V source = graph.getEdgeSource(edge);
 				V target = graph.getEdgeTarget(edge);
-				
-				// Beide Knoten sind schon im Spannbaum, dann braucht die Kante nicht mehr betrachtet werden,
-				// da sie aufgrund der niedrigeren Priorität von einer alternativen Route ausgestochen wurde
-				if(spanningTree.containsVertex(source) && spanningTree.containsVertex(target)) {
-					continue;
-				}
-				
-				// Nur einer der beiden Knoten ist noch nicht im Spannbaum
-				// Dann muss der neue Knoten und die Kante dem Spannbaum hinzugefügt werden
-				// und alle Kanten der Queue hinzugefügt werden.
-				if(spanningTree.containsVertex(source) ^ spanningTree.containsVertex(target)) {
-					V newVertex  = spanningTree.containsVertex(source) ? target : source;
-					
-					addVertex(newVertex, graph, spanningTree, vertices, edges);
-					spanningTree.addEdge(source, target);
-					if(spanningTree instanceof WeightedGraph) {
-						((WeightedGraph<V, E>)spanningTree).setEdgeWeight(spanningTree.getEdge(source, target), graph.getEdgeWeight(edge));
-					}
+				spanningTree.addEdge(source, target);
+				if(spanningTree instanceof WeightedGraph) {
+					((WeightedGraph<V, E>)spanningTree).setEdgeWeight(spanningTree.getEdge(source, target), graph.getEdgeWeight(edge));
 				}
 			}
 		}
@@ -66,17 +61,22 @@ public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E>
 	 * @param vertex Der Knoten
 	 * @param graph Der original-Graph
 	 * @param spanningTree Der Spannbaum zu dem der Knoten hinzugefügt werden soll
-	 * @param vertices Die Menge der nicht verarbeiteten Knoten
-	 * @param edges Die Warteschlange der Kanten
+	 * @param unspanned Die Menge der nicht verarbeiteten Knoten
+	 * @param queue Die Warteschlange
 	 */
-	private void addVertex(V vertex, Graph<V, E> graph, Graph<V, E> spanningTree, Set<V> vertices, Queue<E> edges) {
-		vertices.remove(vertex);
+	private void addVertex(V vertex, Graph<V, E> graph, Graph<V, E> spanningTree, Set<V> unspanned, Map<V, VertexAttribute> vertexWeightMapping, Queue<V> queue) {
+		unspanned.remove(vertex);
 		spanningTree.addVertex(vertex);
 		for(E edge : graph.edgesOf(vertex)) {
 			V source = graph.getEdgeSource(edge);
 			V target = graph.getEdgeTarget(edge);
-			if((spanningTree.containsVertex(source) ^ spanningTree.containsVertex(target)) && !edges.contains(edge)) {
-				edges.add(edge);
+			V other  = vertex.equals(source) ? target : source;
+			VertexAttribute otherWithWeight = vertexWeightMapping.get(other);
+			if(!spanningTree.containsVertex(other) && otherWithWeight.weight > graph.getEdgeWeight(edge)) {
+				queue.remove(other);
+				otherWithWeight.weight = graph.getEdgeWeight(edge);
+				otherWithWeight.edge   = edge;
+				queue.add(other);
 			}
 		}
 	}
@@ -84,5 +84,37 @@ public class LarsPrimSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V, E>
 	@Override
 	public String toString() {
 		return "Lars Prim";
+	}
+	
+	private class VertexAttribute {
+		private E edge;
+		private double weight;
+		
+		public VertexAttribute() {
+			this(null, Double.POSITIVE_INFINITY);
+		}
+		
+		public VertexAttribute(E edge, double weight) {
+			this.edge   = edge;
+			this.weight = weight;
+		}
+		
+		@Override
+		public String toString() {
+			return String.valueOf(weight);
+		}
+	}
+	
+	private class VertexAttributeComparator implements Comparator<V> {
+		private Map<V, VertexAttribute> mapping;
+		
+		public VertexAttributeComparator(Map<V, VertexAttribute> mapping) {
+			this.mapping = mapping;
+		}
+		
+		@Override
+		public int compare(V o1, V o2) {
+			return (int)(mapping.get(o1).weight-mapping.get(o2).weight);
+		}
 	}
 }
