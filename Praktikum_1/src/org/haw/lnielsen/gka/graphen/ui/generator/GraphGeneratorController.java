@@ -107,10 +107,11 @@ public class GraphGeneratorController
 				generator.generateGraph(graph, vertexFactory, null);
 				
 				if(weighted) {
-					int weightModifikator = getView().getWeightModifier();
+					int weightMinValue = getView().getWeightMinValue();
+					int weightMaxValue = getView().getWeightMaxValue();
 					GraphWeighter<Knoten, DefaultEdge> weighter = attributed
-							? new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), weightModifikator)
-							: new GraphWeighter<Knoten, DefaultEdge>(weightModifikator);
+							? new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), weightMinValue, weightMaxValue)
+							: new GraphWeighter<Knoten, DefaultEdge>(weightMinValue, weightMaxValue);
 					weighter.appendGraphWeights((WeightedGraph<Knoten, DefaultEdge>)graph);
 				}
 				

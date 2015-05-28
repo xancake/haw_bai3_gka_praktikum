@@ -148,7 +148,7 @@ public abstract class ShortestPathUndirectedTest_A {
 		RandomAttributedKnotenFactory knotenFabrik = new RandomAttributedKnotenFactory(1, 100);
 		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
 		generator.generateGraph(graph, knotenFabrik, null);
-		GraphWeighter<Knoten, DefaultEdge> weighter = new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), 50);
+		GraphWeighter<Knoten, DefaultEdge> weighter = new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), 30, 50);
 		weighter.appendGraphWeights(graph);
 		
 		Knoten start = new ArrayList<Knoten>(graph.vertexSet()).get((int)(Math.random()*graph.vertexSet().size()));
@@ -170,7 +170,7 @@ public abstract class ShortestPathUndirectedTest_A {
 		RandomAttributedKnotenFactory knotenFabrik = new RandomAttributedKnotenFactory(1, 100);
 		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new RandomGraphGenerator<>(100, 4000);
 		generator.generateGraph(graph, knotenFabrik, null);
-		GraphWeighter<Knoten, DefaultEdge> weighter = new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), 50);
+		GraphWeighter<Knoten, DefaultEdge> weighter = new GraphWeighter<Knoten, DefaultEdge>(new KnotenHeuristikProvider(), 30, 50);
 		weighter.appendGraphWeights(graph);
 		
 		Knoten start = new ArrayList<Knoten>(graph.vertexSet()).get((int)(Math.random()*graph.vertexSet().size()));

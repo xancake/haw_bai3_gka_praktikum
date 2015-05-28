@@ -51,10 +51,16 @@ public interface GraphGeneratorView_I extends WindowView_I<Void, GraphGeneratorV
 	int getAttributeMaxValue();
 	
 	/**
-	 * Gibt den Gewichtsmodifikator zurück.
-	 * @return Der Gewichtsmodifikator
+	 * Gibt den ausgewählten Minimalwert für die Gewichtung von Kanten zurück.
+	 * @return Der Minimalwert für die Gewichtung von Kanten
 	 */
-	int getWeightModifier();
+	int getWeightMinValue();
+	
+	/**
+	 * Gibt den ausgewählten Maximalwert für die Gewichtung von Kanten zurück.
+	 * @return Der Maximalwert für die Gewichtung von Kanten
+	 */
+	int getWeightMaxValue();
 	
 	/**
 	 * Zeigt die übergebene Nachricht als Fehlermeldung an.

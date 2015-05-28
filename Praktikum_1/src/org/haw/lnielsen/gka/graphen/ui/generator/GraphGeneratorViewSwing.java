@@ -47,7 +47,8 @@ public class GraphGeneratorViewSwing
 	private JSpinner myAttributeMaxValue;
 	
 	private JPanel myWeightPanel;
-	private JSpinner myWeightModifikator;
+	private JSpinner myWeightMin;
+	private JSpinner myWeightMax;
 	
 	private JComboBox<GraphGeneratorFactory<Knoten, DefaultEdge, Knoten>> myGeneratorFactories;
 	private JLabel myParameterLabel;
@@ -71,7 +72,8 @@ public class GraphGeneratorViewSwing
 		myAttributeMaxValue = new JSpinner(new SpinnerNumberModel(100, 1, Integer.MAX_VALUE, 1));
 		
 		myWeightPanel = new JPanel();
-		myWeightModifikator = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
+		myWeightMin = new JSpinner(new SpinnerNumberModel(10, 1, Integer.MAX_VALUE, 1));
+		myWeightMax = new JSpinner(new SpinnerNumberModel(15, 1, Integer.MAX_VALUE, 1));
 		
 		myGeneratorFactories = new JComboBox<>();
 		myParameterLabel = new JLabel("<Parameter-Template>", SwingConstants.LEFT);
@@ -85,7 +87,7 @@ public class GraphGeneratorViewSwing
 		myWeightedCheckBox.setToolTipText("Gibt an, ob der zu erzeugende Graph gewichtet sein soll");
 		myAttributeMinValue.setToolTipText("Legt den Minimalwert für die Attribute fest");
 		myAttributeMaxValue.setToolTipText("Legt dem Maximalwert für die Attribute fest");
-		myWeightModifikator.setToolTipText("Legt einen Faktor für die Kantengewichte fest");
+		myWeightMax.setToolTipText("Legt einen Faktor für die Kantengewichte fest");
 	}
 	
 	@Override
@@ -94,7 +96,8 @@ public class GraphGeneratorViewSwing
 		
 		myAttributeMinValue.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
 		myAttributeMaxValue.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
-		myWeightModifikator.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
+		myWeightMin.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
+		myWeightMax.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
 		myGeneratorFactories.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
 		myParameterLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, myParameterLabel.getPreferredSize().height));
 		myParameterField.setMaximumSize(new Dimension(Integer.MAX_VALUE, myNewButton.getPreferredSize().height));
@@ -112,7 +115,8 @@ public class GraphGeneratorViewSwing
 		
 		myWeightPanel.setBorder(BorderFactory.createTitledBorder("Gewichtung"));
 		myWeightPanel.setLayout(new BoxLayout(myWeightPanel, BoxLayout.PAGE_AXIS));
-		myWeightPanel.add(labelComponent(myWeightModifikator, "Modifikator: "));
+		myWeightPanel.add(labelComponent(myWeightMin, "Minimum: "));
+		myWeightPanel.add(labelComponent(myWeightMax, "Maximum: "));
 		myWeightPanel.add(Box.createHorizontalGlue());
 		
 		JPanel graphPanel = new JPanel();
@@ -262,7 +266,8 @@ public class GraphGeneratorViewSwing
 	
 	@Override
 	public void enableWeightConfiguration(boolean enable) {
-		myWeightModifikator.setEnabled(enable);
+		myWeightMin.setEnabled(enable);
+		myWeightMax.setEnabled(enable);
 	}
 	
 	@Override
@@ -276,8 +281,13 @@ public class GraphGeneratorViewSwing
 	}
 	
 	@Override
-	public int getWeightModifier() {
-		return (Integer)myWeightModifikator.getValue();
+	public int getWeightMinValue() {
+		return (Integer)myWeightMin.getValue();
+	}
+	
+	@Override
+	public int getWeightMaxValue() {
+		return (Integer)myWeightMax.getValue();
 	}
 	
 	@Override
