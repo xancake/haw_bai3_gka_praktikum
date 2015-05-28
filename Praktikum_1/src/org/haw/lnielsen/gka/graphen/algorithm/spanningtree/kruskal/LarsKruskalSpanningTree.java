@@ -25,7 +25,7 @@ public class LarsKruskalSpanningTree<V, E> implements SpanningTreeAlgorithm_I<V,
 		
 		Queue<E> edges = new PriorityQueue<>(graph.edgeSet().size(), new EdgeWeightComparator<E>(graph));
 		edges.addAll(graph.edgeSet());
-		while(!edges.isEmpty()) {
+		while(spanningTree.edgeSet().size() < spanningTree.vertexSet().size()-1 && !edges.isEmpty()) {
 			E edge = edges.poll();
 			V edgeSource = graph.getEdgeSource(edge);
 			V edgeTarget = graph.getEdgeTarget(edge);
