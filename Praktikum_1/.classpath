@@ -7,9 +7,9 @@
 	<classpathentry kind="src" path="print"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/jgrapht-core-0.9.0.jar" sourcepath="C:/Program Files/Java/Libraries/JGraphT-0.9.0/source/jgrapht-core"/>
-	<classpathentry kind="lib" path="lib/jgraph-5.13.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/jgrapht-ext-0.9.0.jar" sourcepath="C:/Program Files/Java/Libraries/JGraphT-0.9.0/source/jgrapht-ext/src/main"/>
-	<classpathentry kind="lib" path="lib/jgraphx-2.0.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/JGraphT/jgraph-5.13.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/JGraphT/jgrapht-core-0.9.0.jar" sourcepath="lib/JGraphT/source/jgrapht-core"/>
+	<classpathentry kind="lib" path="lib/JGraphT/jgrapht-ext-0.9.0.jar" sourcepath="lib/JGraphT/source/jgrapht-ext"/>
+	<classpathentry kind="lib" path="lib/JGraphT/jgraphx-2.0.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
