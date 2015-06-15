@@ -1,44 +1,61 @@
 package org.haw.lnielsen.gka.graphen.generator.graph;
 
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
 import org.jgrapht.generate.GraphGenerator;
-import org.jgrapht.generate.RandomGraphGenerator;
+import org.jgrapht.generate.RingGraphGenerator;
 
+/**
+ * Generator für Eulergraphen der mit der Anzahl zu generierenden Knoten und
+ * internen Kreisen parameterisiert wird. Der Generator erzeugt zuerst einen
+ * Kreis dem alle Knoten angehören. Anschließend werden zufällige Knoten
+ * gewählt, die wiederum Kreise formen sollen und entsprechend verbunden.
+ * 
+ * @author Lars Nielsen
+ */
 public class EulerGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
-	private int myAnzahlKnoten;
-	private int myAnzahlKanten;
+	private int myVertexCount;
+	private int myInternalCircles;
 	
-	public EulerGraphGenerator(int anzahlKnoten, int anzahlKanten) {
-		if(anzahlKnoten < 0) {
-			throw new IllegalArgumentException("Die Anzahl der Knoten darf nicht kleiner als 0 sein!");
+	public EulerGraphGenerator(int vertexCount, int internalCircles) {
+		if(vertexCount < 3) {
+			throw new IllegalArgumentException("Es müssen mindestens 3 Knoten generiert werden, um einen Kreis zu erzeugen.");
 		}
-		if(anzahlKanten <= 0) {
-			throw new IllegalArgumentException("Die Anzahl der Kanten muss größer als 0 sein!");
+		if(internalCircles < 0) {
+			throw new IllegalArgumentException("Es kann keine negative Anzahl an Kreisen generiert werden!");
 		}
-		myAnzahlKnoten = anzahlKnoten;
-		myAnzahlKanten = anzahlKanten;
+		myVertexCount = vertexCount;
+		myInternalCircles = internalCircles;
 	}
 	
 	@Override
 	public void generateGraph(Graph<V, E> target, VertexFactory<V> vertexFactory, Map<String, V> resultMap) {
-		GraphGenerator<V, E, V> generator = new RandomGraphGenerator<V, E>(myAnzahlKnoten, myAnzahlKanten);
+		RingGraphGenerator<V, E> generator = new RingGraphGenerator<>(myVertexCount);
 		generator.generateGraph(target, vertexFactory, resultMap);
 		
-		List<V> verticesWithOddDegree = new LinkedList<>();
-		for(V vertex : target.vertexSet()) {
-			if(target.edgesOf(vertex).size()%2 == 1) {
-				verticesWithOddDegree.add(vertex);
+		for(int i=0; i<myInternalCircles; i++) {
+			generateCircle(target, (int)(3 + Math.random() * (target.vertexSet().size()/2-3)));
+		}
+	}
+	
+	private void generateCircle(Graph<V, E> target, int circleSize) {
+		List<V> vertices = new ArrayList<>(target.vertexSet());
+		V start = vertices.get((int)(Math.random()*vertices.size()));
+		V current = start;
+		int i=1; // Bei 1 anfangen, da der Startknoten bereits gewählt wurde
+		while(i<circleSize) {
+			V newVertex = vertices.get((int)(Math.random()*vertices.size()));
+			if(!current.equals(newVertex) && !target.containsEdge(current, newVertex)) {
+				target.addEdge(current, newVertex);
+				current = newVertex;
+				i++;
 			}
 		}
 		
-//		for(int i=0; i) {
-//			
-//		}
+		target.addEdge(current, start);
 	}
 }
