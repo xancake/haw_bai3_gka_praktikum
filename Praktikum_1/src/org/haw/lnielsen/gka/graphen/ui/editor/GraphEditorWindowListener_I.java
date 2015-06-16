@@ -3,6 +3,7 @@ package org.haw.lnielsen.gka.graphen.ui.editor;
 import java.io.File;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.euler.EulerAlgorithm_I;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.jgrapht.graph.DefaultEdge;
@@ -57,4 +58,11 @@ public interface GraphEditorWindowListener_I extends WindowViewListener_I {
 	 * @param algorithm Der Algorithmus der verwendet werden soll
 	 */
 	void onCalculateSpanningTree(SpanningTreeAlgorithm_I<Knoten, DefaultEdge> algorithm);
+	
+	/**
+	 * Wird aufgerufen, wenn die Aktion zum Ermitteln eines Eulerkreises von einem Graphen
+	 * aufgerufen wird.
+	 * @param algorithm Der Algorithmus der verwendet werden soll
+	 */
+	void onCalculateEulerTour(EulerAlgorithm_I<Knoten, DefaultEdge> algorithm);
 }

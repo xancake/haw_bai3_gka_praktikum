@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.euler.EulerAlgorithm_I;
+import org.haw.lnielsen.gka.graphen.algorithm.euler.JennyFleuryAlgorithm;
+import org.haw.lnielsen.gka.graphen.algorithm.euler.LarsHierholzerAlgorithm;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.KnotenHeuristikProvider;
 import org.haw.lnielsen.gka.graphen.algorithm.path.astar.LarsAStarShortestPath;
@@ -54,6 +57,7 @@ public class GraphEditorWindowController
 	private GraphStorer_I myStorer;
 	private List<ShortestPath_I<Knoten, DefaultEdge>> myShortestPathAlgorithms;
 	private List<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> mySpanningTreeAlgorithms;
+	private List<EulerAlgorithm_I<Knoten, DefaultEdge>> myEulerAlgorithms;
 	
 	public GraphEditorWindowController() {
 		super(null, new GraphEditorWindowSwing());
@@ -72,8 +76,12 @@ public class GraphEditorWindowController
 		mySpanningTreeAlgorithms.add(new JGraphTPrimSpanningTreeAdapter<Knoten, DefaultEdge>());
 		mySpanningTreeAlgorithms.add(new LarsPrimSpanningTree<Knoten, DefaultEdge>());
 		mySpanningTreeAlgorithms.add(new PrimFibonacciHeapSpanningTree<Knoten, DefaultEdge>());
+		myEulerAlgorithms = new ArrayList<>();
+		myEulerAlgorithms.add(new JennyFleuryAlgorithm<Knoten, DefaultEdge>());
+		myEulerAlgorithms.add(new LarsHierholzerAlgorithm<Knoten, DefaultEdge>());
 		getView().setShortestPathAlgorithms(myShortestPathAlgorithms);
 		getView().setSpanningTreeAlgorithms(mySpanningTreeAlgorithms);
+		getView().setEulerAlgorithms(myEulerAlgorithms);
 	}
 	
 	@Override
@@ -167,6 +175,16 @@ public class GraphEditorWindowController
 		controller.setModel(spanningTree);
 		controller.show();
 		controller.getView().showSpanningTreeData(millis, graph.getZugriffsZaehler(), GraphUtils.calculateGraphWeight(spanningTree));
+	}
+	
+	@Override
+	public void onCalculateEulerTour(EulerAlgorithm_I<Knoten, DefaultEdge> algorithm) {
+		GraphPath<Knoten, DefaultEdge> eulerTour = algorithm.findEulerTour(getModel());
+		if(eulerTour != null) {
+			getView().showPath(eulerTour, 0);
+		} else {
+			getView().showFehlermeldung("Es konnte keine Eulertour gefunden werden!");
+		}
 	}
 	
 	@Override

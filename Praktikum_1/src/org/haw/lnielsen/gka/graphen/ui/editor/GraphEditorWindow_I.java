@@ -3,6 +3,7 @@ package org.haw.lnielsen.gka.graphen.ui.editor;
 import java.util.List;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.euler.EulerAlgorithm_I;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.jgrapht.Graph;
@@ -30,6 +31,13 @@ public interface GraphEditorWindow_I extends WindowView_I<Graph<Knoten, DefaultE
 	 * @param algorithms Eine Liste der Algorithmen
 	 */
 	void setSpanningTreeAlgorithms(List<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> algorithms);
+	
+	/**
+	 * Legt die Algorithmen zur Ermittlung von Eulerkreisen fest,
+	 * die die Benutzeroberfläche anbietet.
+	 * @param algorithms Eine Liste der Algorithmen
+	 */
+	void setEulerAlgorithms(List<EulerAlgorithm_I<Knoten, DefaultEdge>> algorithms);
 	
 	/**
 	 * Zeigt das Graphengewicht auf der Benutzeroberfläche an.

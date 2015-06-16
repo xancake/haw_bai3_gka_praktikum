@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
+import org.haw.lnielsen.gka.graphen.algorithm.euler.EulerAlgorithm_I;
 import org.haw.lnielsen.gka.graphen.algorithm.path.ShortestPath_I;
 import org.haw.lnielsen.gka.graphen.algorithm.spanningtree.SpanningTreeAlgorithm_I;
 import org.haw.lnielsen.gka.graphen.ui.swing.GraphFileFilter;
@@ -54,6 +55,8 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 	private JButton myTraverseButton;
 	private JComboBox<SpanningTreeAlgorithm_I<Knoten, DefaultEdge>> mySpanningTreeAlgorithms;
 	private JButton mySpanningTreeButton;
+	private JComboBox<EulerAlgorithm_I<Knoten, DefaultEdge>> myEulerTourAlgorithms;
+	private JButton myEulerTourButton;
 	
 	private JFileChooser myChooser;
 	private JGraph myGraphComponent;
@@ -73,6 +76,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myChooser.setFileFilter(new GraphFileFilter());
 		myShortestPathAlgorithms = new JComboBox<>();
 		mySpanningTreeAlgorithms = new JComboBox<>();
+		myEulerTourAlgorithms = new JComboBox<>();
 		myGraphComponent = new JGraph();
 		
 		myNewButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/file_new.gif")));
@@ -82,6 +86,7 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myShortestPathButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/shortestpath2.png")));
 		myTraverseButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/traversieren2.png")));
 		mySpanningTreeButton = new JButton(new ImageIcon(ClassLoader.getSystemResource("img/spanningtree2.png")));
+		myEulerTourButton = new JButton("Eulertour");
 		
 		myNewButton.setToolTipText("Neu...");
 		myLoadButton.setToolTipText("Laden");
@@ -90,11 +95,13 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		myShortestPathButton.setToolTipText("Kürzester Weg");
 		myTraverseButton.setToolTipText("Traversieren");
 		mySpanningTreeButton.setToolTipText("Spannbaum");
+		myEulerTourButton.setToolTipText("Eulertour");
 		
 		myGraphComponent.setEditable(false);
 		myWeightButton.setEnabled(false);
 		myShortestPathButton.setEnabled(false);
 		mySpanningTreeButton.setEnabled(false);
+		myEulerTourButton.setEnabled(false);
 	}
 	
 	@Override
@@ -112,6 +119,8 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		toolbar.add(myTraverseButton);
 		toolbar.add(mySpanningTreeAlgorithms);
 		toolbar.add(mySpanningTreeButton);
+		toolbar.add(myEulerTourAlgorithms);
+		toolbar.add(myEulerTourButton);
 		toolbar.add(Box.createGlue());
 		
 		content.add(toolbar, BorderLayout.PAGE_START);
@@ -208,6 +217,14 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 				myListener.onCalculateSpanningTree(algorithm);
 			}
 		});
+		myEulerTourButton.addActionListener(new ActionListener() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent e) {
+				EulerAlgorithm_I<Knoten, DefaultEdge> algorithm = (EulerAlgorithm_I<Knoten, DefaultEdge>)myEulerTourAlgorithms.getSelectedItem();
+				myListener.onCalculateEulerTour(algorithm);
+			}
+		});
 	}
 
 	@Override
@@ -248,6 +265,19 @@ public class GraphEditorWindowSwing extends SwingWindowView_A<Graph<Knoten, Defa
 		if(!algorithms.isEmpty()) {
 			model.setSelectedItem(algorithms.get(0));
 			mySpanningTreeButton.setEnabled(true);
+		}
+	}
+	
+	@Override
+	public void setEulerAlgorithms(List<EulerAlgorithm_I<Knoten, DefaultEdge>> algorithms) {
+		DefaultComboBoxModel<EulerAlgorithm_I<Knoten, DefaultEdge>> model = new DefaultComboBoxModel<>();
+		for(EulerAlgorithm_I<Knoten, DefaultEdge> algorithm : algorithms) {
+			model.addElement(algorithm);
+		}
+		myEulerTourAlgorithms.setModel(model);
+		if(!algorithms.isEmpty()) {
+			model.setSelectedItem(algorithms.get(0));
+			myEulerTourButton.setEnabled(true);
 		}
 	}
 	

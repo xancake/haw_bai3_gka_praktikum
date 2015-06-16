@@ -151,4 +151,9 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 		}
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return "Lars Hierholzer Algorithm";
+	}
 }
