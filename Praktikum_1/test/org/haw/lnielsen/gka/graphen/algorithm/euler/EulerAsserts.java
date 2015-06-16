@@ -44,5 +44,6 @@ public class EulerAsserts {
 				fail("Vorgängerknoten ist nicht in der aktuell betrachteten Kante enthalten!");
 			}
 		}
+		assertEquals(previous, path.getEndVertex());
 	}
 }

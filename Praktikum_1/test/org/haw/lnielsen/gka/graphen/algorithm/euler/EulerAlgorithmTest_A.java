@@ -26,6 +26,13 @@ public abstract class EulerAlgorithmTest_A {
 	}
 	
 	@Test
+	public void testFindEulerGraph_EmptyGraph() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(false, false);
+		GraphPath<Knoten, DefaultEdge> path = myAlgorithm.findEulerTour(graph);
+		assertNull(path);
+	}
+	
+	@Test
 	public void testFindEulerTour_Eulerpfad_Nikolaushaus() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/euler/eulerpfad_nikolaushaus.graph"));
 		GraphPath<Knoten, DefaultEdge> eulerpath = myAlgorithm.findEulerTour(graph);
