@@ -3,7 +3,6 @@ package org.haw.lnielsen.gka.graphen.algorithm.euler;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
@@ -59,13 +58,23 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 		return new GraphPathImpl<>(graph, eulerCircuit.get(0), eulerCircuit.get(0), edgeList, 0);
 	}
 	
-	private V pickStartVertex(UndirectedGraph<V, E> subgraph, List<List<V>> circuits) {
+	/**
+	 * Wählt einen Startknoten für den nächsten Teilkreis aus den bisher erzeugten Teilkreisen.
+	 * Dabei wird mit dem letzten Teilkreis der erzeugt wurde angefangen zu suchen,
+	 * ob es einen Knoten mit einem Knotengrad größer 0 gibt.
+	 * Sollte es noch keine Teilkreise geben, wird ein zufälliger Knoten aus dem
+	 * Graphen gewählt.
+	 * @param graph Der Graph
+	 * @param circuits Die Liste der Teilkreise
+	 * @return Der Startknoten des nächsten Teilkreises
+	 */
+	private V pickStartVertex(UndirectedGraph<V, E> graph, List<List<V>> circuits) {
 		if(circuits.isEmpty()) {
-			return subgraph.vertexSet().iterator().next();
+			return graph.vertexSet().iterator().next();
 		} else {
 			for(int i=circuits.size()-1; i>=0; i--) {
 				for(V v : circuits.get(i)) {
-					if(subgraph.degreeOf(v) > 0) {
+					if(graph.degreeOf(v) > 0) {
 						return v;
 					}
 				}
@@ -74,13 +83,29 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 		}
 	}
 	
-	private List<V> buildEulerCircuit(UndirectedGraph<V, E> graph, List<List<V>> remainingCircuits) {
+	/**
+	 * Baut einen Eulerkreis aus der übergebenen Liste von Kreisen.
+	 * Die zurückgegebene Liste enthält den Startknoten nicht nochmal als letzten Knoten.
+	 * @param graph Der Graph dem die Kreise entstammen
+	 * @param circuits Die Kreise
+	 * @return Der ermittelte Eulerkreis als Liste von Knoten
+	 */
+	private List<V> buildEulerCircuit(UndirectedGraph<V, E> graph, List<List<V>> circuits) {
 		List<V> eulerCircuit = new ArrayList<>();
-		List<V> firstCircuit = remainingCircuits.remove(0);
-		buildEulerCircuit_Rec(graph, firstCircuit.remove(0), firstCircuit, remainingCircuits, eulerCircuit);
+		List<V> firstCircuit = circuits.remove(0);
+		buildEulerCircuit_Rec(graph, firstCircuit.remove(0), firstCircuit, circuits, eulerCircuit);
 		return eulerCircuit;
 	}
 	
+	/**
+	 * Arbeitet rekursiv Teilkreise ab um einen Eulerkreis zu erzeugen.
+	 * Die zurückgegebene Liste enthält den Startknoten nicht nochmal als letzten Knoten.
+	 * @param graph Der Graph dem die Kreise entstammen
+	 * @param start Der Startknoten von dem aus der aktuelle Teilkreis abgearbeitet werden soll
+	 * @param currentCircuit Der aktuelle Teilkreis der verarbeitet wird
+	 * @param remainingCircuits Die Liste der verbleibenden Teilkreise
+	 * @param eulerCircuit Eine Liste von Knoten die den Eulerkreis repräsentieren soll
+	 */
 	private void buildEulerCircuit_Rec(UndirectedGraph<V, E> graph, V start, List<V> currentCircuit, List<List<V>> remainingCircuits, List<V> eulerCircuit) {
 		V current = start;
 		do {
@@ -98,12 +123,24 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 		} while(!start.equals(current));
 	}
 	
+	/**
+	 * Gibt den Nachfolgeknoten des aktuellen Knotens in dem übergebenen Kreis zurück.
+	 * @param current Der aktuelle Knoten
+	 * @param currentCircuit Der Kreis aus dem der Nachfolgeknoten ermittelt werden soll
+	 * @return Der Nachfolgeknoten des aktuellen Knotens
+	 */
 	private V getNextVertex(V current, List<V> currentCircuit) {
 		int currentIndex = currentCircuit.indexOf(current);
 		int nextIndex    = (currentIndex+1)%currentCircuit.size();
 		return currentCircuit.get(nextIndex);
 	}
 	
+	/**
+	 * Gibt den ersten Kreis zurück, der den übergebenen Knoten enthält.
+	 * @param remainingCircuits Die Liste der Kreise in denen gesucht werden soll
+	 * @param vertex Der zu suchende Knoten
+	 * @return Der erste Kreis der den Knoten enthält oder {@code null}, wenn keiner den Knoten enthält
+	 */
 	private List<V> getCircuitContainingVertex(List<List<V>> remainingCircuits, V vertex) {
 		for(List<V> circuit : remainingCircuits) {
 			for(V v : circuit) {
