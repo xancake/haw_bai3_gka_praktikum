@@ -51,14 +51,14 @@ public abstract class EulerAlgorithmTest_A {
 	public void testFindEulerTour_NoEulertour_1() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/euler/noeulertour_1.graph"));
 		GraphPath<Knoten, DefaultEdge> eulerpath = myAlgorithm.findEulerTour(graph);
-		assertEulerTour(eulerpath);
+		assertNull(eulerpath);
 	}
 	
 	@Test
 	public void testFindEulerTour_NoEulertour_2() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/euler/noeulertour_2.graph"));
 		GraphPath<Knoten, DefaultEdge> eulerpath = myAlgorithm.findEulerTour(graph);
-		assertEulerTour(eulerpath);
+		assertNull(eulerpath);
 	}
 	
 	@Test
