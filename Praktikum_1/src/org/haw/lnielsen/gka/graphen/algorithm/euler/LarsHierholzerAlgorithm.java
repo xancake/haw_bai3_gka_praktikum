@@ -17,6 +17,13 @@ import org.jgrapht.graph.UndirectedSubgraph;
  * @author Lars Nielsen
  */
 public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
+	/**
+	 * Die Implementation des Algorithmus unterstützt derzeit nur {@link UndirectedGraph}en.
+	 * 
+	 * {@inheritDoc}
+	 * 
+	 * @throws IllegalArgumentException, wenn der übergebene Graph keine Instanz eines ungerichteten Graphen ist.
+	 */
 	@Override
 	public GraphPath<V, E> findEulerTour(Graph<V, E> graph) {
 		if(!(graph instanceof UndirectedGraph)) {
