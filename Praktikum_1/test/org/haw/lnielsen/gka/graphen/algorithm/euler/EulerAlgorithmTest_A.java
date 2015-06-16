@@ -2,6 +2,7 @@ package org.haw.lnielsen.gka.graphen.algorithm.euler;
 
 import static org.haw.lnielsen.gka.graphen.algorithm.euler.EulerAsserts.*;
 import static org.junit.Assert.*;
+
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
@@ -51,6 +52,12 @@ public abstract class EulerAlgorithmTest_A {
 	public void testFindEulerTour_Eulertour_2() throws Exception {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/euler/eulertour_2.graph"));
 		GraphPath<Knoten, DefaultEdge> eulerpath = myAlgorithm.findEulerTour(graph);
+		assertEulerTour(eulerpath);
+	}
+	@Test
+	public void testFindEulerTour_Test_Lars_1() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/euler/test_eulergraph_lars_1.graph"));
+		GraphPath<Knoten, DefaultEdge> eulerpath = createEulerAlgorithm().findEulerTour(graph);
 		assertEulerTour(eulerpath);
 	}
 	
