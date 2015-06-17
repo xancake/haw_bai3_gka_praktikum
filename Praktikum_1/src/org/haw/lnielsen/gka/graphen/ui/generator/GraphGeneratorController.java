@@ -14,6 +14,7 @@ import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteBipartiteGraphG
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.EmptyGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.EulerGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.LarsRandomEulerGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.RandomEulerGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.GraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.GridGraphGeneratorFactory;
@@ -57,6 +58,7 @@ public class GraphGeneratorController
 		generatoren.add(new CircleEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new EulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new RandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new LarsRandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		getView().setGraphGenerators(generatoren);
 		getView().enableAttributeConfiguration(false);
 		getView().enableWeightConfiguration(false);
