@@ -56,6 +56,7 @@ public class GraphGeneratorController
 		generatoren.add(new RandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new CircleEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new EulerGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new RandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		getView().setGraphGenerators(generatoren);
 		getView().enableAttributeConfiguration(false);
 		getView().enableWeightConfiguration(false);
