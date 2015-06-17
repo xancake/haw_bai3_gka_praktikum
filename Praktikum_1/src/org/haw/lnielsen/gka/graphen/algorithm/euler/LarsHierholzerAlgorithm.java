@@ -50,7 +50,6 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 				subgraph.removeEdge(edge);
 				current = other;
 			} while(!start.equals(current));
-			circuit.add(current);
 			
 			circuits.add(circuit);
 		}
@@ -62,7 +61,7 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 			edgeList.add(graph.getEdge(eulerCircuit.get(i), eulerCircuit.get(i+1)));
 		}
 		edgeList.add(graph.getEdge(eulerCircuit.get(eulerCircuit.size()-1), eulerCircuit.get(0)));
-		return new GraphPathImpl<>(graph, eulerCircuit.get(0), eulerCircuit.get(0), edgeList, 0);
+		return new GraphPathImpl<>(graph, eulerCircuit.get(0), eulerCircuit.get(0), edgeList, edgeList.size());
 	}
 	
 	/**
@@ -100,7 +99,7 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 	private List<V> buildEulerCircuit(UndirectedGraph<V, E> graph, List<List<V>> circuits) {
 		List<V> eulerCircuit = new ArrayList<>();
 		List<V> firstCircuit = circuits.remove(0);
-		buildEulerCircuit_Rec(graph, firstCircuit.remove(0), firstCircuit, circuits, eulerCircuit);
+		buildEulerCircuit_Rec(graph, 0, firstCircuit, circuits, eulerCircuit);
 		return eulerCircuit;
 	}
 	
@@ -113,21 +112,21 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 	 * @param remainingCircuits Die Liste der verbleibenden Teilkreise
 	 * @param eulerCircuit Eine Liste von Knoten die den Eulerkreis repräsentieren soll
 	 */
-	private void buildEulerCircuit_Rec(UndirectedGraph<V, E> graph, V start, List<V> currentCircuit, List<List<V>> remainingCircuits, List<V> eulerCircuit) {
-		V current = start;
+	private void buildEulerCircuit_Rec(UndirectedGraph<V, E> graph, int start, List<V> currentCircuit, List<List<V>> remainingCircuits, List<V> eulerCircuit) {
+		int current = start;
 		do {
-			eulerCircuit.add(current);
+			V currentVertex = currentCircuit.get(current);
+			eulerCircuit.add(currentVertex);
 			
-			List<V> circuitContainingVertex = getCircuitContainingVertex(remainingCircuits, current);
+			List<V> circuitContainingVertex = getCircuitContainingVertex(remainingCircuits, currentVertex);
 			if(circuitContainingVertex != null) {
 				remainingCircuits.remove(circuitContainingVertex);
-				V matchingVertex = circuitContainingVertex.remove(circuitContainingVertex.indexOf(current));
-				buildEulerCircuit_Rec(graph, getNextVertex(matchingVertex, circuitContainingVertex), circuitContainingVertex, remainingCircuits, eulerCircuit);
+				int matching = circuitContainingVertex.indexOf(currentVertex);
+				buildEulerCircuit_Rec(graph, getNextVertex(matching, circuitContainingVertex), circuitContainingVertex, remainingCircuits, eulerCircuit);
 			}
 			
-			V next = getNextVertex(current, currentCircuit);
-			current = next;
-		} while(!start.equals(current));
+			current = (current+1)%currentCircuit.size();
+		} while(start != current);
 	}
 	
 	/**
@@ -136,10 +135,8 @@ public class LarsHierholzerAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 	 * @param currentCircuit Der Kreis aus dem der Nachfolgeknoten ermittelt werden soll
 	 * @return Der Nachfolgeknoten des aktuellen Knotens
 	 */
-	private V getNextVertex(V current, List<V> currentCircuit) {
-		int currentIndex = currentCircuit.indexOf(current);
-		int nextIndex    = (currentIndex+1)%currentCircuit.size();
-		return currentCircuit.get(nextIndex);
+	private int getNextVertex(int current, List<V> currentCircuit) {
+		return (current+1)%currentCircuit.size();
 	}
 	
 	/**

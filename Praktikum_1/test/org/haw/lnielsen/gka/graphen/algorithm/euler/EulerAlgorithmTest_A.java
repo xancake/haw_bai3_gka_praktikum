@@ -5,9 +5,12 @@ import static org.junit.Assert.*;
 
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
+import org.haw.lnielsen.gka.graphen.generator.graph.LarsRandomEulerGraphGenerator;
+import org.haw.lnielsen.gka.graphen.generator.vertex.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
+import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,9 +79,24 @@ public abstract class EulerAlgorithmTest_A {
 	}
 	
 	@Test
+	public void testFindEulerTour_Random() throws Exception {
+		Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(false, false);
+		
+		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new LarsRandomEulerGraphGenerator<Knoten, DefaultEdge>((int)(10+Math.random()*(100-10)));
+		generator.generateGraph(graph, new KnotenFactory(), null);
+		
+		GraphPath<Knoten, DefaultEdge> path = myAlgorithm.findEulerTour(graph);
+		assertEulerTour(path);
+	}
+	
+	@Test
 	public void testFindEulerTour_RandomRepeatedly() throws Exception {
 		for(int i=0; i<100; i++) {
 			Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(false, false);
+			
+			GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new LarsRandomEulerGraphGenerator<Knoten, DefaultEdge>((int)(100+Math.random()*(1000-100)));
+			generator.generateGraph(graph, new KnotenFactory(), null);
+			
 			GraphPath<Knoten, DefaultEdge> path = myAlgorithm.findEulerTour(graph);
 			assertEulerTour(path);
 		}
