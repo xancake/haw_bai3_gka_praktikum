@@ -42,12 +42,14 @@ public class IncrementalEulerGraphGeneratorTest {
 	}
 	
 	/**
-	 * Testet das Generieren von Eulergraphen einer Knotenanzahl von 3 bis 2.000.
+	 * Testet das Generieren von Eulergraphen einer Knotenanzahl von 3 bis 100.
 	 */
 	@Test
 	public void testGenerate_Undirected_Increase() throws Exception {
-		for(int i=3; i<2000; i++) {
-			testGenerate_Undirected(i, -1);
+		for(int i=3; i<100; i++) {
+			for(int cs=3; cs<i; cs++) {
+				testGenerate_Undirected(i, cs);
+			}
 		}
 	}
 	

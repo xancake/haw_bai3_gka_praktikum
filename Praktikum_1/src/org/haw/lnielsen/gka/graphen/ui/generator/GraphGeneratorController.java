@@ -13,9 +13,9 @@ import org.haw.lnielsen.gka.graphen.ui.generator.factory.IncrementalEulerGraphGe
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteBipartiteGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.CompleteGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.EmptyGraphGeneratorFactory;
-import org.haw.lnielsen.gka.graphen.ui.generator.factory.EulerGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.RingEulerGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.LarsRandomEulerGraphGeneratorFactory;
-import org.haw.lnielsen.gka.graphen.ui.generator.factory.RandomEulerGraphGeneratorFactory;
+import org.haw.lnielsen.gka.graphen.ui.generator.factory.JennyRandomEulerGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.GraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.GridGraphGeneratorFactory;
 import org.haw.lnielsen.gka.graphen.ui.generator.factory.LinearGraphGeneratorFactory;
@@ -54,8 +54,8 @@ public class GraphGeneratorController
 		generatoren.add(new CompleteGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new CompleteBipartiteGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new ScaleFreeGraphGeneratorFactory<Knoten, DefaultEdge>());
-		generatoren.add(new RandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
-		generatoren.add(new EulerGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new JennyRandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new RingEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new IncrementalEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new LarsRandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		getView().setGraphGenerators(generatoren);

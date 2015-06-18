@@ -1,22 +1,19 @@
 package org.haw.lnielsen.gka.graphen.generator.graph;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.jgrapht.Graph;
-import org.jgrapht.UndirectedGraph;
 import org.jgrapht.VertexFactory;
 import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.generate.RandomGraphGenerator;
 
-public class RandomEulerGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
+public class JennyRandomEulerGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
 	private int myAnzahlKnoten;
 	private int myAnzahlKanten;
 	
-	public RandomEulerGraphGenerator(int anzahlKnoten, int anzahlKanten) {
+	public JennyRandomEulerGraphGenerator(int anzahlKnoten, int anzahlKanten) {
 		if(anzahlKnoten < 0) {
 			throw new IllegalArgumentException("Die Anzahl der Knoten darf nicht kleiner als 0 sein!");
 		}
@@ -47,17 +44,14 @@ public class RandomEulerGraphGenerator<V, E> implements GraphGenerator<V, E, V> 
 				target.removeVertex(knoten);
 			}
 
-			int additionalEdgeCounter = 0;
 			while (!verticesWithOddDegree.isEmpty()) {
 				V v1 = verticesWithOddDegree.get(0);
 				V v2 = verticesWithOddDegree.get(1);
 
 				if (target.containsEdge(v1, v2)) {
 					target.removeEdge(v1, v2);
-					additionalEdgeCounter--;
 				} else {
 					target.addEdge(v1, v2);
-					additionalEdgeCounter++;
 				}
 
 				verticesWithOddDegree.remove(v1);

@@ -32,7 +32,7 @@ public class IncrementalEulerGraphGenerator<V, E> implements GraphGenerator<V, E
 			throw new IllegalArgumentException("Die Anzahl der Knoten darf nicht kleiner als 3 sein!");
 		}
 		if(circleSize < -1 || (circleSize > -1 && circleSize < CIRCLE_SIZE_MIN) || circleSize > vertexCount) {
-			throw new IllegalArgumentException("Die Größe der Kreise darf nicht kleiner als " + CIRCLE_SIZE_MIN + " sein, ausgenommen -1 für zufällige Größen!");
+			throw new IllegalArgumentException("Die Größe der Kreise darf nicht kleiner als " + CIRCLE_SIZE_MIN + " oder größer als " + vertexCount + " sein, ausgenommen -1 für zufällige Größen!");
 		}
 		myVertexCount = vertexCount;
 		myCircleSize = circleSize;

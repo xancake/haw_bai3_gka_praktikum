@@ -17,11 +17,11 @@ import org.jgrapht.generate.RingGraphGenerator;
  * 
  * @author Lars Nielsen
  */
-public class EulerGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
+public class RingEulerGraphGenerator<V, E> implements GraphGenerator<V, E, V> {
 	private int myVertexCount;
 	private int myInternalCircles;
 	
-	public EulerGraphGenerator(int vertexCount, int internalCircles) {
+	public RingEulerGraphGenerator(int vertexCount, int internalCircles) {
 		if(vertexCount < 3) {
 			throw new IllegalArgumentException("Es müssen mindestens 3 Knoten generiert werden, um einen Kreis zu erzeugen.");
 		}
