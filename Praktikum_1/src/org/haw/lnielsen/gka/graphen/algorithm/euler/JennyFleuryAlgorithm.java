@@ -51,7 +51,7 @@ public class JennyFleuryAlgorithm<V, E> implements EulerAlgorithm_I<V, E> {
 			}
 		}
 		
-		GraphPathImpl<V, E> graphPath = new GraphPathImpl<V, E>(graph, start, aktuellerKnoten, edgeList, 0);
+		GraphPathImpl<V, E> graphPath = new GraphPathImpl<V, E>(graph, start, aktuellerKnoten, edgeList, edgeList.size());
 		return graphPath;
 	}
 	
