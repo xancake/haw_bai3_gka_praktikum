@@ -55,9 +55,8 @@ public class GraphGeneratorController
 		generatoren.add(new CompleteBipartiteGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new ScaleFreeGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new RandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
-		generatoren.add(new IncrementalEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new EulerGraphGeneratorFactory<Knoten, DefaultEdge>());
-		generatoren.add(new RandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
+		generatoren.add(new IncrementalEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		generatoren.add(new LarsRandomEulerGraphGeneratorFactory<Knoten, DefaultEdge>());
 		getView().setGraphGenerators(generatoren);
 		getView().enableAttributeConfiguration(false);
