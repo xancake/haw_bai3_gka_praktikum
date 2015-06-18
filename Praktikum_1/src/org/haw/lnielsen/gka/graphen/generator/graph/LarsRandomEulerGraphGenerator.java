@@ -80,31 +80,9 @@ public class LarsRandomEulerGraphGenerator<V, E> implements GraphGenerator<V, E,
 		}
 		
 		// Verbleibende Knoten mit ungeradem Knotengrad mit irgendwelchen Knoten verbinden
+		// TODO
 		
-		
-		
-		
-		
-		boolean test = false;
-		test = !test;
-		
-		
-//		boolean foundMatch;
-//		do {
-//			foundMatch = false;
-//			for(int i=1; i<odd.size(); i++) {
-//				V v0 = odd.get(0);
-//				V vi  = odd.get(i);
-//				if(!target.containsEdge(v0, vi)) {
-//					target.addEdge(v0, vi);
-//					odd.remove(i);
-//					odd.remove(0);
-//					foundMatch = true;
-//					break;
-//				}
-//			}
-//		} while(foundMatch);
-		
-		
+		boolean breakpoint_ancor = false;
+		breakpoint_ancor = !breakpoint_ancor;
 	}
 }
