@@ -2,12 +2,13 @@ package org.haw.lnielsen.gka.graphen.algorithm.euler;
 
 import static org.haw.lnielsen.gka.graphen.algorithm.euler.EulerAsserts.*;
 import static org.junit.Assert.*;
-
+import java.io.FileOutputStream;
 import org.haw.lnielsen.gka.graphen.Knoten;
 import org.haw.lnielsen.gka.graphen.generator.GraphFactory;
 import org.haw.lnielsen.gka.graphen.generator.graph.IncrementalEulerGraphGenerator;
 import org.haw.lnielsen.gka.graphen.generator.vertex.KnotenFactory;
 import org.haw.lnielsen.gka.graphen.io.loader.GKAGraphParser;
+import org.haw.lnielsen.gka.graphen.io.store.GKAGraphStorer;
 import org.jgrapht.Graph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.generate.GraphGenerator;
@@ -41,7 +42,6 @@ public abstract class EulerAlgorithmTest_A {
 		Graph<Knoten, DefaultEdge> graph = new GKAGraphParser().parseGraph(ClassLoader.getSystemResourceAsStream("loader/euler/eulerpfad_nikolaushaus.graph"));
 		GraphPath<Knoten, DefaultEdge> eulerpath = myAlgorithm.findEulerTour(graph);
 		assertNull(eulerpath);
-		// TODO: Vielleicht eine findEulerPath-Methode implementieren?
 	}
 	
 	@Test
@@ -86,7 +86,14 @@ public abstract class EulerAlgorithmTest_A {
 		generator.generateGraph(graph, new KnotenFactory(), null);
 		
 		GraphPath<Knoten, DefaultEdge> path = myAlgorithm.findEulerTour(graph);
-		assertEulerTour(path);
+		
+		try {
+			assertEulerTour(path);
+		} catch(AssertionError e) {
+			String file = "loader/euler/fehler/v" + graph.vertexSet().size() + "_e" + graph.edgeSet().size() + ".graph";
+			new GKAGraphStorer().storeGraph(graph, new FileOutputStream(file));
+			fail("Der geprüfte Graph enthält laut Algorithmus keine Eulertour, müsste aber eine enthalten. Der Graph wurde unter '" + file + "' gespeichert, um behoben werden zu können.");
+		}
 	}
 	
 	@Test
@@ -98,7 +105,14 @@ public abstract class EulerAlgorithmTest_A {
 			generator.generateGraph(graph, new KnotenFactory(), null);
 			
 			GraphPath<Knoten, DefaultEdge> path = myAlgorithm.findEulerTour(graph);
-			assertEulerTour(path);
+			
+			try {
+				assertEulerTour(path);
+			} catch(AssertionError e) {
+				String file = "loader/euler/fehler/v" + graph.vertexSet().size() + "_e" + graph.edgeSet().size() + ".graph";
+				new GKAGraphStorer().storeGraph(graph, new FileOutputStream(file));
+				fail("Der geprüfte Graph enthält laut Algorithmus keine Eulertour, müsste aber eine enthalten. Der Graph wurde unter '" + file + "' gespeichert, um behoben werden zu können.");
+			}
 		}
 	}
 	
