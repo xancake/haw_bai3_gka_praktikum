@@ -12,26 +12,33 @@ import org.jgrapht.generate.GraphGenerator;
 import org.jgrapht.graph.DefaultEdge;
 import org.junit.Test;
 
-public class LarsRandomEulerGraphGeneratorTest {
+public class IncrementalEulerGraphGeneratorTest {
 	/**
 	 * Testet das Generieren eines Eulergraphen mit drei Knoten, da ein Eulergraph mit weniger Knoten ohne
 	 * Mehrfachkanten bzw. Schlaufen nicht möglich ist.
 	 */
 	@Test
 	public void testGenerate_Undirected_MinimalPossibleGraph() throws Exception {
-		testGenerate_Undirected(3);
+		testGenerate_Undirected(3, 3);
 	}
 	
 	/**
-	 * Testet das Generieren eines Eulergraphen mit vier Knoten, da dies für den Algorithmus besonders kritisch ist.
-	 * Aufgrund der Arbeitsweise kann es vorkommen, dass ein Knoten mit allen anderen Knoten verbunden ist und somit
-	 * kein Eulerkreis aus dem Graphen gemacht werden kann.
+	 * Testet das Generieren eines Eulergraphen mit drei Knoten, da ein Eulergraph mit weniger Knoten ohne
+	 * Mehrfachkanten bzw. Schlaufen nicht möglich ist. Hierbei werden zufällige Kreisgrößen gewählt.
 	 */
 	@Test
-	public void testGenerate_Undirected_4() throws Exception {
-		for(int i=0; i<1000; i++) {
-			testGenerate_Undirected(4);
-		}
+	public void testGenerate_Undirected_MinimalPossibleGraph_RandomCircles() throws Exception {
+		testGenerate_Undirected(3, -1);
+	}
+	
+	/**
+	 * Testet den Fall, dass die angegebene Kreisgröße kleiner als die Anzahl der Knoten ist.
+	 * Hierbei muss ein Viereck herauskommen, anstatt von zwei Dreiecken, die an zwei Eckpunkten
+	 * miteinander verbunden sind.
+	 */
+	@Test
+	public void testGenerate_Undirected_4vertices_3circleSize() throws Exception {
+		testGenerate_Undirected(4, 3);
 	}
 	
 	/**
@@ -40,14 +47,14 @@ public class LarsRandomEulerGraphGeneratorTest {
 	@Test
 	public void testGenerate_Undirected_Increase() throws Exception {
 		for(int i=3; i<2000; i++) {
-			testGenerate_Undirected(i);
+			testGenerate_Undirected(i, -1);
 		}
 	}
 	
-	private void testGenerate_Undirected(int vertices) throws Exception {
+	private void testGenerate_Undirected(int vertices, int circleSize) throws Exception {
 		Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(false, false);
 		
-		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new LarsRandomEulerGraphGenerator<Knoten, DefaultEdge>(vertices);
+		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new IncrementalEulerGraphGenerator<Knoten, DefaultEdge>(vertices, circleSize);
 		generator.generateGraph(graph, new KnotenFactory(), null);
 		
 		assertEquals("Die Anzahl der Knoten stimmt nicht überein!", vertices, graph.vertexSet().size());
