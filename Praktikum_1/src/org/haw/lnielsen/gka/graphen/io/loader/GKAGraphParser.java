@@ -51,7 +51,8 @@ public class GKAGraphParser implements GraphParser_I {
 	 */
 	@Override
 	public Graph<Knoten, DefaultEdge> parseGraph(InputStream in) throws GraphParseException, IOException {
-		try(Scanner scanner = new Scanner(new BufferedInputStream(in))) {
+		Scanner scanner = new Scanner(new BufferedInputStream(in));
+		try {
 			int currentLine = 0;
 			int headerLine = NO_HEADER_FOUND;
 			boolean directed = false;
@@ -93,6 +94,8 @@ public class GKAGraphParser implements GraphParser_I {
 			}
 			
 			return graph;
+		} finally {
+			scanner.close();
 		}
 	}
 	
