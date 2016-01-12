@@ -48,18 +48,24 @@ public class IncrementalEulerGraphGeneratorTest {
 	public void testGenerate_Undirected_Increase() throws Exception {
 		for(int i=3; i<100; i++) {
 			for(int cs=3; cs<i; cs++) {
-				testGenerate_Undirected(i, cs);
+				testGenerate_Undirected(i, cs, false);
 			}
 		}
 	}
 	
 	private void testGenerate_Undirected(int vertices, int circleSize) throws Exception {
+		testGenerate_Undirected(vertices, circleSize, true);
+	}
+	
+	private void testGenerate_Undirected(int vertices, int circleSize, boolean checkVertexCount) throws Exception {
 		Graph<Knoten, DefaultEdge> graph = GraphFactory.createGraph(false, false);
 		
 		GraphGenerator<Knoten, DefaultEdge, Knoten> generator = new IncrementalEulerGraphGenerator<Knoten, DefaultEdge>(vertices, circleSize);
 		generator.generateGraph(graph, new KnotenFactory(), null);
 		
-		assertEquals("Die Anzahl der Knoten stimmt nicht überein!", vertices, graph.vertexSet().size());
+		if(checkVertexCount) {
+			assertEquals("Die Anzahl der Knoten stimmt nicht überein!", vertices, graph.vertexSet().size());
+		}
 		assertTrue("Der Graph ist kein Eulergraph (" + vertices + " Knoten)!", EulerianCircuit.isEulerian((UndirectedGraph<Knoten, DefaultEdge>)graph));
 	}
 }
